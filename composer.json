@@ -1,0 +1,21 @@
+{
+    "name": "zaikorea/zaiclient",
+    "description": "Z.Ai official client SDK",
+    "autoload": {
+        "psr-4": {
+            "Zaikorea\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Z.Ai Inc."
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+	"phpdocumentor/phpdocumentor": "2.*"
+    }
+}
