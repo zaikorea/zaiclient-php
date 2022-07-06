@@ -13,9 +13,11 @@ use GuzzleHttp\Exception\RequestException;
 
 use ZaiKorea\ZaiClient\Requests\RecommendationRequest;
 use ZaiKorea\ZaiClient\Responses\RecommendationResponse;
+use ZaiKorea\ZaiClient\Requests\PurchaseEvent;
 use ZaiKorea\ZaiClient\Security\ZaiHeaders;
 
 use JsonMapper;
+use ZaiKorea\ZaiClient\Configs\Config;
 
 /**
  * Client for easy usage of Z.Ai recommendation API
@@ -38,20 +40,68 @@ class ZaiClient {
     }
 
     /**
-     * @param RecommendationRequest $request
+     * @param  $request
      * @return RecommendationResponse Used
      */
-    public function getRecommendations($request) {
-        $headers = ZaiHeaders::generateZaiHeaders($this->zai_client_id, $this->zai_secret, $request->getPath($this->zai_client_id));
-        $body = json_encode($request);
+    public function addEventLog($event) {
+        $headers = ZaiHeaders::generateZaiHeaders(
+            $this->zai_client_id, 
+            $this->zai_secret, 
+            Config::EVENTS_API_PATH,
+        );
+        $body = json_encode($event->getPayload());
 
-        $guzzle_request = new Request('POST', $request->getURIPath($this->zai_client_id), $headers, Utils::streamFor($body));
+        $guzzle_request = new Request(
+            'POST', 
+            Config::EVENTS_API_ENDPOINT . Config::EVENTS_API_PATH,
+            $headers, 
+            Utils::streamFor($body)
+        );
 
         try {
             $response = $this->guzzle_client->send($guzzle_request);
         }
         catch(RequestException $e) {
+            // TODO: Raise custom exception
             echo "\nMessage: " .$e->getMessage() . "\n";
+            foreach ($e->getRequest()->getHeaders() as $name => $values) {
+                echo $name . ':' . implode(',', $values) . "\n";
+            }
+            echo $e->getRequest()->getBody() . "\n";
+        } 
+
+        return $response->getStatusCode();
+    }
+
+
+    /**
+     * @param RecommendationRequest $request
+     * @return RecommendationResponse Used
+     */
+    public function getRecommendations($request) {
+        $headers = ZaiHeaders::generateZaiHeaders(
+            $this->zai_client_id, 
+            $this->zai_secret, 
+            $request->getPath($this->zai_client_id)
+        );
+        $body = json_encode($request);
+
+        $guzzle_request = new Request(
+            'POST', 
+            $request->getURIPath($this->zai_client_id), 
+            $headers, 
+            Utils::streamFor($body)
+        );
+
+        try {
+            $response = $this->guzzle_client->send($guzzle_request);
+        }
+        catch(RequestException $e) {
+            // TODO: Raise custom exception
+            echo "\nMessage: " .$e->getMessage() . "\n";
+            foreach ($e->getRequest()->getHeaders() as $name => $values) {
+                echo $name . ':' . implode(',', $values) . "\n";
+            }
             echo $e->getRequest()->getBody() . "\n";
         } 
 
