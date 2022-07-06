@@ -3,15 +3,17 @@ namespace ZaiKorea\ZaiClient;
 
 use PHPUnit\Framework\TestCase;
 use ZaiKorea\ZaiClient\Requests\UserRecommendationRequest;
+use ZaiKorea\ZaiClient\Requests\RelatedItemsRecommendationRequest;
+use ZaiKorea\ZaiClient\Requests\RerankingRecommendationRequest;
 
 
 class RecommendationTest extends TestCase {
-    private $client_id = "test";
-    private $client_secret = "KVPzvdHTPWnt0xaEGc2ix-eqPXFCdEV5zcqolBr_h1k"; // secret key for testing
+    private $client_id = 'test';
+    private $client_secret = 'KVPzvdHTPWnt0xaEGc2ix-eqPXFCdEV5zcqolBr_h1k'; // secret key for testing
 
     public function testGetRecommendationsWithUserRecommendationRequest() {
         $client = new ZaiClient($this->client_id, $this->client_secret);
-        $user_id = "ZaiTest_User_id";
+        $user_id = 'ZaiTest_User_id';
         $limit = 10;
         $options = [
             'recommendation_type' => 'homepage',
@@ -28,15 +30,14 @@ class RecommendationTest extends TestCase {
 
     public function testGetRecommendationsWithRelatedItemsRecommendationRequest() {
         $client = new ZaiClient($this->client_id, $this->client_secret);
-        $user_id = "ZaiTest_User_id";
+        $item_id = "012345567788";
         $limit = 10;
         $options = [
-            'recommendation_type' => 'homepage',
+            'recommendation_type' => 'product_detail_page',
             'offset' => 0
         ];
 
-        // TODO
-        $request = new RelatedItemsRecommendationRequest($user_id, $limit, $options);
+        $request = new RelatedItemsRecommendationRequest($item_id, $limit, $options);
         $response = $client->getRecommendations($request);
 
         self::assertNotNull($response->getItems(), "items in response is null");
@@ -47,14 +48,14 @@ class RecommendationTest extends TestCase {
     public function testGetRecommendationsWithRerankingRecommendationRequest() {
         $client = new ZaiClient($this->client_id, $this->client_secret);
         $user_id = "ZaiTest_User_id";
-        $limit = 10;
+        $item_ids = ["1234", "5678", "9101112"];
+        $limit = 3;
         $options = [
-            'recommendation_type' => 'homepage',
+            'recommendation_type' => 'all_products_page',
             'offset' => 0
         ];
 
-        // TODO
-        $request = new RerankingRecommendationRequest($user_id, $limit, $options);
+        $request = new RerankingRecommendationRequest($user_id, $item_ids, $limit, $options);
         $response = $client->getRecommendations($request);
 
         self::assertNotNull($response->getItems(), "items in response is null");

@@ -7,9 +7,9 @@ use ZaiKorea\ZaiClient\Requests\RecommendationRequest;
 use ZaiKorea\ZaiClient\Configs\Config;
 
 class UserRecommendationRequest extends RecommendationRequest {
-    CONST DEFAULT_RECOMMENDATION_TYPE = "homepage";
-    CONST DEFAULT_OFFSET = 0;
-    CONST RECOMMENDER_PATH = "/user-recommendations";
+    const DEFAULT_RECOMMENDATION_TYPE = 'homepage';
+    const DEFAULT_OFFSET = 0;
+    const RECOMMENDER_PATH = '/user-recommendations';
     
 
     public function __construct($user_id, $limit, $options = array()) {
@@ -17,7 +17,7 @@ class UserRecommendationRequest extends RecommendationRequest {
         $this->limit = $limit;
 
         if (!is_array($options)) 
-            throw new \InvalidArgumentException("options must be givent as an array. $options given instead.");
+            throw new \InvalidArgumentException('options must be givent as an array. $options given instead.');
 
         $this->recommendation_type = isset($options['recommendation_type']) ? $options['recommendation_type'] : self::DEFAULT_RECOMMENDATION_TYPE;
         $this->offset = isset($options['offset']) ? $options['offset'] : self::DEFAULT_OFFSET;
