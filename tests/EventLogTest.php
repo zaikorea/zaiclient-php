@@ -9,6 +9,7 @@ use ZaiKorea\ZaiClient\Requests\LikeEvent;
 use ZaiKorea\ZaiClient\Requests\CartaddEvent;
 use ZaiKorea\ZaiClient\Requests\RateEvent;
 use ZaiKorea\ZaiClient\Requests\CustomEvent;
+use ZaiKorea\ZaiClient\Exceptions\ZaiClientException;
 
 class EventLogTest extends TestCase {
     private $client_id = 'test';
@@ -233,5 +234,23 @@ class EventLogTest extends TestCase {
         $response_status = $client->addEventLog($custom_event);
 
         self::assertSame(200, $response_status);
+    }
+
+    /* ------------------- Test Errors ---------------------  */
+
+    /**
+     * @expectException ZaiClientException
+     */
+    public function testBadSecret() {
+        $this->expectException(ZaiClientException::class);
+
+        $bad_secret = '123456777';
+        $client = new ZaiClient($this->client_id, $bad_secret);
+        $customer_id = 'php-add-single-custom';
+        $custom_event = 'search';
+        $custom_action = ['P1000005' => 4];
+
+        $custom_event = new CustomEvent($customer_id, $custom_event, $custom_action);
+        $client->addEventLog($custom_event); // This should throw ZaiClientException
     }
 }

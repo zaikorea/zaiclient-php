@@ -10,11 +10,12 @@ namespace ZaiKorea\ZaiClient;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Utils;
 use GuzzleHttp\Exception\RequestException;
-
+use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\GuzzleException;
 use ZaiKorea\ZaiClient\Requests\RecommendationRequest;
 use ZaiKorea\ZaiClient\Responses\RecommendationResponse;
-use ZaiKorea\ZaiClient\Requests\PurchaseEvent;
 use ZaiKorea\ZaiClient\Security\ZaiHeaders;
+use ZaiKorea\ZaiClient\Exceptions\ZaiClientException;
 
 use JsonMapper;
 use ZaiKorea\ZaiClient\Configs\Config;
@@ -60,15 +61,10 @@ class ZaiClient {
 
         try {
             $response = $this->guzzle_client->send($guzzle_request);
-        }
-        catch(RequestException $e) {
-            // TODO: Raise custom exception
-            echo "\nMessage: " .$e->getMessage() . "\n";
-            foreach ($e->getRequest()->getHeaders() as $name => $values) {
-                echo $name . ':' . implode(',', $values) . "\n";
-            }
-            echo $e->getRequest()->getBody() . "\n";
         } 
+        catch (BadResponseException $e) {
+            throw new ZaiClientException($e->getMessage(), $e);
+        }
 
         return $response->getStatusCode();
     }
@@ -78,8 +74,8 @@ class ZaiClient {
      * @return int StatusCode
      */
     public function updateEventLog($event) {
-        // if (is_array($event->getPayload()))
-        //     throw new \InvalidArgumentException('Events with multiple payloads does not support updateEventLog operation');
+        if (is_array($event->getPayload()))
+             throw new \InvalidArgumentException('Events with multiple payloads does not support updateEventLog operation');
 
         $headers = ZaiHeaders::generateZaiHeaders(
             $this->zai_client_id, 
@@ -97,15 +93,10 @@ class ZaiClient {
 
         try {
             $response = $this->guzzle_client->send($guzzle_request);
-        }
-        catch(RequestException $e) {
-            // TODO: Raise custom exception
-            echo "\nMessage: " .$e->getMessage() . "\n";
-            foreach ($e->getRequest()->getHeaders() as $name => $values) {
-                echo $name . ':' . implode(',', $values) . "\n";
-            }
-            echo $e->getRequest()->getBody() . "\n";
         } 
+        catch (BadResponseException $e) {
+            throw new ZaiClientException($e->getMessage(), $e);
+        }
 
         return $response->getStatusCode();
     }
@@ -131,15 +122,10 @@ class ZaiClient {
 
         try {
             $response = $this->guzzle_client->send($guzzle_request);
-        }
-        catch(RequestException $e) {
-            // TODO: Raise custom exception
-            echo "\nMessage: " .$e->getMessage() . "\n";
-            foreach ($e->getRequest()->getHeaders() as $name => $values) {
-                echo $name . ':' . implode(',', $values) . "\n";
-            }
-            echo $e->getRequest()->getBody() . "\n";
         } 
+        catch (BadResponseException $e) {
+            throw new ZaiClientException($e->getMessage(), $e);
+        }
 
         return $response->getStatusCode();
     }
@@ -165,15 +151,10 @@ class ZaiClient {
 
         try {
             $response = $this->guzzle_client->send($guzzle_request);
-        }
-        catch(RequestException $e) {
-            // TODO: Raise custom exception
-            echo "\nMessage: " .$e->getMessage() . "\n";
-            foreach ($e->getRequest()->getHeaders() as $name => $values) {
-                echo $name . ':' . implode(',', $values) . "\n";
-            }
-            echo $e->getRequest()->getBody() . "\n";
         } 
+        catch (BadResponseException $e) {
+            throw new ZaiClientException($e->getMessage(), $e);
+        }
 
         $response_body = json_decode($response->getBody());
         $recommendation_response = $this->json_mapper->map($response_body, new RecommendationResponse());
