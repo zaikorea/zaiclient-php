@@ -12,12 +12,12 @@ abstract class RecommendationRequest implements \JsonSerializable {
     protected $user_id;
 
     /**
-     * @var string $item_id ID used for getting related-items
+     * @var string | array $item_id ID used for getting related-items
      */ 
     protected $item_id;
 
     /**
-     * @var array $item_ids array of IDs used for reranking
+     * @var array $item_id ID used for getting related-items
      */ 
     protected $item_ids;
 
@@ -72,8 +72,7 @@ abstract class RecommendationRequest implements \JsonSerializable {
         return $this->recommendation_type;
     }
 
-    public function jsonSerialize(): mixed
-    {
+    public function jsonSerialize() {
         $vars = get_object_vars($this);
         return $vars;
     }
