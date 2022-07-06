@@ -10,11 +10,12 @@ use ZaiKorea\ZaiClient\Requests\EventInBatch;
 use ZaiKorea\ZaiClient\Configs\Config;
 
 class PurchaseEvent extends BaseEvent {
+    const EVENT_TYPE = 'purchase';
     private $timestamp;
     
 
     /**
-     *     $orders = array(
+     *     $order = array(
      *         'item_id1'=> [ 
      *             'price' => 10000, 
      *             'count' => 3 
@@ -26,7 +27,7 @@ class PurchaseEvent extends BaseEvent {
      *     )
      *
      */
-    public function __construct($customer_id, $orders=array(), $options = array()) {
+    public function __construct($customer_id, $order=array(), $options = array()) {
         $this->timestamp = strval(microtime(true));
         if (isset($options['timestamp']))
             $this->timestamp = $options['timestamp'];
@@ -34,13 +35,13 @@ class PurchaseEvent extends BaseEvent {
         $events = array();
 
         $tmp_timestamp = $this->timestamp;
-        foreach ($orders as $item_id => $order_spec) {
+        foreach ($order as $item_id => $order_spec) {
             for ($i = 0; $i < $order_spec['count']; $i++) {
                 array_push($events, new EventInBatch(
                     $customer_id,
                     $item_id,
                     $tmp_timestamp,
-                    Config::PURCHASE_EVENT_TYPE, // event value
+                    self::EVENT_TYPE,
                     $order_spec['price']
                 ));
                 $tmp_timestamp += Config::EPSILON;

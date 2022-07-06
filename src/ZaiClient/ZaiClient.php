@@ -40,8 +40,8 @@ class ZaiClient {
     }
 
     /**
-     * @param  $request
-     * @return RecommendationResponse Used
+     * @param  $event
+     * @return int StatusCode
      */
     public function addEventLog($event) {
         $headers = ZaiHeaders::generateZaiHeaders(
@@ -73,6 +73,76 @@ class ZaiClient {
         return $response->getStatusCode();
     }
 
+    /**
+     * @param  $event
+     * @return int StatusCode
+     */
+    public function updateEventLog($event) {
+        // if (is_array($event->getPayload()))
+        //     throw new \InvalidArgumentException('Events with multiple payloads does not support updateEventLog operation');
+
+        $headers = ZaiHeaders::generateZaiHeaders(
+            $this->zai_client_id, 
+            $this->zai_secret, 
+            Config::EVENTS_API_PATH,
+        );
+        $body = json_encode($event->getPayload());
+
+        $guzzle_request = new Request(
+            'PUT', 
+            Config::EVENTS_API_ENDPOINT . Config::EVENTS_API_PATH,
+            $headers, 
+            Utils::streamFor($body)
+        );
+
+        try {
+            $response = $this->guzzle_client->send($guzzle_request);
+        }
+        catch(RequestException $e) {
+            // TODO: Raise custom exception
+            echo "\nMessage: " .$e->getMessage() . "\n";
+            foreach ($e->getRequest()->getHeaders() as $name => $values) {
+                echo $name . ':' . implode(',', $values) . "\n";
+            }
+            echo $e->getRequest()->getBody() . "\n";
+        } 
+
+        return $response->getStatusCode();
+    }
+
+    /**
+     * @param  $event
+     * @return int StatusCode
+     */
+    public function deleteEventLog($event) {
+        $headers = ZaiHeaders::generateZaiHeaders(
+            $this->zai_client_id, 
+            $this->zai_secret, 
+            Config::EVENTS_API_PATH,
+        );
+        $body = json_encode($event->getPayload());
+
+        $guzzle_request = new Request(
+            'DELETE', 
+            Config::EVENTS_API_ENDPOINT . Config::EVENTS_API_PATH,
+            $headers, 
+            Utils::streamFor($body)
+        );
+
+        try {
+            $response = $this->guzzle_client->send($guzzle_request);
+        }
+        catch(RequestException $e) {
+            // TODO: Raise custom exception
+            echo "\nMessage: " .$e->getMessage() . "\n";
+            foreach ($e->getRequest()->getHeaders() as $name => $values) {
+                echo $name . ':' . implode(',', $values) . "\n";
+            }
+            echo $e->getRequest()->getBody() . "\n";
+        } 
+
+        return $response->getStatusCode();
+    }
 
     /**
      * @param RecommendationRequest $request
