@@ -19,7 +19,9 @@ class Config {
     const ZAI_UNIX_TIMESTAMP_HEADER = 'X-ZAI-TIMESTAMP';
     const ZAI_AUTHORIZATION_HEADER = 'X-ZAI-AUTHORIZATION';
     const ZAI_CALL_TYPE_HEADER = 'X-ZAI-CALL-TYPE';
-    const ZAI_CALL_TYPE = 'SDK_CALL';
+    const ZAI_CALL_TYPE = 'sdk_call';
+    
+    const PURCHASE_EVENT_TYPE = 'purchase';
 
     const BATCH_REQUEST_CAP = '50';
     const EPSILON = 1e-4;
