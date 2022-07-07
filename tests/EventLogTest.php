@@ -1,4 +1,10 @@
 <?php
+/**
+ * EventLogTest
+ * @author Uiseop Eom <tech@zaikorea.org>
+ * @modifiedBy <name>
+ */
+
 namespace ZaiKorea\ZaiClient;
 
 use Error;
@@ -10,6 +16,8 @@ use ZaiKorea\ZaiClient\Requests\CartaddEvent;
 use ZaiKorea\ZaiClient\Requests\RateEvent;
 use ZaiKorea\ZaiClient\Requests\CustomEvent;
 use ZaiKorea\ZaiClient\Exceptions\ZaiClientException;
+use ZaiKorea\ZaiClient\Configs\Config;
+
 
 class EventLogTest extends TestCase {
     private $client_id = 'test';
@@ -22,7 +30,7 @@ class EventLogTest extends TestCase {
     public function testAddSinglePurchaseEventLog() {
         $client = new ZaiClient($this->client_id, $this->client_secret);
         $customer_id = 'php-add-single-purchase';
-        $order = array('P1000009' => ['price'=> 11000, 'count'=> 1]);
+        $order = array('item_id'=> 'P1000009', 'price'=> 11000, 'count'=> 1);
 
         $purchase_event = new PurchaseEvent($customer_id, $order);
         $response_status = $client->addEventLog($purchase_event);
@@ -34,8 +42,8 @@ class EventLogTest extends TestCase {
         $client = new ZaiClient($this->client_id, $this->client_secret);
         $customer_id = 'php-add-multi-purchase';
         $order = array(
-            'P1234567' => ['price'=> 11000, 'count'=> 2],
-            'P5678901' => ['price'=> 11000, 'count'=> 3]
+            ['item_id' => 'P1234567', 'price'=> 11000, 'count'=> 2],
+            ['item_id' => 'P5678901', 'price'=> 11000, 'count'=> 3]
         );
 
         $options = array(
@@ -51,7 +59,7 @@ class EventLogTest extends TestCase {
         $client = new ZaiClient($this->client_id, $this->client_secret);
         $customer_id = 'php-add-single-purchase';
         $order = array(
-            'P1000009' => ['price'=> 14000, 'count'=> 1],
+            ['item_id' => 'P1000009', 'price'=> 14000, 'count'=> 1],
         );
 
         $options = array(
@@ -67,8 +75,8 @@ class EventLogTest extends TestCase {
         $client = new ZaiClient($this->client_id, $this->client_secret);
         $customer_id = 'php-add-multi-purchase';
         $order = array(
-            'P1000007' => ['price'=> 11000, 'count'=> 2],
-            'P1000008' => ['price'=> 11000, 'count'=> 3]
+            ['item_id' => 'P1000007', 'price'=> 11000, 'count'=> 2],
+            ['item_id' => 'P1000008', 'price'=> 11000, 'count'=> 3]
         );
 
         $options = array(
@@ -179,7 +187,7 @@ class EventLogTest extends TestCase {
     public function testAddSingleRateEventLog() {
         $client = new ZaiClient($this->client_id, $this->client_secret);
         $customer_id = 'php-add-single-rate';
-        $item_id = 'P1000005';
+        $item_id = ['item_id'=>'P1000005', 'value' => 3.0];
 
         $rate_event = new RateEvent($customer_id, $item_id);
         $response_status = $client->addEventLog($rate_event);
@@ -190,17 +198,112 @@ class EventLogTest extends TestCase {
     public function testAddMultipleRateEventLog() {
         $client = new ZaiClient($this->client_id, $this->client_secret);
         $customer_id = 'php-add-multi-rates';
-        $item_ids = ['P1000000', 'P1000001'];
+        $rate_actions = [
+            ['item_id'=>'P1000005', 'value' => 3.0],
+            ['item_id'=>'P1000006', 'value' => 4.0]
+        ];
 
         $options = array(
             'timestamp' => time()
         );
 
-        $rate_event = new RateEvent($customer_id, $item_ids, $options);
+        $rate_event = new RateEvent($customer_id, $rate_actions, $options);
         $response_status = $client->addEventLog($rate_event);
 
         self::assertSame(200, $response_status);
     }
+
+    public function testBadRateActionTypeOnRateEventWithoutValueKeyword() {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+                sprintf(Config::ARR_FORM_ERRMSG, RateEvent::class, '__construct', 2, "[ ['item_id' => P12345, 'value' => 5.0] ] (1D array available if targeting single rate action)")
+        );
+
+        $client = new ZaiClient($this->client_id, $this->client_secret);
+        $customer_id = 'php-raise-error';
+        $rate_actions = [
+            ['item_id' => 'P1000007'],
+        ];
+
+        $purchase_event = new RateEvent($customer_id, $rate_actions);
+        $client->addEventLog($purchase_event);
+    }
+
+    public function testBadRateActionTypeOnRateEventWithAssociativeArray() {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(Config::NON_SEQ_ARR_ERRMSG, RateEvent::class, '__construct', 2)
+        );
+
+
+        $client = new ZaiClient($this->client_id, $this->client_secret);
+        $customer_id = 'php-raise-error';
+        $rate_actions = [
+            'P20007' => ['price'=> 11000, 'count'=> 3],
+            'P20008' => ['price'=> 12000, 'count'=> 2],
+        ];
+
+        $purchase_event = new RateEvent($customer_id, $rate_actions);
+        $client->addEventLog($purchase_event);
+    }
+
+    public function testBadRateActionTypeOnRateEventWithEmptyArray() {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(Config::EMPTY_ARR_ERRMSG, RateEvent::class, '__construct', 2)
+        );
+
+        $client = new ZaiClient($this->client_id, $this->client_secret);
+        $customer_id = 'php-raise-error';
+        $rate_actions = [];
+
+        $purchase_event = new RateEvent($customer_id, $rate_actions);
+        $client->addEventLog($purchase_event);
+    }
+
+    public function testBadRateActionTypeOnRateEventWithString() {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(Config::EMPTY_ARR_ERRMSG, RateEvent::class, '__construct', 2)
+        );
+
+        $client = new ZaiClient($this->client_id, $this->client_secret);
+        $customer_id = 'php-raise-error';
+        $rate_actions = 'P1234678';
+
+        $purchase_event = new RateEvent($customer_id, $rate_actions);
+        $client->addEventLog($purchase_event);
+    }
+
+    public function testBadRateActionTypeOnRateEventWithMissingKeyword() {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(Config::ARR_FORM_ERRMSG, RateEvent::class, '__construct', 2, "[ ['item_id' => P12345, 'value' => 5.0] ] (1D array available if targeting single rate action)")
+        );
+
+        $client = new ZaiClient($this->client_id, $this->client_secret);
+        $customer_id = 'php-raise-error';
+        $rate_actions = ['item_id' => 'P1112345'];
+
+        $purchase_event = new RateEvent($customer_id, $rate_actions);
+        $client->addEventLog($purchase_event);
+    }
+
+    public function testBadRateActionTypeOnRateEventWithWrongKeyword() {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(Config::ARR_FORM_ERRMSG, RateEvent::class, '__construct', 2, "[ ['item_id' => P12345, 'value' => 5.0] ] (1D array available if targeting single rate action)")
+        );
+
+        $client = new ZaiClient($this->client_id, $this->client_secret);
+        $customer_id = 'php-raise-error';
+        $rate_actions = ['item_id' => 'P1112345', 'price' => 3000];
+
+        $purchase_event = new RateEvent($customer_id, $rate_actions);
+        $client->addEventLog($purchase_event);
+    }
+
+
 
     /* ------------------- Test Custom Event ---------------------  */
     // Only test the addEventLog
@@ -209,7 +312,7 @@ class EventLogTest extends TestCase {
         $client = new ZaiClient($this->client_id, $this->client_secret);
         $customer_id = 'php-add-single-custom';
         $custom_event = 'search';
-        $custom_action = ['P1000005' => 4];
+        $custom_action = ['item_id' => 'P1000005', 'value' => null];
 
         $custom_event = new CustomEvent($customer_id, $custom_event, $custom_action);
         $response_status = $client->addEventLog($custom_event);
@@ -220,17 +323,38 @@ class EventLogTest extends TestCase {
     public function testAddMultiplecustomEventLog() {
         $client = new ZaiClient($this->client_id, $this->client_secret);
         $customer_id = 'php-add-multi-customs';
-        $custom_event = 'search';
-        $custom_actions = [
-            'P1000003' => null,
-            'P1000002' => null
-        ];
+        $custom_event_type = 'search';
 
+        $custom_action = array(
+            ['item_id' => 'P1000009', 'value' => null],
+            ['item_id' => 'P1000010', 'value' => null]
+        );
         $options = array(
             'timestamp' => time()
         );
 
-        $custom_event = new CustomEvent($customer_id, $custom_event, $custom_actions, $options);
+        $custom_event = new CustomEvent($customer_id, $custom_event_type, $custom_action, $options);
+        $response_status = $client->addEventLog($custom_event);
+
+        self::assertSame(200, $response_status);
+    }
+
+    public function testAddCustomEventLogWithIndexedArray() {
+        $client = new ZaiClient($this->client_id, $this->client_secret);
+        $customer_id = 'php-add-multi-customs';
+        $custom_event_type = 'search';
+
+        $custom_action = array(
+            ['item_id' => 'P1000009', 'value' => null],
+            ['item_id' => 'P1000010', 'value' => null],
+            ['item_id' => 'P1000011', 'value' => null],
+            ['item_id' => 'P1000012', 'value' => null],
+        );
+        $options = array(
+            'timestamp' => time()
+        );
+
+        $custom_event = new CustomEvent($customer_id, $custom_event_type, $custom_action, $options);
         $response_status = $client->addEventLog($custom_event);
 
         self::assertSame(200, $response_status);
@@ -246,11 +370,68 @@ class EventLogTest extends TestCase {
 
         $bad_secret = '123456777';
         $client = new ZaiClient($this->client_id, $bad_secret);
-        $customer_id = 'php-add-single-custom';
-        $custom_event = 'search';
-        $custom_action = ['P1000005' => 4];
+        $customer_id = 'php-raise-error';
+        $item_id = 'P1000005';
 
-        $custom_event = new CustomEvent($customer_id, $custom_event, $custom_action);
+        $custom_event = new ViewEvent($customer_id, $item_id);
         $client->addEventLog($custom_event); // This should throw ZaiClientException
+    }
+
+    /**
+     * @expectException InvalidArgumentException
+     */
+    public function testUpdateMultipleEvent() {
+        $this->expectException(\InvalidArgumentException::class);
+        $client = new ZaiClient($this->client_id, $this->client_secret);
+        $customer_id = 'php-raise-error';
+        $item_ids = ['P1000005', 'P1000006', 'P100007'];
+
+        $view_event = new ViewEvent($customer_id, $item_ids);
+        $client->updateEventLog($view_event); // This should throw ZaiClientException
+    }
+
+    public function testBadOrdersTypeOnPurchaseEventWithoutCountKeyword() {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
+
+        $client = new ZaiClient($this->client_id, $this->client_secret);
+        $customer_id = 'php-raise-error';
+        $orders = [
+            ['item_id' => 'P1000007', 'price'=> 11000],
+        ];
+
+        $purchase_event = new PurchaseEvent($customer_id, $orders);
+        $client->addEventLog($purchase_event);
+    }
+
+    public function testBadOrdersTypeOnPurchaseEventWithAssociativeArray() {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(Config::ARR_FORM_ERRMSG, PurchaseEvent::class, '__construct', 2, "[ ['item_id' => P12345, 'price' => 50000, 'count' => 3] ] (1D array available if targeting single order)")
+        );
+
+        $client = new ZaiClient($this->client_id, $this->client_secret);
+        $customer_id = 'php-raise-error';
+        $orders = [
+            ['P20007' => ['price'=> 11000, 'count'=> 3]],
+            ['P20008' => ['price'=> 12000, 'count'=> 2]],
+        ];
+
+        $purchase_event = new PurchaseEvent($customer_id, $orders);
+        $client->addEventLog($purchase_event);
+    }
+
+    public function testBadOrdersTypeOnPurchaseEventWithEmptyArray() {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(Config::EMPTY_ARR_ERRMSG, PurchaseEvent::class, '__construct', 2)
+        );
+
+        $client = new ZaiClient($this->client_id, $this->client_secret);
+        $customer_id = 'php-raise-error';
+        $orders = [];
+
+        $purchase_event = new PurchaseEvent($customer_id, $orders);
+        $client->addEventLog($purchase_event);
     }
 }

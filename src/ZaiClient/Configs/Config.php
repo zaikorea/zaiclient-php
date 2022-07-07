@@ -2,6 +2,7 @@
 /**
  * Config
  * @author Uiseop Eom <tech@zaikorea.org>
+ * @modifiedBy <name>
  */
 
 namespace ZaiKorea\ZaiClient\Configs;
@@ -23,4 +24,11 @@ class Config {
 
     const BATCH_REQUEST_CAP = '50';
     const EPSILON = 1e-4;
+
+    /* ----------------- Error Messages ----------------- */
+    const NON_STR_ARG_ERRMSG = '%s:%s expects parameter %d to be a string.';
+    const NULL_ARG_ERRMSG = '%s:%s expects parameter %d to be a string or non-empty array.';
+    const EMPTY_ARR_ERRMSG = '%s:%s expects parameter %d to be a non-empty array.';
+    const NON_SEQ_ARR_ERRMSG = '%s:%s expects parameter %d to be a sequential array.';
+    const ARR_FORM_ERRMSG = '%s:%s expects parameter %d to be an array of form %s.';
 }
