@@ -10,12 +10,12 @@ namespace ZaiKorea\ZaiClient;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Utils;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\BadResponseException;
-use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\TransferException;
 use ZaiKorea\ZaiClient\Requests\RecommendationRequest;
 use ZaiKorea\ZaiClient\Responses\RecommendationResponse;
 use ZaiKorea\ZaiClient\Security\ZaiHeaders;
 use ZaiKorea\ZaiClient\Exceptions\ZaiClientException;
+use ZaiKorea\ZaiClient\Exceptions\ZaiNetworkIOException;
 
 use JsonMapper;
 use ZaiKorea\ZaiClient\Configs\Config;
@@ -41,7 +41,7 @@ class ZaiClient {
     }
 
     /**
-     * @param  $event
+     * @param BaseEvent $event
      * @return int StatusCode
      */
     public function addEventLog($event) {
@@ -62,15 +62,18 @@ class ZaiClient {
         try {
             $response = $this->guzzle_client->send($guzzle_request);
         } 
-        catch (BadResponseException $e) {
+        catch (RequestException $e) {
             throw new ZaiClientException($e->getMessage(), $e);
+        }
+        catch (TransferException $e) {
+            throw new ZaiNetworkIOException($e->getMessage(), $e);
         }
 
         return $response->getStatusCode();
     }
 
     /**
-     * @param  $event
+     * @param BaseEvent $event
      * @return int StatusCode
      */
     public function updateEventLog($event) {
@@ -94,15 +97,18 @@ class ZaiClient {
         try {
             $response = $this->guzzle_client->send($guzzle_request);
         } 
-        catch (BadResponseException $e) {
+        catch (RequestException $e) {
             throw new ZaiClientException($e->getMessage(), $e);
+        }
+        catch (TransferException $e) {
+            throw new ZaiNetworkIOException($e->getMessage(), $e);
         }
 
         return $response->getStatusCode();
     }
 
     /**
-     * @param  $event
+     * @param BaseEvent $event
      * @return int StatusCode
      */
     public function deleteEventLog($event) {
@@ -123,8 +129,11 @@ class ZaiClient {
         try {
             $response = $this->guzzle_client->send($guzzle_request);
         } 
-        catch (BadResponseException $e) {
+        catch (RequestException $e) {
             throw new ZaiClientException($e->getMessage(), $e);
+        }
+        catch (TransferException $e) {
+            throw new ZaiNetworkIOException($e->getMessage(), $e);
         }
 
         return $response->getStatusCode();
@@ -132,7 +141,7 @@ class ZaiClient {
 
     /**
      * @param RecommendationRequest $request
-     * @return RecommendationResponse Used
+     * @return RecommendationResponse
      */
     public function getRecommendations($request) {
         $headers = ZaiHeaders::generateZaiHeaders(
@@ -152,8 +161,11 @@ class ZaiClient {
         try {
             $response = $this->guzzle_client->send($guzzle_request);
         } 
-        catch (BadResponseException $e) {
+        catch (RequestException $e) {
             throw new ZaiClientException($e->getMessage(), $e);
+        }
+        catch (TransferException $e) {
+            throw new ZaiNetworkIOException($e->getMessage(), $e);
         }
 
         $response_body = json_decode($response->getBody());
@@ -162,3 +174,4 @@ class ZaiClient {
     }
 }
 ?>
+NetworkIO
