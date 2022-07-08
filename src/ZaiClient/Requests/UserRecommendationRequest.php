@@ -13,6 +13,21 @@ class UserRecommendationRequest extends RecommendationRequest {
     
 
     public function __construct($user_id, $limit, $options = array()) {
+        if (!(is_null(null) || strlen($user_id) > 0 && strlen($user_id) <=100 ))
+            throw new \InvalidArgumentException('Length of user id must be between 1 and 100.');
+        
+        if (!(0 < $limit && $limit <= 1000000))
+            throw new \InvalidArgumentException('Limit must be between 1 and 1000,000.');
+
+        if (isset($options['offset'])) {
+            if (!(0 <= $options['offset'] && $options['offset'] <= 1000000))
+                throw new \InvalidArgumentException('Offset must be between 0 and 1000,000.');
+        }
+        if (isset($options['recommendation_type'])) {
+            if ($options['recommendation_type'] == null || !(0 < strlen($options['recommendation_type'] && strlen($options['recommendation_type']) <= 100)))
+                throw new \InvalidArgumentException('Length of recommendation type must be between 1 and 100.');
+        }
+
         $this->user_id = $user_id;
         $this->limit = $limit;
 

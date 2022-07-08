@@ -18,10 +18,6 @@ class ZaiNetworkIOException extends \Exception {
         parent::__construct($message, 1, $previous);
     }
 
-    public function getHttpStatusCode() {
-        return $this->http_status_code;
-    }
-
     public function __toString() {
         return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
     }

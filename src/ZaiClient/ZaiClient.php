@@ -13,6 +13,7 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
 use ZaiKorea\ZaiClient\Requests\RecommendationRequest;
 use ZaiKorea\ZaiClient\Responses\RecommendationResponse;
+use ZaiKorea\ZaiClient\Responses\EventLoggerResponse;
 use ZaiKorea\ZaiClient\Security\ZaiHeaders;
 use ZaiKorea\ZaiClient\Exceptions\ZaiClientException;
 use ZaiKorea\ZaiClient\Exceptions\ZaiNetworkIOException;
@@ -37,7 +38,7 @@ class ZaiClient {
 
         $this->guzzle_client = new \GuzzleHttp\Client();
         $this->json_mapper = new JsonMapper();
-        $this->json_mapper->bEnforceMapType = false;
+        //$this->json_mapper->bEnforceMapType = false;
     }
 
     /**
@@ -69,7 +70,9 @@ class ZaiClient {
             throw new ZaiNetworkIOException($e->getMessage(), $e);
         }
 
-        return $response->getStatusCode();
+        $response_body = json_decode($response->getBody());
+        $eventlogger_response = $this->json_mapper->map($response_body, new EventLoggerResponse()); 
+        return $eventlogger_response;
     }
 
     /**
@@ -104,7 +107,9 @@ class ZaiClient {
             throw new ZaiNetworkIOException($e->getMessage(), $e);
         }
 
-        return $response->getStatusCode();
+        $response_body = json_decode($response->getBody());
+        $eventlogger_response = $this->json_mapper->map($response_body, new EventLoggerResponse()); 
+        return $eventlogger_response;
     }
 
     /**
@@ -136,12 +141,16 @@ class ZaiClient {
             throw new ZaiNetworkIOException($e->getMessage(), $e);
         }
 
-        return $response->getStatusCode();
+        $response_body = json_decode($response->getBody());
+        $eventlogger_response = $this->json_mapper->map($response_body, new EventLoggerResponse()); 
+        return $eventlogger_response;
     }
 
     /**
-     * @param RecommendationRequest $request
-     * @return RecommendationResponse
+     *  Get recommendation from Z.Ai ML API server
+     * 
+     * @param RecommendationRequest $request Request can be one of <UserRecomendation | RelatedItems | Reranking>Recomendations
+     * @return RecommendationResponse Json serializable class
      */
     public function getRecommendations($request) {
         $headers = ZaiHeaders::generateZaiHeaders(
@@ -173,5 +182,3 @@ class ZaiClient {
         return $recommendation_response;
     }
 }
-?>
-NetworkIO

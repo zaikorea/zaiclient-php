@@ -12,12 +12,12 @@ abstract class RecommendationRequest implements \JsonSerializable {
     protected $user_id;
 
     /**
-     * @var string | array $item_id ID used for getting related-items
+     * @var string $item_id ID used for getting related-items
      */ 
     protected $item_id;
 
     /**
-     * @var array $item_id ID used for getting related-items
+     * @var string[] $item_id ID used for getting related-items
      */ 
     protected $item_ids;
 

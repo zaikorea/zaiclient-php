@@ -22,7 +22,9 @@ use ZaiKorea\ZaiClient\Configs\Config;
 class EventLogTest extends TestCase {
     private $client_id = 'test';
     private $client_secret = 'KVPzvdHTPWnt0xaEGc2ix-eqPXFCdEV5zcqolBr_h1k';
-
+    private $add_event_msg = 'The given event was added successfully.';
+    private $update_event_msg = 'The given event was updated successfully.';
+    private $delete_event_msg = 'The given event was removed successfully.';
 
     /* --------------------- Test Purchase Event --------------------  */
     // Tests addEventLog, updateEventLog, deleteEventLog
@@ -33,9 +35,9 @@ class EventLogTest extends TestCase {
         $order = array('item_id'=> 'P1000009', 'price'=> 11000, 'count'=> 1);
 
         $purchase_event = new PurchaseEvent($customer_id, $order);
-        $response_status = $client->addEventLog($purchase_event);
+        $response = $client->addEventLog($purchase_event);
 
-        self::assertSame(200, $response_status);
+        self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
     public function testAddMultiplePurchaseEventLog() {
@@ -51,8 +53,9 @@ class EventLogTest extends TestCase {
         );
 
         $purchase_event = new PurchaseEvent($customer_id, $order, $options);
-        $response_status = $client->addEventLog($purchase_event);
-        self::assertSame(200, $response_status);
+        $response = $client->addEventLog($purchase_event);
+
+        self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
     public function testUpdatePurchaseEventLog() {
@@ -61,35 +64,39 @@ class EventLogTest extends TestCase {
         $order = array(
             ['item_id' => 'P1000009', 'price'=> 14000, 'count'=> 1],
         );
-
         $options = array(
             'timestamp' => time()
         );
-
         $purchase_event = new PurchaseEvent($customer_id, $order, $options);
-        $response_status = $client->updateEventLog($purchase_event);
-        self::assertSame(200, $response_status);
+        $response_status = $client->addEventLog($purchase_event, $options);
+
+        $order = array(
+            ['item_id' => 'P1000009', 'price'=> 24000, 'count'=> 1],
+        );
+
+        $purchase_event = new PurchaseEvent($customer_id, $order, ['timestamp'=>$purchase_event->getTimestamp()]);
+        $response = $client->updateEventLog($purchase_event);
+
+        self::assertSame($this->update_event_msg, $response->getMessage());
     }
 
     public function testDeletePurchaseEventLog() {
         $client = new ZaiClient($this->client_id, $this->client_secret);
         $customer_id = 'php-add-multi-purchase';
         $order = array(
-            ['item_id' => 'P1000007', 'price'=> 11000, 'count'=> 2],
-            ['item_id' => 'P1000008', 'price'=> 11000, 'count'=> 3]
+            ['item_id' => 'P1000007', 'price'=> 900, 'count'=> 2],
+            ['item_id' => 'P1000008', 'price'=> 900, 'count'=> 3]
         );
-
         $options = array(
             'timestamp' => time()
         );
-
         $purchase_event = new PurchaseEvent($customer_id, $order, $options);
-        $response_status = $client->addEventLog($purchase_event);
-        if ($response_status != 200)
-            throw new Error('Something went wrong while testing Delete Purchase Event');
+        $client->addEventLog($purchase_event);
 
-        $response_status = $client->deleteEventLog($purchase_event);
-        self::assertSame(200, $response_status);
+        $purchase_event = new PurchaseEvent($customer_id, $order, ['timestamp'=>$purchase_event->getTimestamp()]);
+        $response = $client->deleteEventLog($purchase_event);
+
+        self::assertSame($this->delete_event_msg, $response->getMessage());
     }
 
     /* ----------------------- Test View Event -----------------------  */
@@ -101,9 +108,9 @@ class EventLogTest extends TestCase {
         $item_id = 'P1000005';
 
         $view_event = new ViewEvent($customer_id, $item_id);
-        $response_status = $client->addEventLog($view_event);
+        $response = $client->addEventLog($view_event);
 
-        self::assertSame(200, $response_status);
+        self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
     public function testAddMultipleViewEventLog() {
@@ -118,7 +125,9 @@ class EventLogTest extends TestCase {
         $view_event = new ViewEvent($customer_id, $item_ids, $options);
         $response_status = $client->addEventLog($view_event);
 
-        self::assertSame(200, $response_status);
+        $response = $client->addEventLog($view_event);
+
+        self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
     /* ----------------------- Test Like Event -----------------------  */
@@ -130,9 +139,9 @@ class EventLogTest extends TestCase {
         $item_id = 'P1000005';
 
         $like_event = new LikeEvent($customer_id, $item_id);
-        $response_status = $client->addEventLog($like_event);
+        $response = $client->addEventLog($like_event);
 
-        self::assertSame(200, $response_status);
+        self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
     public function testAddMultipleLikeEventLog() {
@@ -145,9 +154,9 @@ class EventLogTest extends TestCase {
         );
 
         $like_event = new ViewEvent($customer_id, $item_ids, $options);
-        $response_status = $client->addEventLog($like_event);
+        $response = $client->addEventLog($like_event);
 
-        self::assertSame(200, $response_status);
+        self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
     /* ------------------- Test Cartdd Event ---------------------  */
@@ -160,9 +169,9 @@ class EventLogTest extends TestCase {
         $item_id = 'P1000005';
 
         $cartadd_event = new CartaddEvent($customer_id, $item_id);
-        $response_status = $client->addEventLog($cartadd_event);
+        $response = $client->addEventLog($cartadd_event);
 
-        self::assertSame(200, $response_status);
+        self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
     public function testAddMultipleCartaddEventLog() {
@@ -175,9 +184,9 @@ class EventLogTest extends TestCase {
         );
 
         $cartadd_event = new CartaddEvent($customer_id, $item_ids, $options);
-        $response_status = $client->addEventLog($cartadd_event);
+        $response = $client->addEventLog($cartadd_event);
 
-        self::assertSame(200, $response_status);
+        self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
 
@@ -190,9 +199,9 @@ class EventLogTest extends TestCase {
         $item_id = ['item_id'=>'P1000005', 'value' => 3.0];
 
         $rate_event = new RateEvent($customer_id, $item_id);
-        $response_status = $client->addEventLog($rate_event);
+        $response = $client->addEventLog($rate_event);
 
-        self::assertSame(200, $response_status);
+        self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
     public function testAddMultipleRateEventLog() {
@@ -208,15 +217,15 @@ class EventLogTest extends TestCase {
         );
 
         $rate_event = new RateEvent($customer_id, $rate_actions, $options);
-        $response_status = $client->addEventLog($rate_event);
+        $response = $client->addEventLog($rate_event);
 
-        self::assertSame(200, $response_status);
+        self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
     public function testBadRateActionTypeOnRateEventWithoutValueKeyword() {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
-                sprintf(Config::ARR_FORM_ERRMSG, RateEvent::class, '__construct', 2, "[ ['item_id' => P12345, 'value' => 5.0] ] (1D array available if targeting single rate action)")
+                sprintf(Config::ARR_FORM_ERRMSG, RateEvent::class, '__construct', 2, "[ ['item_id' => P12345, 'value' => 5.0] ] (1D array available if recording single rate action)")
         );
 
         $client = new ZaiClient($this->client_id, $this->client_secret);
@@ -278,7 +287,7 @@ class EventLogTest extends TestCase {
     public function testBadRateActionTypeOnRateEventWithMissingKeyword() {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            sprintf(Config::ARR_FORM_ERRMSG, RateEvent::class, '__construct', 2, "[ ['item_id' => P12345, 'value' => 5.0] ] (1D array available if targeting single rate action)")
+            sprintf(Config::ARR_FORM_ERRMSG, RateEvent::class, '__construct', 2, "[ ['item_id' => P12345, 'value' => 5.0] ] (1D array available if recording single rate action)")
         );
 
         $client = new ZaiClient($this->client_id, $this->client_secret);
@@ -292,7 +301,7 @@ class EventLogTest extends TestCase {
     public function testBadRateActionTypeOnRateEventWithWrongKeyword() {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            sprintf(Config::ARR_FORM_ERRMSG, RateEvent::class, '__construct', 2, "[ ['item_id' => P12345, 'value' => 5.0] ] (1D array available if targeting single rate action)")
+            sprintf(Config::ARR_FORM_ERRMSG, RateEvent::class, '__construct', 2, "[ ['item_id' => P12345, 'value' => 5.0] ] (1D array available if recording single rate action)")
         );
 
         $client = new ZaiClient($this->client_id, $this->client_secret);
@@ -315,9 +324,9 @@ class EventLogTest extends TestCase {
         $custom_action = ['item_id' => 'P1000005', 'value' => null];
 
         $custom_event = new CustomEvent($customer_id, $custom_event, $custom_action);
-        $response_status = $client->addEventLog($custom_event);
+        $response = $client->addEventLog($custom_event);
 
-        self::assertSame(200, $response_status);
+        self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
     public function testAddMultiplecustomEventLog() {
@@ -334,9 +343,9 @@ class EventLogTest extends TestCase {
         );
 
         $custom_event = new CustomEvent($customer_id, $custom_event_type, $custom_action, $options);
-        $response_status = $client->addEventLog($custom_event);
+        $response = $client->addEventLog($custom_event);
 
-        self::assertSame(200, $response_status);
+        self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
     public function testAddCustomEventLogWithIndexedArray() {
@@ -355,9 +364,9 @@ class EventLogTest extends TestCase {
         );
 
         $custom_event = new CustomEvent($customer_id, $custom_event_type, $custom_action, $options);
-        $response_status = $client->addEventLog($custom_event);
+        $response = $client->addEventLog($custom_event);
 
-        self::assertSame(200, $response_status);
+        self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
     /* ------------------- Test Errors ---------------------  */
@@ -407,7 +416,7 @@ class EventLogTest extends TestCase {
     public function testBadOrdersTypeOnPurchaseEventWithAssociativeArray() {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            sprintf(Config::ARR_FORM_ERRMSG, PurchaseEvent::class, '__construct', 2, "[ ['item_id' => P12345, 'price' => 50000, 'count' => 3] ] (1D array available if targeting single order)")
+            sprintf(Config::ARR_FORM_ERRMSG, PurchaseEvent::class, '__construct', 2, "[ ['item_id' => P12345, 'price' => 50000, 'count' => 3] ] (1D array available if recording single order)")
         );
 
         $client = new ZaiClient($this->client_id, $this->client_secret);

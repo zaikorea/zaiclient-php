@@ -28,6 +28,41 @@ class RecommendationTest extends TestCase {
         self::assertTrue(time() - $response->getTimestamp() < 0.5 );
     }
 
+    public function testGetRecommendationsWithUserRecommendationRequestWithNull() {
+        $client = new ZaiClient($this->client_id, $this->client_secret);
+        $user_id = null;
+        $limit = 10;
+        $options = [
+            'recommendation_type' => 'homepage',
+            'offset' => 0
+        ];
+
+        $request = new UserRecommendationRequest($user_id, $limit, $options);
+        $response = $client->getRecommendations($request);
+
+        self::assertNotNull($response->getItems(), "items in response is null");
+        self::assertSame($response->getCount(), $limit, "items count don't match");
+        self::assertTrue(time() - $response->getTimestamp() < 0.5 );
+    }
+
+    public function testGetRecommendationsWithUserRecommendationRequestWithOffset() {
+        $client = new ZaiClient($this->client_id, $this->client_secret);
+        $user_id = 'testing';
+        $limit = 10;
+        $options = [
+            'recommendation_type' => 'homepage',
+            'offset' => 5
+        ];
+
+        $request = new UserRecommendationRequest($user_id, $limit, $options);
+        $response = $client->getRecommendations($request);
+        
+        self::assertSame($response->getItems()[0], 'testing_homepage_ITEM_ID_5');
+        self::assertNotNull($response->getItems(), "items in response is null");
+        self::assertSame($response->getCount(), $limit, "items count don't match");
+        self::assertTrue(time() - $response->getTimestamp() < 0.5 );
+    }
+
     public function testGetRecommendationsWithRelatedItemsRecommendationRequest() {
         $client = new ZaiClient($this->client_id, $this->client_secret);
         $item_id = "012345567788";

@@ -17,7 +17,6 @@ use ZaiKorea\ZaiClient\Configs\Config;
 class CartaddEvent extends BaseEvent {
     const EVENT_TYPE = 'cartadd';
     const EVENT_VALUE = 1;
-    private $timestamp;
 
     /**
      * CartaddEvent accepts: 
@@ -50,20 +49,21 @@ class CartaddEvent extends BaseEvent {
     public function __construct($customer_id, $item_ids, $options = array()) {
         // $item_ids should not be an emtpy array
         if (!$item_ids)
-            throw new \InvalidArgumentException(sprintf(Config::NULL_ARG_ERRMSG, self::class, __FUNCTION__, 2));
+            throw new \InvalidArgumentException(
+                sprintf(Config::NULL_ARG_ERRMSG, self::class, __FUNCTION__, 2)
+            );
 
         // change to array if $item_id is a single string
         if (is_string($item_ids))
             $item_ids = array($item_ids);
 
-        // set timestamp to custom timestamp given by the user
-        $this->timestamp = strval(microtime(true));
+        $this->setTimestamp(strval(microtime(true)));
         if (isset($options['timestamp']))
-            $this->timestamp = $options['timestamp'];
+            $this->setTimestamp($options['timestamp']);
 
         $events = array();
 
-        $tmp_timestamp = $this->timestamp;
+        $tmp_timestamp = $this->getTimestamp();
 
         foreach ($item_ids as $item_id) {
             array_push($events, new EventInBatch(

@@ -1,6 +1,9 @@
 <?php
 /**
  * Recommendation response
+ * 
+ * A friendly reference for deserializing array
+ * https://github.com/cweiske/jsonmapper/issues/41
  */
 namespace ZaiKorea\ZaiClient\Responses;
 
@@ -23,7 +26,7 @@ class RecommendationResponse {
 
     /**
      * Set Items with array of item_ids
-     * @param int $items
+     * @param array $items
      */
     public function setItems($items) {
         $this->items = $items;

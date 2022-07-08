@@ -15,7 +15,6 @@ use ZaiKorea\ZaiClient\Configs\Config;
  * @final
  */ 
 class CustomEvent extends BaseEvent {
-    private $timestamp;
 
     /**
      * CustomEvent accepts: 
@@ -46,8 +45,7 @@ class CustomEvent extends BaseEvent {
      *         ['item_id' => 'P1123458', 'value' => 'USER_ID_2'],
      *         ['item_id' => 'P1123459', 'value' => 'USER_ID_3'],
      *     ];
-     * 
-     *     $custom_event = new CustomEvent($customer_id, $custom_event_type, $custom_actions);
+     *     $custom_event_batch = new CustomEvent($customer_id, $custom_event_type, $custom_actions);
      * 
      * The CustomEvent class supports following options:
      *     - timesptamp: a custom timestamp given by the user, the user
@@ -58,7 +56,6 @@ class CustomEvent extends BaseEvent {
      * @param string $custom_event_type
      * @param string|array $item_ids
      * @param array $options
-     * 
      */
     public function __construct(
         $customer_id, 
@@ -68,10 +65,14 @@ class CustomEvent extends BaseEvent {
     ) {
         // Validate if $custom_event_type is string
         if (!is_string($custom_event_type))
-            throw new \InvalidArgumentException(sprintf(Config::NON_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2));
+            throw new \InvalidArgumentException(
+                sprintf(Config::NON_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
+            );
 
         if (!$custom_actions)
-            throw new \InvalidArgumentException(sprintf(Config::EMPTY_ARR_ERRMSG, self::class, __FUNCTION__, 3));
+            throw new \InvalidArgumentException(
+                sprintf(Config::EMPTY_ARR_ERRMSG, self::class, __FUNCTION__, 3)
+            );
 
         // change to 2D array if $custom_actions is 1D array (action on single item) 
         if (gettype(reset($custom_actions)) != 'array')
@@ -79,23 +80,24 @@ class CustomEvent extends BaseEvent {
 
         // Validate if $custom_event_type is sequential array
         if (array_keys($custom_actions) !== range(0, count($custom_actions) - 1))
-            throw new \InvalidArgumentException(sprintf(Config::NON_SEQ_ARR_ERRMSG, self::class, __FUNCTION__, 3));
+            throw new \InvalidArgumentException(
+                sprintf(Config::NON_SEQ_ARR_ERRMSG, self::class, __FUNCTION__, 3)
+            );
 
 
-        // set timestamp to custom timestamp given by the user
-        $this->timestamp = strval(microtime(true));
+        $this->setTimestamp(strval(microtime(true)));
         if (isset($options['timestamp']))
-            $this->timestamp = $options['timestamp'];
+            $this->setTimestamp($options['timestamp']);
 
         $events = array();
 
-        $tmp_timestamp = $this->timestamp;
-        foreach ($custom_actions as $custom_action) {
+        $tmp_timestamp = $this->getTimestamp();
 
+        foreach ($custom_actions as $custom_action) {
             if (array_keys($custom_action) != array('item_id', 'value')) {
                 throw new \InvalidArgumentException(
                     sprintf(Config::ARR_FORM_ERRMSG, 
-                        self::class, __FUNCTION__, 3, "[ ['item_id' => P12345, 'value' => int | null ] (1D array available if targeting single custom action)")
+                        self::class, __FUNCTION__, 3, "[ ['item_id' => P12345, 'value' => int | null ] (1D array available if recording single custom action)")
                 );
             }
 

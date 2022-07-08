@@ -12,11 +12,24 @@ class BaseEvent {
      */ 
     protected $payload;
 
+    /** 
+     * @var $timestamp Timestamp of the event happening
+     */ 
+    protected $timestamp;
+
     public function setPayload($payload) {
         $this->payload = $payload;
     }
 
     public function getPayload() {
         return $this->payload;
+    }
+
+    public function setTimestamp($timestamp) {
+        $this->timestamp = $timestamp;
+    }
+
+    public function getTimestamp() {
+        return $this->timestamp;
     }
 }

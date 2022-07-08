@@ -10,13 +10,13 @@ namespace ZaiKorea\ZaiClient\Requests;
 use ZaiKorea\ZaiClient\Requests\BaseEvent;
 use ZaiKorea\ZaiClient\Requests\EventInBatch;
 use ZaiKorea\ZaiClient\Configs\Config;
+use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
 
 /** 
  * @final
  */ 
 class PurchaseEvent extends BaseEvent {
     const EVENT_TYPE = 'purchase';
-    private $timestamp;
     
     /**
      * PurchaseEvent accepts: 
@@ -52,8 +52,7 @@ class PurchaseEvent extends BaseEvent {
      *             'count' => 5
      *         ]
      *     ];
-     * 
-     *     $purchase_event = new PurchaseEvent($customer_id, $orders);
+     *     $purchase_event_batch = new PurchaseEvent($customer_id, $orders);
      * 
      * The PurchaseEvent class supports following options:
      *     - timesptamp: a custom timestamp given by the user, the user
@@ -68,7 +67,9 @@ class PurchaseEvent extends BaseEvent {
     public function __construct($customer_id, $orders=array(), $options = array()) {
         // $orders should not be an emtpy array
         if (!$orders)
-            throw new \InvalidArgumentException(sprintf(Config::EMPTY_ARR_ERRMSG, self::class, __FUNCTION__, 2));
+            throw new \InvalidArgumentException(
+                sprintf(Config::EMPTY_ARR_ERRMSG, self::class, __FUNCTION__, 2)
+            );
 
         // change to 2D array if $orders is 1D array (order on single item) 
         if (gettype(reset($orders)) != 'array')
@@ -76,21 +77,23 @@ class PurchaseEvent extends BaseEvent {
 
         // Validate if $order is sequential array
         if (array_keys($orders) !== range(0, count($orders) - 1))
-            throw new \InvalidArgumentException(sprintf(Config::NON_SEQ_ARR_ERRMSG, self::class, __FUNCTION__, 2));
+            throw new \InvalidArgumentException(
+                sprintf(Config::NON_SEQ_ARR_ERRMSG, self::class, __FUNCTION__, 2)
+            );
 
         // set timestamp to custom timestamp given by the user
-        $this->timestamp = strval(microtime(true));
+        $this->setTimeStamp(strval(microtime(true)));
         if (isset($options['timestamp']))
-            $this->timestamp = $options['timestamp'];
+            $this->setTimeStamp($options['timestamp']);
 
         $events = array();
 
-        $tmp_timestamp = $this->timestamp;
-        foreach ($orders as $order_spec) {
+        $tmp_timestamp = $this->getTimestamp();
 
+        foreach ($orders as $order_spec) {
             if (array_keys($order_spec) != array('item_id', 'price', 'count')) {
                 throw new \InvalidArgumentException(
-                    sprintf(Config::ARR_FORM_ERRMSG, self::class, __FUNCTION__, 2, "[ ['item_id' => P12345, 'price' => 50000, 'count' => 3] ] (1D array available if targeting single order)")
+                    sprintf(Config::ARR_FORM_ERRMSG, self::class, __FUNCTION__, 2, "[ ['item_id' => P12345, 'price' => 50000, 'count' => 3] ] (1D array available if recording single order)")
                 );
             }
 
@@ -105,6 +108,9 @@ class PurchaseEvent extends BaseEvent {
                 $tmp_timestamp += Config::EPSILON;
             }
         }
+
+        if (count($events) > 50)
+            throw new BatchSizeLimitExceededException();
 
         if (count($events) == 1)
             $this->setPayload($events[0]);
