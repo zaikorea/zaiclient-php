@@ -70,6 +70,10 @@ class EventLoggerResponse {
     }
 
     public function __toString() {
-        return "{}";
+        return "EventLoggerResonse{\n" .
+            "\tmessage=\"{$this->message}\"\n" .
+            "\tfailure count={$this->failure_count}\n" .
+            "\ttimestamp={$this->timestamp}\n" .
+            "}\n";
     }
 }

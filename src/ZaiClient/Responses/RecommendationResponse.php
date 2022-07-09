@@ -71,4 +71,12 @@ class RecommendationResponse {
     public function getTimestamp() {
         return $this->timestamp;
     }
+
+    public function __toString() {
+        return "RecommendationResponse{\n" .
+            "\titems=" . implode(" | ", $this->items) . "\n" .
+            "\tcount={$this->count}\n" .
+            "\ttimestamp={$this->timestamp}\n" .
+            "}";
+    }
 }
