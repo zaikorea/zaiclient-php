@@ -77,6 +77,6 @@ class RecommendationResponse {
             "\titems=" . implode(" | ", $this->items) . "\n" .
             "\tcount={$this->count}\n" .
             "\ttimestamp={$this->timestamp}\n" .
-            "}";
+            "}\n";
     }
 }
