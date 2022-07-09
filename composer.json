@@ -1,6 +1,7 @@
 {
     "name": "zaikorea/zaiclient",
     "description": "Z.Ai official client SDK",
+    "hompage": "https://www.zaikorea.org",
     "autoload": {
         "psr-4": {
             "ZaiKorea\\": "src/"
