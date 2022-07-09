@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CustomEvent
  * @author Uiseop Eom <tech@zaikorea.org>
@@ -13,8 +14,9 @@ use ZaiKorea\ZaiClient\Configs\Config;
 
 /** 
  * @final
- */ 
-class CustomEvent extends BaseEvent {
+ */
+class CustomEvent extends BaseEvent
+{
 
     /**
      * CustomEvent accepts: 
@@ -58,9 +60,9 @@ class CustomEvent extends BaseEvent {
      * @param array $options
      */
     public function __construct(
-        $customer_id, 
-        $custom_event_type, 
-        $custom_actions = array(), 
+        $customer_id,
+        $custom_event_type,
+        $custom_actions = array(),
         $options = array()
     ) {
         // Validate if $custom_event_type is string
@@ -96,8 +98,13 @@ class CustomEvent extends BaseEvent {
         foreach ($custom_actions as $custom_action) {
             if (array_keys($custom_action) != array('item_id', 'value')) {
                 throw new \InvalidArgumentException(
-                    sprintf(Config::ARR_FORM_ERRMSG, 
-                        self::class, __FUNCTION__, 3, "[ ['item_id' => P12345, 'value' => int | null ] (1D array available if recording single custom action)")
+                    sprintf(
+                        Config::ARR_FORM_ERRMSG,
+                        self::class,
+                        __FUNCTION__,
+                        3,
+                        "[ ['item_id' => P12345, 'value' => int | null ] (1D array available if recording single custom action)"
+                    )
                 );
             }
 

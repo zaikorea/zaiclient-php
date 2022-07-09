@@ -1,4 +1,5 @@
 <?php
+
 namespace ZaiKorea\ZaiClient;
 
 use PHPUnit\Framework\TestCase;
@@ -8,11 +9,13 @@ use ZaiKorea\ZaiClient\Requests\RerankingRecommendationRequest;
 
 define('SECRET', getenv('ZAI_TEST'));
 
-class RecommendationTest extends TestCase {
+class RecommendationTest extends TestCase
+{
     private $client_id = 'test';
     private $client_secret = 'KVPzvdHTPWnt0xaEGc2ix-eqPXFCdEV5zcqolBr_h1k'; // secret key for testing
 
-    public function testGetRecommendationsWithUserRecommendationRequest() {
+    public function testGetRecommendationsWithUserRecommendationRequest()
+    {
         $client = new ZaiClient($this->client_id, SECRET);
         $user_id = 'ZaiTest_User_id';
         $limit = 10;
@@ -26,10 +29,11 @@ class RecommendationTest extends TestCase {
 
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertSame($response->getCount(), $limit, "items count don't match");
-        self::assertTrue(time() - $response->getTimestamp() < 0.5 );
+        self::assertTrue(time() - $response->getTimestamp() < 0.5);
     }
 
-    public function testGetRecommendationsWithUserRecommendationRequestWithNull() {
+    public function testGetRecommendationsWithUserRecommendationRequestWithNull()
+    {
         $client = new ZaiClient($this->client_id, SECRET);
         $user_id = null;
         $limit = 10;
@@ -43,10 +47,11 @@ class RecommendationTest extends TestCase {
 
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertSame($response->getCount(), $limit, "items count don't match");
-        self::assertTrue(time() - $response->getTimestamp() < 0.5 );
+        self::assertTrue(time() - $response->getTimestamp() < 0.5);
     }
 
-    public function testGetRecommendationsWithUserRecommendationRequestWithOffset() {
+    public function testGetRecommendationsWithUserRecommendationRequestWithOffset()
+    {
         $client = new ZaiClient($this->client_id, SECRET);
         $user_id = 'testing';
         $limit = 10;
@@ -57,14 +62,15 @@ class RecommendationTest extends TestCase {
 
         $request = new UserRecommendationRequest($user_id, $limit, $options);
         $response = $client->getRecommendations($request);
-        
+
         self::assertSame($response->getItems()[0], 'testing_homepage_ITEM_ID_5');
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertSame($response->getCount(), $limit, "items count don't match");
-        self::assertTrue(time() - $response->getTimestamp() < 0.5 );
+        self::assertTrue(time() - $response->getTimestamp() < 0.5);
     }
 
-    public function testGetRecommendationsWithRelatedItemsRecommendationRequest() {
+    public function testGetRecommendationsWithRelatedItemsRecommendationRequest()
+    {
         $client = new ZaiClient($this->client_id, SECRET);
         $item_id = "012345567788";
         $limit = 10;
@@ -78,10 +84,11 @@ class RecommendationTest extends TestCase {
 
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertSame($response->getCount(), $limit, "items count don't match");
-        self::assertTrue(time() - $response->getTimestamp() < 0.5 );
+        self::assertTrue(time() - $response->getTimestamp() < 0.5);
     }
 
-    public function testGetRecommendationsWithRerankingRecommendationRequest() {
+    public function testGetRecommendationsWithRerankingRecommendationRequest()
+    {
         $client = new ZaiClient($this->client_id, SECRET);
         $user_id = "ZaiTest_User_id";
         $item_ids = ["1234", "5678", "9101112"];
@@ -96,8 +103,6 @@ class RecommendationTest extends TestCase {
 
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertSame($response->getCount(), $limit, "items count don't match");
-        self::assertTrue(time() - $response->getTimestamp() < 0.5 );
+        self::assertTrue(time() - $response->getTimestamp() < 0.5);
     }
-
 }
-?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PurchaseEvent
  * @author Uiseop Eom <tech@zaikorea.org>
@@ -14,10 +15,11 @@ use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
 
 /** 
  * @final
- */ 
-class PurchaseEvent extends BaseEvent {
+ */
+class PurchaseEvent extends BaseEvent
+{
     const EVENT_TYPE = 'purchase';
-    
+
     /**
      * PurchaseEvent accepts: 
      * - customer id
@@ -64,7 +66,8 @@ class PurchaseEvent extends BaseEvent {
      * @param array $options
      * 
      */
-    public function __construct($customer_id, $orders=array(), $options = array()) {
+    public function __construct($customer_id, $orders = array(), $options = array())
+    {
         // $orders should not be an emtpy array
         if (!$orders)
             throw new \InvalidArgumentException(

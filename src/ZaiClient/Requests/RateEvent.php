@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RateEvent
  * @author Uiseop Eom <tech@zaikorea.org>
@@ -13,8 +14,9 @@ use ZaiKorea\ZaiClient\Configs\Config;
 
 /** 
  * @final
- */ 
-class RateEvent extends BaseEvent {
+ */
+class RateEvent extends BaseEvent
+{
     const EVENT_TYPE = 'rate';
 
     /**
@@ -52,7 +54,8 @@ class RateEvent extends BaseEvent {
      * @param array $options
      * 
      */
-    public function __construct($customer_id, $rate_actions = array(), $options = array()) {
+    public function __construct($customer_id, $rate_actions = array(), $options = array())
+    {
         // $rate_actions should not be an emtpy array
         if (!is_array($rate_actions) || !$rate_actions)
             throw new \InvalidArgumentException(
@@ -88,8 +91,8 @@ class RateEvent extends BaseEvent {
                 $customer_id,
                 $rate_action['item_id'],
                 $tmp_timestamp,
-                self::EVENT_TYPE, 
-                $rate_action['value'] 
+                self::EVENT_TYPE,
+                $rate_action['value']
             ));
             $tmp_timestamp += Config::EPSILON;
         }

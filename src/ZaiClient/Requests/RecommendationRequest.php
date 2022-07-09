@@ -1,39 +1,42 @@
 <?php
+
 /**
  * Recommendation request
  */
+
 namespace ZaiKorea\ZaiClient\Requests;
 
-abstract class RecommendationRequest implements \JsonSerializable {
+abstract class RecommendationRequest implements \JsonSerializable
+{
 
     /**
      * @var string $user_id ID used for getting user-recommendations
-     */ 
+     */
     protected $user_id;
 
     /**
      * @var string $item_id ID used for getting related-items
-     */ 
+     */
     protected $item_id;
 
     /**
      * @var string[] $item_id ID used for getting related-items
-     */ 
+     */
     protected $item_ids;
 
     /**
      * @var int $limit number of items to fetch from recommender
-     */ 
+     */
     protected $limit;
 
     /**
      * @var string $recommendation_type
-     */ 
+     */
     protected $recommendation_type;
 
     /**
      * @var int $offset starting offset of the items to fetch from recommender
-     */ 
+     */
     protected $offset;
 
     /**
@@ -52,7 +55,8 @@ abstract class RecommendationRequest implements \JsonSerializable {
      * 
      * @return int
      */
-    public function getLimit() { 
+    public function getLimit()
+    {
         return $this->limit;
     }
 
@@ -60,7 +64,8 @@ abstract class RecommendationRequest implements \JsonSerializable {
      * 
      * @return int
      */
-    public function getOffset() { 
+    public function getOffset()
+    {
         return $this->offset;
     }
 
@@ -68,13 +73,14 @@ abstract class RecommendationRequest implements \JsonSerializable {
      * 
      * @return string
      */
-    public function getRecommendationType() { 
+    public function getRecommendationType()
+    {
         return $this->recommendation_type;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         $vars = get_object_vars($this);
         return $vars;
     }
-
 }

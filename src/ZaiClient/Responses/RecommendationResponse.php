@@ -1,34 +1,38 @@
 <?php
+
 /**
  * Recommendation response
  * 
  * A friendly reference for deserializing array
  * https://github.com/cweiske/jsonmapper/issues/41
  */
+
 namespace ZaiKorea\ZaiClient\Responses;
 
-class RecommendationResponse {
+class RecommendationResponse
+{
 
     /**
      * @var array $items array of strings ['ID_1', 'ID_2', ...]
-     */ 
+     */
     private $items;
 
     /**
      * @var int $count number of items
-     */ 
+     */
     private $count;
 
     /**
      * @var float $timestamp timestamp from server
-     */ 
+     */
     private $timestamp;
 
     /**
      * Set Items with array of item_ids
      * @param array $items
      */
-    public function setItems($items) {
+    public function setItems($items)
+    {
         $this->items = $items;
     }
 
@@ -36,7 +40,8 @@ class RecommendationResponse {
      * Set count
      * @param int $count
      */
-    public function setCount($count) {
+    public function setCount($count)
+    {
         $this->count = $count;
     }
 
@@ -44,7 +49,8 @@ class RecommendationResponse {
      * Set timestamp 
      * @param float $timestamp
      */
-    public function setTimestamp($timestamp) {
+    public function setTimestamp($timestamp)
+    {
         $this->timestamp = $timestamp;
     }
 
@@ -52,7 +58,8 @@ class RecommendationResponse {
      * Get Array of items
      * @return int
      */
-    public function getItems() {
+    public function getItems()
+    {
         return $this->items;
     }
 
@@ -60,7 +67,8 @@ class RecommendationResponse {
      * Get count
      * @return int Count
      */
-    public function getCount() {
+    public function getCount()
+    {
         return $this->count;
     }
 
@@ -68,11 +76,13 @@ class RecommendationResponse {
      * Get Timestamp
      * @return float Timestamp from the server
      */
-    public function getTimestamp() {
+    public function getTimestamp()
+    {
         return $this->timestamp;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return "RecommendationResponse{\n" .
             "\titems=" . implode(" | ", $this->items) . "\n" .
             "\tcount={$this->count}\n" .

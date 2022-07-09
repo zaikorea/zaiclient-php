@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Config
  * @author Uiseop Eom <tech@zaikorea.org>
@@ -7,7 +8,8 @@
 
 namespace ZaiKorea\ZaiClient\Configs;
 
-class Config {
+class Config
+{
     const EVENTS_API_ENDPOINT = 'https://collector-api.zaikorea.org';
     const EVENTS_API_PATH = '/events';
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * LikeEvent
  * @author Uiseop Eom <tech@zaikorea.org>
@@ -13,8 +14,9 @@ use ZaiKorea\ZaiClient\Configs\Config;
 
 /** 
  * @final
- */ 
-class LikeEvent extends BaseEvent {
+ */
+class LikeEvent extends BaseEvent
+{
     const EVENT_TYPE = 'like';
     const EVENT_VALUE = 1;
 
@@ -46,7 +48,8 @@ class LikeEvent extends BaseEvent {
      * @param string|array $item_ids
      * @param array $options
      */
-    public function __construct($customer_id, $item_ids, $options = array()) {
+    public function __construct($customer_id, $item_ids, $options = array())
+    {
         // $item_ids should not be an emtpy array
         if (!$item_ids)
             throw new \InvalidArgumentException(

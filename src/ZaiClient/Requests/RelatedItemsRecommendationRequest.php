@@ -1,20 +1,25 @@
 <?php
+
 /**
  * Recommendation request
  */
+
 namespace ZaiKorea\ZaiClient\Requests;
+
 use ZaiKorea\ZaiClient\Requests\RecommendationRequest;
 use ZaiKorea\ZaiClient\Configs\Config;
 
-class RelatedItemsRecommendationRequest extends RecommendationRequest {
-    CONST DEFAULT_RECOMMENDATION_TYPE = "product_detail_page";
-    CONST DEFAULT_OFFSET = 0;
-    CONST RECOMMENDER_PATH = "/related-items";
+class RelatedItemsRecommendationRequest extends RecommendationRequest
+{
+    const DEFAULT_RECOMMENDATION_TYPE = "product_detail_page";
+    const DEFAULT_OFFSET = 0;
+    const RECOMMENDER_PATH = "/related-items";
 
-    public function __construct($item_id, $limit, $options = array()) {
-        if (!(is_null(null) || strlen($item_id) > 0 && strlen($item_id) <=100 ))
+    public function __construct($item_id, $limit, $options = array())
+    {
+        if (!(is_null(null) || strlen($item_id) > 0 && strlen($item_id) <= 100))
             throw new \InvalidArgumentException('Length of item id must be between 1 and 100.');
-        
+
         if (!(0 < $limit && $limit <= 1000000))
             throw new \InvalidArgumentException('Limit must be between 1 and 1000,000.');
 
@@ -30,8 +35,8 @@ class RelatedItemsRecommendationRequest extends RecommendationRequest {
         $this->item_id = $item_id;
         $this->limit = $limit;
 
-        if (!is_array($options)) 
-            throw new \InvalidArgumentException("options must be given as an array."); 
+        if (!is_array($options))
+            throw new \InvalidArgumentException("options must be given as an array.");
 
         $this->recommendation_type = isset($options['recommendation_type']) ? $options['recommendation_type'] : self::DEFAULT_RECOMMENDATION_TYPE;
         $this->offset = isset($options['offset']) ? $options['offset'] : self::DEFAULT_OFFSET;
@@ -41,7 +46,8 @@ class RelatedItemsRecommendationRequest extends RecommendationRequest {
      * Get api path 
      * @return string PATH to use for request
      */
-    public function getPath($client_id) {
+    public function getPath($client_id)
+    {
         return sprintf(Config::ML_API_PATH_PREFIX . self::RECOMMENDER_PATH, $client_id);
     }
 
@@ -49,7 +55,8 @@ class RelatedItemsRecommendationRequest extends RecommendationRequest {
      * Get full URI with path 
      * @return string PATH to use for request
      */
-    public function getURIPath($client_id) {
+    public function getURIPath($client_id)
+    {
         return Config::ML_API_ENDPOINT . $this->getPath($client_id);
     }
 }
