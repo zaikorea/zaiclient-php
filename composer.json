@@ -16,8 +16,6 @@
         "netresearch/jsonmapper": "^3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~9.5",
-        "phpdocumentor/phpdocumentor": "*"
     },
     "config": {
         "allow-plugins": {

@@ -74,7 +74,7 @@ class CartaddEvent extends BaseEvent
                 $item_id,
                 $tmp_timestamp,
                 self::EVENT_TYPE,
-                self::EVENT_VALUE,
+                self::EVENT_VALUE
             ));
             $tmp_timestamp += Config::EPSILON;
         }
