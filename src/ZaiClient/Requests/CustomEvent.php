@@ -11,6 +11,7 @@ namespace ZaiKorea\ZaiClient\Requests;
 use ZaiKorea\ZaiClient\Requests\BaseEvent;
 use ZaiKorea\ZaiClient\Requests\EventInBatch;
 use ZaiKorea\ZaiClient\Configs\Config;
+use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
 
 /** 
  * @final
@@ -107,7 +108,6 @@ class CustomEvent extends BaseEvent
                     )
                 );
             }
-
             array_push($events, new EventInBatch(
                 $customer_id,
                 $custom_action['item_id'],
@@ -117,6 +117,9 @@ class CustomEvent extends BaseEvent
             ));
             $tmp_timestamp += Config::EPSILON;
         }
+
+        if (count($events) > 50)
+            throw new BatchSizeLimitExceededException(count($events));
 
         if (count($events) == 1)
             $this->setPayload($events[0]);

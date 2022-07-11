@@ -15,9 +15,9 @@ use \GuzzleHttp\Exception\BadResponseException;
  */
 class BatchSizeLimitExceededException extends \Exception
 {
-    public function __construct()
+    public function __construct($records_num)
     {
-        $message = sprintf("Number of total records cannot exceed 50, but your Event holds %d.");
+        $message = sprintf("Number of total records cannot exceed 50, but your Event holds %d.", $records_num);
         parent::__construct($message, 2);
     }
 

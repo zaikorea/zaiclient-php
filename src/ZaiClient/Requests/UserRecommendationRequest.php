@@ -24,20 +24,21 @@ class UserRecommendationRequest extends RecommendationRequest
         if (!(0 < $limit && $limit <= 1000000))
             throw new \InvalidArgumentException('Limit must be between 1 and 1000,000.');
 
+        if (!is_array($options))
+            throw new \InvalidArgumentException('Options must be given as an array.');
+
         if (isset($options['offset'])) {
             if (!(0 <= $options['offset'] && $options['offset'] <= 1000000))
                 throw new \InvalidArgumentException('Offset must be between 0 and 1000,000.');
         }
-        if (isset($options['recommendation_type'])) {
-            if ($options['recommendation_type'] == null || !(0 < strlen($options['recommendation_type'] && strlen($options['recommendation_type']) <= 100)))
+
+        if (isset($options['recommendation_type'])) { // php tip! isset() returns false if the value of $options['recommendation_type'] is null
+            if (!(0 < strlen($options['recommendation_type'] && strlen($options['recommendation_type']) <= 100)))
                 throw new \InvalidArgumentException('Length of recommendation type must be between 1 and 100.');
         }
 
         $this->user_id = $user_id;
         $this->limit = $limit;
-
-        if (!is_array($options))
-            throw new \InvalidArgumentException('options must be givent as an array. $options given instead.');
 
         $this->recommendation_type = isset($options['recommendation_type']) ? $options['recommendation_type'] : self::DEFAULT_RECOMMENDATION_TYPE;
         $this->offset = isset($options['offset']) ? $options['offset'] : self::DEFAULT_OFFSET;

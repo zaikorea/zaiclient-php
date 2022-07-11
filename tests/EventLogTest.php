@@ -16,9 +16,12 @@ use ZaiKorea\ZaiClient\Requests\CartaddEvent;
 use ZaiKorea\ZaiClient\Requests\RateEvent;
 use ZaiKorea\ZaiClient\Requests\CustomEvent;
 use ZaiKorea\ZaiClient\Exceptions\ZaiClientException;
+use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
 use ZaiKorea\ZaiClient\Configs\Config;
 
 define('SECRET', getenv('ZAI_TEST'));
+
+require_once 'TestUtils.php';
 
 class EventLogTest extends TestCase
 {
@@ -468,6 +471,62 @@ class EventLogTest extends TestCase
         $customer_id = 'php-raise-error';
         $orders = [];
 
+        $purchase_event = new PurchaseEvent($customer_id, $orders);
+        $client->addEventLog($purchase_event);
+    }
+
+    public function testBadCustomerIdOnViewEvent()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Length of user id must be between 1 and 100.');
+
+        $client = new ZaiClient($this->client_id, SECRET);
+        $customer_id = generateRandomString(101);
+
+        $item_id = ['P12345'];
+        $view_event = new ViewEvent($customer_id, $item_id);
+        $client->addEventLog($view_event);
+    }
+
+    public function testBadItemIdOnViewEvent()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Length of item id must be between 1 and 100.');
+
+        $client = new ZaiClient($this->client_id, SECRET);
+        $customer_id = 'php-raise-error';
+
+        $item_id = [generateRandomString(101)];
+        $view_event = new ViewEvent($customer_id, $item_id);
+        $client->addEventLog($view_event);
+    }
+
+    public function testBadEventTypeCustomerEvent()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Length of event type must be between 1 and 100.');
+
+        $client = new ZaiClient($this->client_id, SECRET);
+        $customer_id = 'php-raise-error';
+
+        $custom_event_type = generateRandomString(102);
+        $custom_action = ['item_id' => 'P99999', 'value' => 9];
+        $custom_event = new CustomEvent($customer_id, $custom_event_type, $custom_action);
+        $client->addEventLog($custom_event);
+    }
+
+    public function testBatchLimiteExceededException()
+    {
+        $this->expectException(BatchSizeLimitExceededException::class);
+        $this->expectExceptionMessage(sprintf("Number of total records cannot exceed 50, but your Event holds %d.", 55));
+
+        $client = new ZaiClient($this->client_id, SECRET);
+        $customer_id = 'php-raise-error';
+
+        $orders = array(
+            ['item_id' => 'P1234567', 'price' => 11000, 'count' => 52],
+            ['item_id' => 'P5678901', 'price' => 11000, 'count' => 3]
+        );
         $purchase_event = new PurchaseEvent($customer_id, $orders);
         $client->addEventLog($purchase_event);
     }

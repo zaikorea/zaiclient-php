@@ -113,7 +113,7 @@ class PurchaseEvent extends BaseEvent
         }
 
         if (count($events) > 50)
-            throw new BatchSizeLimitExceededException();
+            throw new BatchSizeLimitExceededException(count($events));
 
         if (count($events) == 1)
             $this->setPayload($events[0]);

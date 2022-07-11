@@ -35,7 +35,7 @@ class EventInBatch implements \JsonSerializable
             throw new \InvalidArgumentException('Length of user id must be between 1 and 100.');
 
         if (!(strlen($this->item_id) > 0 && strlen($this->item_id) <= 100))
-            throw new \InvalidArgumentException('Length of user id must be between 1 and 100.');
+            throw new \InvalidArgumentException('Length of item id must be between 1 and 100.');
 
         if (!(strlen($this->event_type) > 0 && strlen($this->event_type) <= 100))
             throw new \InvalidArgumentException('Length of event type must be between 1 and 100.');
