@@ -20,8 +20,8 @@ class RelatedItemsRecommendationRequest extends RecommendationRequest
         if (!(is_null(null) || strlen($item_id) > 0 && strlen($item_id) <= 100))
             throw new \InvalidArgumentException('Length of item id must be between 1 and 100.');
 
-        if (!(0 < $limit && $limit <= 1000000))
-            throw new \InvalidArgumentException('Limit must be between 1 and 1000,000.');
+        if (!(is_null(null) || (0 < $limit && $limit <= 1000000)))
+            throw new \InvalidArgumentException('Limit must be null or between 1 and 1000,000.');
 
         if (isset($options['offset'])) {
             if (!(0 <= $options['offset'] && $options['offset'] <= 1000000))
