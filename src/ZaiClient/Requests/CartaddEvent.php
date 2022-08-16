@@ -19,7 +19,7 @@ use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
 class CartaddEvent extends BaseEvent
 {
     const EVENT_TYPE = 'cartadd';
-    const EVENT_VALUE = 1;
+    const EVENT_VALUE = 'null';
 
     /**
      * CartaddEvent accepts: 

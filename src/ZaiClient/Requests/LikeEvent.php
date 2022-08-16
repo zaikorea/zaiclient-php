@@ -19,7 +19,7 @@ use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
 class LikeEvent extends BaseEvent
 {
     const EVENT_TYPE = 'like';
-    const EVENT_VALUE = 1;
+    const EVENT_VALUE = 'null';
 
     /**
      * LikeEvent accepts: 

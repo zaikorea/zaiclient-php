@@ -11,6 +11,9 @@ namespace ZaiKorea\ZaiClient;
 use PHPUnit\Framework\TestCase;
 use ZaiKorea\ZaiClient\Requests\PurchaseEvent;
 use ZaiKorea\ZaiClient\Requests\ViewEvent;
+use ZaiKorea\ZaiClient\Requests\ProductDetailViewEvent;
+use ZaiKorea\ZaiClient\Requests\PageViewEvent;
+use ZaiKorea\ZaiClient\Requests\SearchEvent;
 use ZaiKorea\ZaiClient\Requests\LikeEvent;
 use ZaiKorea\ZaiClient\Requests\CartaddEvent;
 use ZaiKorea\ZaiClient\Requests\RateEvent;
@@ -137,6 +140,69 @@ class EventLogTest extends TestCase
         $response_status = $client->addEventLog($view_event);
 
         $response = $client->addEventLog($view_event);
+
+        self::assertSame($this->add_event_msg, $response->getMessage());
+    }
+
+    /* ----------------------- Test ProductDetailView Event -----------------------  */
+    // From here on only test the addEventLog
+
+    public function testAddSingleProductDetailViewEventLog()
+    {
+        $client = new ZaiClient($this->client_id, SECRET);
+        $customer_id = 'php-add-single-productdetailview';
+        $item_id = 'P1000005';
+
+        $product_detail_view_event = new ProductDetailViewEvent($customer_id, $item_id);
+        $response = $client->addEventLog($product_detail_view_event);
+
+        self::assertSame($this->add_event_msg, $response->getMessage());
+    }
+
+    public function testAddMultipleProductDetailViewEventLog()
+    {
+        $client = new ZaiClient($this->client_id, SECRET);
+        $customer_id = 'php-add-multi-productdetailview';
+        $item_ids = ['P1000000', 'P1000001'];
+
+        $options = array(
+            'timestamp' => time()
+        );
+
+        $product_detail_view_event = new ProductDetailViewEvent($customer_id, $item_ids, $options);
+        $response_status = $client->addEventLog($product_detail_view_event);
+
+        $response = $client->addEventLog($product_detail_view_event);
+
+        self::assertSame($this->add_event_msg, $response->getMessage());
+    }
+
+    /* ----------------------- Test PageView Event -----------------------  */
+    // From here on only test the addEventLog
+
+    public function testAddPageViewEventLog()
+    {
+        $client = new ZaiClient($this->client_id, SECRET);
+        $customer_id = 'php-add-pageview';
+        $event_value = 'homepage';
+
+        $page_view_event = new PageViewEvent($customer_id, $event_value);
+        $response = $client->addEventLog($page_view_event);
+
+        self::assertSame($this->add_event_msg, $response->getMessage());
+    }
+
+    /* ----------------------- Test Search Event -----------------------  */
+    // From here on only test the addEventLog
+
+    public function testAddSearchEventLog()
+    {
+        $client = new ZaiClient($this->client_id, SECRET);
+        $customer_id = 'php-add-search';
+        $event_value = 'Blue Jeans';
+
+        $search_event = new SearchEvent($customer_id, $event_value);
+        $response = $client->addEventLog($search_event);
 
         self::assertSame($this->add_event_msg, $response->getMessage());
     }

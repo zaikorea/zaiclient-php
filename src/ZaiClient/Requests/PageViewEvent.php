@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ViewEvent
+ * PageViewEvent
  * @author Uiseop Eom <tech@zaikorea.org>
  * @modifiedBy <name>
  */
@@ -13,15 +13,15 @@ use ZaiKorea\ZaiClient\Requests\EventInBatch;
 use ZaiKorea\ZaiClient\Configs\Config;
 use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
 
-class ViewEvent extends BaseEvent
+class PageViewEvent extends BaseEvent
 {
-    const EVENT_TYPE = 'view';
-    const EVENT_VALUE = 'null';
+    const EVENT_TYPE = 'page_view';
+    const ITEM_ID = 'null';
 
     /**
-     * ViewEvent accepts: 
+     * PageViewEvent accepts: 
      * - customer id
-     * - single item_id or array of item_ids
+     * - single event_value or array of event_values
      * - array of options
      * 
      * Here's an example of creating a View event using a single 
@@ -29,34 +29,34 @@ class ViewEvent extends BaseEvent
      * to each request: 
      * 
      *     $customer_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
-     *     $item_id = 'P1123456'
-     *     $view_event = new ViewEvent($customer_id, $item_id);
+     *     $event_value = 'homepage'
+     *     $view_event = new PageViewEvent($customer_id, $event_value);
      * 
      *     $customer_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
-     *     $item_id = ['P11234567', 'P11234567'];
+     *     $evant_values = ['homepage', 'category'];
      *     $options = ['timestamp'=> 1657197315];
-     *     $view_event_batch = new ViewEvent($customer_id, $item_ids, $options);
+     *     $view_event_batch = new PageViewEvent($customer_id, $event_values, $options);
      *
-     * The ViewEvent class supports following options:
+     * The PageViewEvent class supports following options:
      *     - timesptamp: a custom timestamp given by the user, the user
      *                   can use this option to customize the timestamp
      *                   of the recorded event.
      * 
      * @param int|string $customer_id
-     * @param string|array $item_ids
+     * @param string|array $event_values
      * @param array $options
      */
-    public function __construct($customer_id, $item_ids, $options = array())
+    public function __construct($customer_id, $event_values, $options = array())
     {
-        // $item_ids should not be an emtpy array
-        if (!$item_ids)
+        // $event_values should not be an emtpy array
+        if (!$event_values)
             throw new \InvalidArgumentException(
                 sprintf(Config::NULL_ARG_ERRMSG, self::class, __FUNCTION__, 2)
             );
 
-        // change to array if $item_id is a single string
-        if (is_string($item_ids))
-            $item_ids = array($item_ids);
+        // change to array if $event_value is a single string
+        if (is_string($event_values))
+            $event_values = array($event_values);
 
         // set timestamp to custom timestamp given by the user
         $this->setTimestamp(strval(microtime(true)));
@@ -67,13 +67,13 @@ class ViewEvent extends BaseEvent
 
         $tmp_timestamp = $this->getTimestamp();
 
-        foreach ($item_ids as $item_id) {
+        foreach ($event_values as $event_value) {
             array_push($events, new EventInBatch(
                 $customer_id,
-                $item_id,
+                self::ITEM_ID,
                 $tmp_timestamp,
                 self::EVENT_TYPE,
-                self::EVENT_VALUE
+                $event_value
             ));
             $tmp_timestamp += Config::EPSILON;
         }
