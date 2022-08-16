@@ -192,6 +192,22 @@ class EventLogTest extends TestCase
         self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
+    public function testAddPageViewEventLogWithEmptyEventValue()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage((
+            sprintf(Config::NULL_ARG_ERRMSG, PageViewEvent::class, '__construct', 2)
+        ));
+        $client = new ZaiClient($this->client_id, SECRET);
+        $customer_id = 'php-add-search';
+        $event_value = null;
+
+        $search_event = new PageViewEvent($customer_id, $event_value);
+        $response = $client->addEventLog($search_event);
+
+        self::assertSame($this->add_event_msg, $response->getMessage());
+    }
+
     /* ----------------------- Test Search Event -----------------------  */
     // From here on only test the addEventLog
 
@@ -206,6 +222,23 @@ class EventLogTest extends TestCase
 
         self::assertSame($this->add_event_msg, $response->getMessage());
     }
+
+    public function testAddSearchEventLogWithEmptyQuery()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage((
+            sprintf(Config::NULL_ARG_ERRMSG, SearchEvent::class, '__construct', 2)
+        ));
+        $client = new ZaiClient($this->client_id, SECRET);
+        $customer_id = 'php-add-search';
+        $event_value = null;
+
+        $search_event = new SearchEvent($customer_id, $event_value);
+        $response = $client->addEventLog($search_event);
+
+        self::assertSame($this->add_event_msg, $response->getMessage());
+    }
+
 
     /* ----------------------- Test Like Event -----------------------  */
     // Only test the addEventLog
@@ -400,8 +433,6 @@ class EventLogTest extends TestCase
         $purchase_event = new RateEvent($customer_id, $rate_actions);
         $client->addEventLog($purchase_event);
     }
-
-
 
     /* ------------------- Test Custom Event ---------------------  */
     // Only test the addEventLog
