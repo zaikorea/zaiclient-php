@@ -46,17 +46,23 @@ class SearchEvent extends BaseEvent
      * @param string|array $event_values
      * @param array $options
      */
-    public function __construct($customer_id, $event_values, $options = array())
+    public function __construct($customer_id, $search_query, $options = array())
     {
-        // $event_values should not be an emtpy array
-        if (!$event_values)
+        // $page_type should not be an empty string
+        if (!$search_query)
             throw new \InvalidArgumentException(
-                sprintf(Config::NULL_ARG_ERRMSG, self::class, __FUNCTION__, 2)
+                sprintf(Config::EMPTY_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
+            );
+
+        // $page_type should not be an array (doesn't support batch)
+        if (!is_string($search_query))
+            throw new \InvalidArgumentException(
+                sprintf(Config::EMPTY_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
             );
 
         // change to array if $event_value is a single string
-        if (is_string($event_values))
-            $event_values = array($event_values);
+        if (is_string($search_query))
+            $search_queries = array($search_query);
 
         // set timestamp to custom timestamp given by the user
         $this->setTimestamp(strval(microtime(true)));
@@ -67,13 +73,13 @@ class SearchEvent extends BaseEvent
 
         $tmp_timestamp = $this->getTimestamp();
 
-        foreach ($event_values as $event_value) {
+        foreach ($search_queries as $search_query) {
             array_push($events, new EventInBatch(
                 $customer_id,
                 self::ITEM_ID,
                 $tmp_timestamp,
                 self::EVENT_TYPE,
-                $event_value
+                $search_query
             ));
             $tmp_timestamp += Config::EPSILON;
         }

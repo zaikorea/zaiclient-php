@@ -55,17 +55,25 @@ class RateEvent extends BaseEvent
      * @param array $options
      * 
      */
-    public function __construct($customer_id, $rate_actions = array(), $options = array())
+    public function __construct($customer_id, $rate_action = array(), $options = array())
     {
+
         // $rate_actions should not be an emtpy array
-        if (!is_array($rate_actions) || !$rate_actions)
+        if (!is_array($rate_action) || !$rate_action)
             throw new \InvalidArgumentException(
                 sprintf(Config::EMPTY_ARR_ERRMSG, self::class, __FUNCTION__, 2)
             );
 
+        // $rate_actions should be 1d array
+        if (count($rate_action) != count($rate_action, COUNT_RECURSIVE)) 
+            throw new \InvalidArgumentException(
+                'Rate event doesn\'t support batch'
+            );
+            
+
         // change to 2D array if $rate_actions is 1D array (rate on single item) 
-        if (gettype(reset($rate_actions)) != 'array')
-            $rate_actions = array($rate_actions);
+        if (gettype(reset($rate_action)) != 'array')
+            $rate_actions = array($rate_action);
 
         // Validate if $rate_actions is sequential array
         if (array_keys($rate_actions) !== range(0, count($rate_actions) - 1))

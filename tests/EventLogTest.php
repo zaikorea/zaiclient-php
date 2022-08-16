@@ -22,14 +22,14 @@ use ZaiKorea\ZaiClient\Exceptions\ZaiClientException;
 use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
 use ZaiKorea\ZaiClient\Configs\Config;
 
-define('SECRET', getenv('ZAI_TEST'));
 
 require_once 'TestUtils.php';
 
 class EventLogTest extends TestCase
 {
-    private $client_id = 'test';
-    // private $client_secret = getenv('ZAI_TEST');
+    const CLIENT_ID = 'test';
+    const SECRET = 'KVPzvdHTPWnt0xaEGc2ix-eqPXFCdEV5zcqolBr_h1k';
+
     private $add_event_msg = 'The given event was added successfully.';
     private $update_event_msg = 'The given event was updated successfully.';
     private $delete_event_msg = 'The given event was removed successfully.';
@@ -39,7 +39,7 @@ class EventLogTest extends TestCase
 
     public function testAddSinglePurchaseEventLog()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-single-purchase';
         $order = array('item_id' => 'P1000009', 'price' => 11000, 'count' => 1);
 
@@ -51,7 +51,7 @@ class EventLogTest extends TestCase
 
     public function testAddMultiplePurchaseEventLog()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-multi-purchase';
         $order = array(
             ['item_id' => 'P1234567', 'price' => 11000, 'count' => 2],
@@ -70,7 +70,7 @@ class EventLogTest extends TestCase
 
     public function testUpdatePurchaseEventLog()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-single-purchase';
         $order = array(
             ['item_id' => 'P1000009', 'price' => 14000, 'count' => 1],
@@ -93,7 +93,7 @@ class EventLogTest extends TestCase
 
     public function testDeletePurchaseEventLog()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-multi-purchase';
         $order = array(
             ['item_id' => 'P1000007', 'price' => 900, 'count' => 2],
@@ -116,7 +116,7 @@ class EventLogTest extends TestCase
 
     public function testAddSingleViewEventLog()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-single-view';
         $item_id = 'P1000005';
 
@@ -128,7 +128,7 @@ class EventLogTest extends TestCase
 
     public function testAddMultipleViewEventLog()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-multi-views';
         $item_ids = ['P1000000', 'P1000001'];
 
@@ -149,7 +149,7 @@ class EventLogTest extends TestCase
 
     public function testAddSingleProductDetailViewEventLog()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-single-productdetailview';
         $item_id = 'P1000005';
 
@@ -161,7 +161,11 @@ class EventLogTest extends TestCase
 
     public function testAddMultipleProductDetailViewEventLog()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(Config::EMPTY_STR_ARG_ERRMSG, ProductDetailViewEvent::class, '__construct', 2)    
+        );
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-multi-productdetailview';
         $item_ids = ['P1000000', 'P1000001'];
 
@@ -170,11 +174,6 @@ class EventLogTest extends TestCase
         );
 
         $product_detail_view_event = new ProductDetailViewEvent($customer_id, $item_ids, $options);
-        $response_status = $client->addEventLog($product_detail_view_event);
-
-        $response = $client->addEventLog($product_detail_view_event);
-
-        self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
     /* ----------------------- Test PageView Event -----------------------  */
@@ -182,7 +181,7 @@ class EventLogTest extends TestCase
 
     public function testAddPageViewEventLog()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-pageview';
         $event_value = 'homepage';
 
@@ -195,10 +194,10 @@ class EventLogTest extends TestCase
     public function testAddPageViewEventLogWithEmptyEventValue()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage((
-            sprintf(Config::NULL_ARG_ERRMSG, PageViewEvent::class, '__construct', 2)
-        ));
-        $client = new ZaiClient($this->client_id, SECRET);
+        $this->expectExceptionMessage(
+            sprintf(Config::EMPTY_STR_ARG_ERRMSG, PageViewEvent::class, '__construct', 2)
+        );
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-search';
         $event_value = null;
 
@@ -213,7 +212,7 @@ class EventLogTest extends TestCase
 
     public function testAddSearchEventLog()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-search';
         $event_value = 'Blue Jeans';
 
@@ -227,9 +226,9 @@ class EventLogTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage((
-            sprintf(Config::NULL_ARG_ERRMSG, SearchEvent::class, '__construct', 2)
+            sprintf(Config::EMPTY_STR_ARG_ERRMSG, SearchEvent::class, '__construct', 2)
         ));
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-search';
         $event_value = null;
 
@@ -245,7 +244,7 @@ class EventLogTest extends TestCase
 
     public function testAddSingleLikeEventLog()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-single-like';
         $item_id = 'P1000005';
 
@@ -257,7 +256,7 @@ class EventLogTest extends TestCase
 
     public function testAddMultipleLikeEventLog()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-multi-likes';
         $item_ids = ['P1000000', 'P1000001'];
 
@@ -277,7 +276,7 @@ class EventLogTest extends TestCase
 
     public function testAddSingleCartaddEventLog()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-single-cartadd';
         $item_id = 'P1000005';
 
@@ -289,7 +288,12 @@ class EventLogTest extends TestCase
 
     public function testAddMultipleCartaddEventLog()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(Config::EMPTY_STR_ARG_ERRMSG, CartaddEvent::class, '__construct', 2)
+        );
+
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-multi-cartadds';
         $item_ids = ['P1000000', 'P1000001'];
 
@@ -309,7 +313,7 @@ class EventLogTest extends TestCase
 
     public function testAddSingleRateEventLog()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-single-rate';
         $item_id = ['item_id' => 'P1000005', 'value' => 3.0];
 
@@ -321,7 +325,11 @@ class EventLogTest extends TestCase
 
     public function testAddMultipleRateEventLog()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Rate event doesn\'t support batch'
+        );
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-multi-rates';
         $rate_actions = [
             ['item_id' => 'P1000005', 'value' => 3.0],
@@ -342,10 +350,10 @@ class EventLogTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            sprintf(Config::ARR_FORM_ERRMSG, RateEvent::class, '__construct', 2, "[ ['item_id' => P12345, 'value' => 5.0] ] (1D array available if recording single rate action)")
+            'Rate event doesn\'t support batch'
         );
 
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-raise-error';
         $rate_actions = [
             ['item_id' => 'P1000007'],
@@ -359,11 +367,11 @@ class EventLogTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            sprintf(Config::NON_SEQ_ARR_ERRMSG, RateEvent::class, '__construct', 2)
+            'Rate event doesn\'t support batch'
         );
 
 
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-raise-error';
         $rate_actions = [
             'P20007' => ['price' => 11000, 'count' => 3],
@@ -381,7 +389,7 @@ class EventLogTest extends TestCase
             sprintf(Config::EMPTY_ARR_ERRMSG, RateEvent::class, '__construct', 2)
         );
 
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-raise-error';
         $rate_actions = [];
 
@@ -396,7 +404,7 @@ class EventLogTest extends TestCase
             sprintf(Config::EMPTY_ARR_ERRMSG, RateEvent::class, '__construct', 2)
         );
 
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-raise-error';
         $rate_actions = 'P1234678';
 
@@ -411,7 +419,7 @@ class EventLogTest extends TestCase
             sprintf(Config::ARR_FORM_ERRMSG, RateEvent::class, '__construct', 2, "[ ['item_id' => P12345, 'value' => 5.0] ] (1D array available if recording single rate action)")
         );
 
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-raise-error';
         $rate_actions = ['item_id' => 'P1112345'];
 
@@ -426,7 +434,7 @@ class EventLogTest extends TestCase
             sprintf(Config::ARR_FORM_ERRMSG, RateEvent::class, '__construct', 2, "[ ['item_id' => P12345, 'value' => 5.0] ] (1D array available if recording single rate action)")
         );
 
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-raise-error';
         $rate_actions = ['item_id' => 'P1112345', 'price' => 3000];
 
@@ -439,7 +447,7 @@ class EventLogTest extends TestCase
 
     public function testAddSinglecustomEventLog()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-single-custom';
         $custom_event = 'search';
         $custom_action = ['item_id' => 'P1000005', 'value' => null];
@@ -452,7 +460,7 @@ class EventLogTest extends TestCase
 
     public function testAddMultiplecustomEventLog()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-multi-customs';
         $custom_event_type = 'search';
 
@@ -472,7 +480,7 @@ class EventLogTest extends TestCase
 
     public function testAddCustomEventLogWithIndexedArray()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-multi-customs';
         $custom_event_type = 'search';
 
@@ -502,7 +510,7 @@ class EventLogTest extends TestCase
         $this->expectException(ZaiClientException::class);
 
         $bad_secret = '123456777';
-        $client = new ZaiClient($this->client_id, $bad_secret);
+        $client = new ZaiClient(self::CLIENT_ID, $bad_secret);
         $customer_id = 'php-raise-error';
         $item_id = 'P1000005';
 
@@ -516,7 +524,7 @@ class EventLogTest extends TestCase
     public function testUpdateMultipleEvent()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-raise-error';
         $item_ids = ['P1000005', 'P1000006', 'P100007'];
 
@@ -529,7 +537,7 @@ class EventLogTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectException(\InvalidArgumentException::class);
 
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-raise-error';
         $orders = [
             ['item_id' => 'P1000007', 'price' => 11000],
@@ -546,7 +554,7 @@ class EventLogTest extends TestCase
             sprintf(Config::ARR_FORM_ERRMSG, PurchaseEvent::class, '__construct', 2, "[ ['item_id' => P12345, 'price' => 50000, 'count' => 3] ] (1D array available if recording single order)")
         );
 
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-raise-error';
         $orders = [
             ['P20007' => ['price' => 11000, 'count' => 3]],
@@ -564,7 +572,7 @@ class EventLogTest extends TestCase
             sprintf(Config::EMPTY_ARR_ERRMSG, PurchaseEvent::class, '__construct', 2)
         );
 
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-raise-error';
         $orders = [];
 
@@ -577,7 +585,7 @@ class EventLogTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Length of user id must be between 1 and 100.');
 
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = generateRandomString(101);
 
         $item_id = ['P12345'];
@@ -590,7 +598,7 @@ class EventLogTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Length of item id must be between 1 and 100.');
 
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-raise-error';
 
         $item_id = [generateRandomString(101)];
@@ -603,7 +611,7 @@ class EventLogTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Length of event type must be between 1 and 100.');
 
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-raise-error';
 
         $custom_event_type = generateRandomString(102);
@@ -617,7 +625,7 @@ class EventLogTest extends TestCase
         $this->expectException(BatchSizeLimitExceededException::class);
         $this->expectExceptionMessage(sprintf("Number of total records cannot exceed 50, but your Event holds %d.", 55));
 
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-raise-error';
 
         $orders = array(

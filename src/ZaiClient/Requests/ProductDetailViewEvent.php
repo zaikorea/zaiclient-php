@@ -43,20 +43,26 @@ class ProductDetailViewEvent extends BaseEvent
      *                   of the recorded event.
      * 
      * @param int|string $customer_id
-     * @param string|array $item_ids
+     * @param string|array $item_id
      * @param array $options
      */
-    public function __construct($customer_id, $item_ids, $options = array())
+    public function __construct($customer_id, $item_id, $options = array())
     {
         // $item_ids should not be an emtpy array
-        if (!$item_ids)
+        if (!$item_id)
             throw new \InvalidArgumentException(
-                sprintf(Config::NULL_ARG_ERRMSG, self::class, __FUNCTION__, 2)
+                sprintf(Config::EMPTY_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
             );
 
-        // change to array if $item_id is a single string
-        if (is_string($item_ids))
-            $item_ids = array($item_ids);
+        // $item_id should not be an array (doesn't support batch)
+        if (!is_string($item_id))
+            throw new \InvalidArgumentException(
+                sprintf(Config::EMPTY_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
+            );
+
+        // change to array if $item_id is a single string (BaseEvent supports)
+        if (is_string($item_id))
+            $item_ids = array($item_id);
 
         // set timestamp to custom timestamp given by the user
         $this->setTimestamp(strval(microtime(true)));

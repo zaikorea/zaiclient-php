@@ -7,17 +7,18 @@ use ZaiKorea\ZaiClient\Requests\UserRecommendationRequest;
 use ZaiKorea\ZaiClient\Requests\RelatedItemsRecommendationRequest;
 use ZaiKorea\ZaiClient\Requests\RerankingRecommendationRequest;
 
-define('SECRET', getenv('ZAI_TEST'));
-
 require_once 'TestUtils.php';
 
 class RecommendationTest extends TestCase
 {
+    const CLIENT_ID = 'test';
+    const SECRET = 'KVPzvdHTPWnt0xaEGc2ix-eqPXFCdEV5zcqolBr_h1k';
     private $client_id = 'test';
 
     public function testGetRecommendationsWithUserRecommendationRequest()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $user_id = 'user';
         $limit = 3;
         $options = [
@@ -36,7 +37,7 @@ class RecommendationTest extends TestCase
 
     public function testGetRecommendationsWithUserRecommendationRequestWithNull()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $user_id = null;
         $limit = 3;
         $options = [
@@ -55,7 +56,7 @@ class RecommendationTest extends TestCase
 
     public function testGetRecommendationsWithUserRecommendationRequestWithOffset()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $user_id = 'testing';
         $limit = 10;
         $options = [
@@ -74,7 +75,7 @@ class RecommendationTest extends TestCase
 
     public function testGetRecommendationsWithRelatedItemsRecommendationRequest()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $item_id = "012345567788";
         $limit = 10;
         $options = [
@@ -92,7 +93,7 @@ class RecommendationTest extends TestCase
 
     public function testGetRecommendationsWithRerankingRecommendationRequest()
     {
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $user_id = "ZaiTest_User_id";
         $item_ids = ["1234", "5678", "9101112"];
         $limit = 3;
@@ -123,7 +124,7 @@ class RecommendationTest extends TestCase
             'offset' => 0
         ];
         $request = new UserRecommendationRequest($user_id, $limit, $options);
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $response = $client->getRecommendations($request);
     }
 
@@ -140,7 +141,7 @@ class RecommendationTest extends TestCase
             'offset' => 0
         ];
         $request = new RelatedItemsRecommendationRequest($user_id, $limit, $options);
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $response = $client->getRecommendations($request);
     }
 
@@ -157,7 +158,7 @@ class RecommendationTest extends TestCase
             'offset' => 0
         ];
         $request = new RelatedItemsRecommendationRequest($item_id, $limit, $options);
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $response = $client->getRecommendations($request);
     }
 
@@ -166,7 +167,7 @@ class RecommendationTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Length of item_ids must be between 1 and 1000,000.');
 
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $user_id = "ZaiTest_User_id";
         $item_ids = [];
         $limit = 3;
@@ -191,7 +192,7 @@ class RecommendationTest extends TestCase
             'recommendation_type' => generateRandomString(101),
         ];
         $request = new UserRecommendationRequest($user_id, $limit, $options);
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $response = $client->getRecommendations($request);
     }
 
@@ -205,7 +206,7 @@ class RecommendationTest extends TestCase
 
         $options = 'homepage';
         $request = new UserRecommendationRequest($user_id, $limit, $options);
-        $client = new ZaiClient($this->client_id, SECRET);
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $response = $client->getRecommendations($request);
     }
 }
