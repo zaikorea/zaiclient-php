@@ -54,7 +54,7 @@ class LikeEvent extends BaseEvent
         // $item_id should not be an emtpy array
         if (!$item_id)
             throw new \InvalidArgumentException(
-                sprintf(Config::EMPTY_STR_ARG_ERRMSG, self::class, __FUNCTION__,  2)
+                'Length of item id must be between 1 and 100.'
             );
 
         // $page_type should not be an array (doesn't support batch)

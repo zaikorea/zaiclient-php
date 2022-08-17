@@ -10,7 +10,6 @@ namespace ZaiKorea\ZaiClient;
 
 use PHPUnit\Framework\TestCase;
 use ZaiKorea\ZaiClient\Requests\PurchaseEvent;
-use ZaiKorea\ZaiClient\Requests\ViewEvent;
 use ZaiKorea\ZaiClient\Requests\ProductDetailViewEvent;
 use ZaiKorea\ZaiClient\Requests\PageViewEvent;
 use ZaiKorea\ZaiClient\Requests\SearchEvent;
@@ -109,39 +108,6 @@ class EventLogTest extends TestCase
         $response = $client->deleteEventLog($purchase_event);
 
         self::assertSame($this->delete_event_msg, $response->getMessage());
-    }
-
-    /* ----------------------- Test View Event -----------------------  */
-    // From here on only test the addEventLog
-
-    public function testAddSingleViewEventLog()
-    {
-        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-single-view';
-        $item_id = 'P1000005';
-
-        $view_event = new ViewEvent($customer_id, $item_id);
-        $response = $client->addEventLog($view_event);
-
-        self::assertSame($this->add_event_msg, $response->getMessage());
-    }
-
-    public function testAddMultipleViewEventLog()
-    {
-        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-multi-views';
-        $item_ids = ['P1000000', 'P1000001'];
-
-        $options = array(
-            'timestamp' => time()
-        );
-
-        $view_event = new ViewEvent($customer_id, $item_ids, $options);
-        $response_status = $client->addEventLog($view_event);
-
-        $response = $client->addEventLog($view_event);
-
-        self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
     /* ----------------------- Test ProductDetailView Event -----------------------  */
@@ -256,6 +222,11 @@ class EventLogTest extends TestCase
 
     public function testAddMultipleLikeEventLog()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(Config::EMPTY_STR_ARG_ERRMSG, LikeEvent::class, '__construct', 2)
+        );
+
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-multi-likes';
         $item_ids = ['P1000000', 'P1000001'];
@@ -264,7 +235,7 @@ class EventLogTest extends TestCase
             'timestamp' => time()
         );
 
-        $like_event = new ViewEvent($customer_id, $item_ids, $options);
+        $like_event = new LikeEvent($customer_id, $item_ids, $options);
         $response = $client->addEventLog($like_event);
 
         self::assertSame($this->add_event_msg, $response->getMessage());
@@ -514,7 +485,7 @@ class EventLogTest extends TestCase
         $customer_id = 'php-raise-error';
         $item_id = 'P1000005';
 
-        $custom_event = new ViewEvent($customer_id, $item_id);
+        $custom_event = new ProductDetailViewEvent($customer_id, $item_id);
         $client->addEventLog($custom_event); // This should throw ZaiClientException
     }
 
@@ -528,7 +499,7 @@ class EventLogTest extends TestCase
         $customer_id = 'php-raise-error';
         $item_ids = ['P1000005', 'P1000006', 'P100007'];
 
-        $view_event = new ViewEvent($customer_id, $item_ids);
+        $view_event = new ProductDetailViewEvent($customer_id, $item_ids);
         $client->updateEventLog($view_event); // This should throw ZaiClientException
     }
 
@@ -580,29 +551,27 @@ class EventLogTest extends TestCase
         $client->addEventLog($purchase_event);
     }
 
-    public function testBadCustomerIdOnViewEvent()
+    public function testBadCustomerIdOnProductDetailViewEvent()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Length of user id must be between 1 and 100.');
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = generateRandomString(101);
 
         $item_id = ['P12345'];
-        $view_event = new ViewEvent($customer_id, $item_id);
+        $view_event = new ProductDetailViewEvent($customer_id, $item_id);
         $client->addEventLog($view_event);
     }
 
-    public function testBadItemIdOnViewEvent()
+    public function testBadItemIdOnProductDetailViewEvent()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Length of item id must be between 1 and 100.');
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-raise-error';
 
         $item_id = [generateRandomString(101)];
-        $view_event = new ViewEvent($customer_id, $item_id);
+        $view_event = new ProductDetailViewEvent($customer_id, $item_id);
         $client->addEventLog($view_event);
     }
 
