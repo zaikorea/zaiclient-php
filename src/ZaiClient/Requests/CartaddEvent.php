@@ -58,9 +58,9 @@ class CartaddEvent extends BaseEvent
             );
         
         // $page_type should not be an array (doesn't support batch)
-        if (!is_string($item_id))
+        if (is_array($item_id))
             throw new \InvalidArgumentException(
-                sprintf(Config::EMPTY_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
+                sprintf(Config::BATCH_ERRMSG, self::class)
             );
 
         // change to array if $item_id is a single string

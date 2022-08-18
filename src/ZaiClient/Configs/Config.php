@@ -28,8 +28,9 @@ class Config
     const EPSILON = 1e-4;
 
     /* ----------------- Error Messages ----------------- */
-    const EMPTY_STR_ARG_ERRMSG = '%s:%s expects parameter %d to be a non-empty string.';
+    const NON_STR_ARG_ERRMSG = '%s:%s expects parameter %d to be a non-empty string.';
     const EMPTY_ARR_ERRMSG = '%s:%s expects parameter %d to be a non-empty array.';
     const NON_SEQ_ARR_ERRMSG = '%s:%s expects parameter %d to be a sequential array.';
     const ARR_FORM_ERRMSG = '%s:%s expects parameter %d to be an array of form %s.';
+    const BATCH_ERRMSG = '%s does not support batch processing.';
 }

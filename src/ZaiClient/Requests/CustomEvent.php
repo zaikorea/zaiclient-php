@@ -69,7 +69,7 @@ class CustomEvent extends BaseEvent
         // Validate if $custom_event_type is string
         if (!is_string($custom_event_type))
             throw new \InvalidArgumentException(
-                sprintf(Config::EMPTY_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
+                sprintf(Config::NON_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
             );
 
         if (!$custom_actions)

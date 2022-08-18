@@ -48,7 +48,6 @@ class ProductDetailViewEvent extends BaseEvent
      */
     public function __construct($customer_id, $item_id, $options = array())
     {
-        // $item_ids should not be an emtpy array
         if (!$item_id)
             throw new \InvalidArgumentException(
                 'Length of item id must be between 1 and 100.'
@@ -57,7 +56,7 @@ class ProductDetailViewEvent extends BaseEvent
         // $item_id should not be an array (doesn't support batch)
         if (is_array($item_id))
             throw new \InvalidArgumentException(
-                sprintf(Config::EMPTY_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
+                sprintf(Config::NON_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
             );
 
         // change to array if $item_id is a single string (BaseEvent supports)

@@ -48,16 +48,16 @@ class PageViewEvent extends BaseEvent
      */
     public function __construct($customer_id, $page_type, $options = array())
     {
-        // $page_type should not be an empty string
-        if (!$page_type)
-            throw new \InvalidArgumentException(
-                sprintf(Config::EMPTY_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
-            );
-
-        // $page_type should not be an array (doesn't support batch)
+        // $page_type should be a string
         if (!is_string($page_type))
             throw new \InvalidArgumentException(
-                sprintf(Config::EMPTY_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
+                sprintf(Config::NON_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
+            );
+
+        // $page_type should be a non-empty string
+        if (!$page_type)
+            throw new \InvalidArgumentException(
+                sprintf(Config::NON_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
             );
 
         // change to array if $event_value is a single string

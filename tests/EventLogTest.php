@@ -129,7 +129,7 @@ class EventLogTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            sprintf(Config::EMPTY_STR_ARG_ERRMSG, ProductDetailViewEvent::class, '__construct', 2)    
+            sprintf(Config::NON_STR_ARG_ERRMSG, ProductDetailViewEvent::class, '__construct', 2)    
         );
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-multi-productdetailview';
@@ -161,7 +161,7 @@ class EventLogTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            sprintf(Config::EMPTY_STR_ARG_ERRMSG, PageViewEvent::class, '__construct', 2)
+            sprintf(Config::NON_STR_ARG_ERRMSG, PageViewEvent::class, '__construct', 2)
         );
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-search';
@@ -192,7 +192,7 @@ class EventLogTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage((
-            sprintf(Config::EMPTY_STR_ARG_ERRMSG, SearchEvent::class, '__construct', 2)
+            sprintf(Config::NON_STR_ARG_ERRMSG, SearchEvent::class, '__construct', 2)
         ));
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $customer_id = 'php-add-search';
@@ -224,7 +224,7 @@ class EventLogTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            sprintf(Config::EMPTY_STR_ARG_ERRMSG, LikeEvent::class, '__construct', 2)
+            sprintf(Config::BATCH_ERRMSG, LikeEvent::class)
         );
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
@@ -261,7 +261,7 @@ class EventLogTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            sprintf(Config::EMPTY_STR_ARG_ERRMSG, CartaddEvent::class, '__construct', 2)
+            sprintf(Config::BATCH_ERRMSG, CartaddEvent::class)
         );
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
