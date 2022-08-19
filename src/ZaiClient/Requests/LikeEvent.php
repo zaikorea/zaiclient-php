@@ -64,8 +64,7 @@ class LikeEvent extends BaseEvent
             );
 
         // change to array if $item_id is a single string
-        if (!is_array($item_id))
-            $item_ids = array($item_id);
+        $item_ids = array($item_id);
 
         // set timestamp to custom timestamp given by the user
         $this->setTimestamp(strval(microtime(true)));
