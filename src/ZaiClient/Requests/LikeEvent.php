@@ -31,25 +31,25 @@ class LikeEvent extends BaseEvent
      * item_id or an array of item_ids * default request options to apply 
      * to each request: 
      * 
-     *     $customer_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
+     *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
      *     $item_id = 'P1123456'
-     *     $like_event = new LikeEvent($customer_id, $item_id);
+     *     $like_event = new LikeEvent($user_id, $item_id);
      * 
-     *     $customer_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
+     *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
      *     $item_id = ['P11234567', 'P11234567'];
      *     $options = ['timestamp'=> 1657197315];
-     *     $like_event_batch = new LikeEvent($customer_id, $item_ids, $options);
+     *     $like_event_batch = new LikeEvent($user_id, $item_ids, $options);
      *
      * The LikeEvent class supports following options:
      *     - timesptamp: a custom timestamp given by the user, the user
      *                   can use this option to customize the timestamp
      *                   of the recorded event.
      * 
-     * @param int|string $customer_id
+     * @param int|string $user_id
      * @param string|array $item_ids
      * @param array $options
      */
-    public function __construct($customer_id, $item_id, $options = array())
+    public function __construct($user_id, $item_id, $options = array())
     {
         // $item_id should not be an emtpy array
         if (!$item_id)
@@ -78,7 +78,7 @@ class LikeEvent extends BaseEvent
 
         foreach ($item_ids as $item_id) {
             array_push($events, new EventInBatch(
-                $customer_id,
+                $user_id,
                 $item_id,
                 $tmp_timestamp,
                 self::EVENT_TYPE,

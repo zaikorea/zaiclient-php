@@ -28,25 +28,25 @@ class PageViewEvent extends BaseEvent
      * item_id or an array of item_ids * default request options to apply 
      * to each request: 
      * 
-     *     $customer_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
+     *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
      *     $event_value = 'homepage'
-     *     $view_event = new PageViewEvent($customer_id, $event_value);
+     *     $view_event = new PageViewEvent($user_id, $event_value);
      * 
-     *     $customer_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
+     *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
      *     $evant_values = ['homepage', 'category'];
      *     $options = ['timestamp'=> 1657197315];
-     *     $view_event_batch = new PageViewEvent($customer_id, $event_values, $options);
+     *     $view_event_batch = new PageViewEvent($user_id, $event_values, $options);
      *
      * The PageViewEvent class supports following options:
      *     - timesptamp: a custom timestamp given by the user, the user
      *                   can use this option to customize the timestamp
      *                   of the recorded event.
      * 
-     * @param int|string $customer_id
+     * @param int|string $user_id
      * @param string|array $event_values
      * @param array $options
      */
-    public function __construct($customer_id, $page_type, $options = array())
+    public function __construct($user_id, $page_type, $options = array())
     {
         // $page_type should be a string
         if (!is_string($page_type))
@@ -61,8 +61,7 @@ class PageViewEvent extends BaseEvent
             );
 
         // change to array if $event_value is a single string
-        if (is_string($page_type))
-            $page_type = array($page_type);
+        $page_type = array($page_type);
 
         // set timestamp to custom timestamp given by the user
         $this->setTimestamp(strval(microtime(true)));
@@ -75,7 +74,7 @@ class PageViewEvent extends BaseEvent
 
         foreach ($page_type as $event_value) {
             array_push($events, new EventInBatch(
-                $customer_id,
+                $user_id,
                 self::ITEM_ID,
                 $tmp_timestamp,
                 self::EVENT_TYPE,

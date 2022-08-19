@@ -39,10 +39,10 @@ class EventLogTest extends TestCase
     public function testAddSinglePurchaseEventLog()
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-single-purchase';
+        $user_id = 'php-add-single-purchase';
         $order = array('item_id' => 'P1000009', 'price' => 11000, 'count' => 1);
 
-        $purchase_event = new PurchaseEvent($customer_id, $order);
+        $purchase_event = new PurchaseEvent($user_id, $order);
         $response = $client->addEventLog($purchase_event);
 
         self::assertSame($this->add_event_msg, $response->getMessage());
@@ -51,7 +51,7 @@ class EventLogTest extends TestCase
     public function testAddMultiplePurchaseEventLog()
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-multi-purchase';
+        $user_id = 'php-add-multi-purchase';
         $order = array(
             ['item_id' => 'P1234567', 'price' => 11000, 'count' => 2],
             ['item_id' => 'P5678901', 'price' => 11000, 'count' => 3]
@@ -61,7 +61,7 @@ class EventLogTest extends TestCase
             'timestamp' => time()
         );
 
-        $purchase_event = new PurchaseEvent($customer_id, $order, $options);
+        $purchase_event = new PurchaseEvent($user_id, $order, $options);
         $response = $client->addEventLog($purchase_event);
 
         self::assertSame($this->add_event_msg, $response->getMessage());
@@ -70,21 +70,21 @@ class EventLogTest extends TestCase
     public function testUpdatePurchaseEventLog()
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-single-purchase';
+        $user_id = 'php-add-single-purchase';
         $order = array(
             ['item_id' => 'P1000009', 'price' => 14000, 'count' => 1],
         );
         $options = array(
             'timestamp' => time()
         );
-        $purchase_event = new PurchaseEvent($customer_id, $order, $options);
+        $purchase_event = new PurchaseEvent($user_id, $order, $options);
         $response_status = $client->addEventLog($purchase_event, $options);
 
         $order = array(
             ['item_id' => 'P1000009', 'price' => 24000, 'count' => 1],
         );
 
-        $purchase_event = new PurchaseEvent($customer_id, $order, ['timestamp' => $purchase_event->getTimestamp()]);
+        $purchase_event = new PurchaseEvent($user_id, $order, ['timestamp' => $purchase_event->getTimestamp()]);
         $response = $client->updateEventLog($purchase_event);
 
         self::assertSame($this->update_event_msg, $response->getMessage());
@@ -93,7 +93,7 @@ class EventLogTest extends TestCase
     public function testDeletePurchaseEventLog()
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-multi-purchase';
+        $user_id = 'php-add-multi-purchase';
         $order = array(
             ['item_id' => 'P1000007', 'price' => 900, 'count' => 2],
             ['item_id' => 'P1000008', 'price' => 900, 'count' => 3]
@@ -101,10 +101,10 @@ class EventLogTest extends TestCase
         $options = array(
             'timestamp' => time()
         );
-        $purchase_event = new PurchaseEvent($customer_id, $order, $options);
+        $purchase_event = new PurchaseEvent($user_id, $order, $options);
         $client->addEventLog($purchase_event);
 
-        $purchase_event = new PurchaseEvent($customer_id, $order, ['timestamp' => $purchase_event->getTimestamp()]);
+        $purchase_event = new PurchaseEvent($user_id, $order, ['timestamp' => $purchase_event->getTimestamp()]);
         $response = $client->deleteEventLog($purchase_event);
 
         self::assertSame($this->delete_event_msg, $response->getMessage());
@@ -116,10 +116,10 @@ class EventLogTest extends TestCase
     public function testAddSingleProductDetailViewEventLog()
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-single-productdetailview';
+        $user_id = 'php-add-single-productdetailview';
         $item_id = 'P1000005';
 
-        $product_detail_view_event = new ProductDetailViewEvent($customer_id, $item_id);
+        $product_detail_view_event = new ProductDetailViewEvent($user_id, $item_id);
         $response = $client->addEventLog($product_detail_view_event);
 
         self::assertSame($this->add_event_msg, $response->getMessage());
@@ -132,14 +132,14 @@ class EventLogTest extends TestCase
             sprintf(Config::NON_STR_ARG_ERRMSG, ProductDetailViewEvent::class, '__construct', 2)    
         );
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-multi-productdetailview';
+        $user_id = 'php-add-multi-productdetailview';
         $item_ids = ['P1000000', 'P1000001'];
 
         $options = array(
             'timestamp' => time()
         );
 
-        $product_detail_view_event = new ProductDetailViewEvent($customer_id, $item_ids, $options);
+        $product_detail_view_event = new ProductDetailViewEvent($user_id, $item_ids, $options);
     }
 
     /* ----------------------- Test PageView Event -----------------------  */
@@ -148,10 +148,10 @@ class EventLogTest extends TestCase
     public function testAddPageViewEventLog()
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-pageview';
+        $user_id = 'php-add-pageview';
         $event_value = 'homepage';
 
-        $page_view_event = new PageViewEvent($customer_id, $event_value);
+        $page_view_event = new PageViewEvent($user_id, $event_value);
         $response = $client->addEventLog($page_view_event);
 
         self::assertSame($this->add_event_msg, $response->getMessage());
@@ -164,10 +164,10 @@ class EventLogTest extends TestCase
             sprintf(Config::NON_STR_ARG_ERRMSG, PageViewEvent::class, '__construct', 2)
         );
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-search';
+        $user_id = 'php-add-search';
         $event_value = null;
 
-        $search_event = new PageViewEvent($customer_id, $event_value);
+        $search_event = new PageViewEvent($user_id, $event_value);
         $response = $client->addEventLog($search_event);
 
         self::assertSame($this->add_event_msg, $response->getMessage());
@@ -179,10 +179,10 @@ class EventLogTest extends TestCase
     public function testAddSearchEventLog()
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-search';
+        $user_id = 'php-add-search';
         $event_value = 'Blue Jeans';
 
-        $search_event = new SearchEvent($customer_id, $event_value);
+        $search_event = new SearchEvent($user_id, $event_value);
         $response = $client->addEventLog($search_event);
 
         self::assertSame($this->add_event_msg, $response->getMessage());
@@ -195,10 +195,10 @@ class EventLogTest extends TestCase
             sprintf(Config::NON_STR_ARG_ERRMSG, SearchEvent::class, '__construct', 2)
         ));
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-search';
+        $user_id = 'php-add-search';
         $event_value = null;
 
-        $search_event = new SearchEvent($customer_id, $event_value);
+        $search_event = new SearchEvent($user_id, $event_value);
         $response = $client->addEventLog($search_event);
 
         self::assertSame($this->add_event_msg, $response->getMessage());
@@ -211,10 +211,10 @@ class EventLogTest extends TestCase
     public function testAddSingleLikeEventLog()
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-single-like';
+        $user_id = 'php-add-single-like';
         $item_id = 'P1000005';
 
-        $like_event = new LikeEvent($customer_id, $item_id);
+        $like_event = new LikeEvent($user_id, $item_id);
         $response = $client->addEventLog($like_event);
 
         self::assertSame($this->add_event_msg, $response->getMessage());
@@ -228,14 +228,14 @@ class EventLogTest extends TestCase
         );
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-multi-likes';
+        $user_id = 'php-add-multi-likes';
         $item_ids = ['P1000000', 'P1000001'];
 
         $options = array(
             'timestamp' => time()
         );
 
-        $like_event = new LikeEvent($customer_id, $item_ids, $options);
+        $like_event = new LikeEvent($user_id, $item_ids, $options);
         $response = $client->addEventLog($like_event);
 
         self::assertSame($this->add_event_msg, $response->getMessage());
@@ -248,10 +248,10 @@ class EventLogTest extends TestCase
     public function testAddSingleCartaddEventLog()
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-single-cartadd';
+        $user_id = 'php-add-single-cartadd';
         $item_id = 'P1000005';
 
-        $cartadd_event = new CartaddEvent($customer_id, $item_id);
+        $cartadd_event = new CartaddEvent($user_id, $item_id);
         $response = $client->addEventLog($cartadd_event);
 
         self::assertSame($this->add_event_msg, $response->getMessage());
@@ -265,14 +265,14 @@ class EventLogTest extends TestCase
         );
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-multi-cartadds';
+        $user_id = 'php-add-multi-cartadds';
         $item_ids = ['P1000000', 'P1000001'];
 
         $options = array(
             'timestamp' => time()
         );
 
-        $cartadd_event = new CartaddEvent($customer_id, $item_ids, $options);
+        $cartadd_event = new CartaddEvent($user_id, $item_ids, $options);
         $response = $client->addEventLog($cartadd_event);
 
         self::assertSame($this->add_event_msg, $response->getMessage());
@@ -285,10 +285,10 @@ class EventLogTest extends TestCase
     public function testAddSingleRateEventLog()
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-single-rate';
+        $user_id = 'php-add-single-rate';
         $item_id = ['item_id' => 'P1000005', 'value' => 3.0];
 
-        $rate_event = new RateEvent($customer_id, $item_id);
+        $rate_event = new RateEvent($user_id, $item_id);
         $response = $client->addEventLog($rate_event);
 
         self::assertSame($this->add_event_msg, $response->getMessage());
@@ -301,7 +301,7 @@ class EventLogTest extends TestCase
             'Rate event doesn\'t support batch'
         );
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-multi-rates';
+        $user_id = 'php-add-multi-rates';
         $rate_actions = [
             ['item_id' => 'P1000005', 'value' => 3.0],
             ['item_id' => 'P1000006', 'value' => 4.0]
@@ -311,7 +311,7 @@ class EventLogTest extends TestCase
             'timestamp' => time()
         );
 
-        $rate_event = new RateEvent($customer_id, $rate_actions, $options);
+        $rate_event = new RateEvent($user_id, $rate_actions, $options);
         $response = $client->addEventLog($rate_event);
 
         self::assertSame($this->add_event_msg, $response->getMessage());
@@ -325,12 +325,12 @@ class EventLogTest extends TestCase
         );
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-raise-error';
+        $user_id = 'php-raise-error';
         $rate_actions = [
             ['item_id' => 'P1000007'],
         ];
 
-        $purchase_event = new RateEvent($customer_id, $rate_actions);
+        $purchase_event = new RateEvent($user_id, $rate_actions);
         $client->addEventLog($purchase_event);
     }
 
@@ -343,13 +343,13 @@ class EventLogTest extends TestCase
 
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-raise-error';
+        $user_id = 'php-raise-error';
         $rate_actions = [
             'P20007' => ['price' => 11000, 'count' => 3],
             'P20008' => ['price' => 12000, 'count' => 2],
         ];
 
-        $purchase_event = new RateEvent($customer_id, $rate_actions);
+        $purchase_event = new RateEvent($user_id, $rate_actions);
         $client->addEventLog($purchase_event);
     }
 
@@ -361,10 +361,10 @@ class EventLogTest extends TestCase
         );
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-raise-error';
+        $user_id = 'php-raise-error';
         $rate_actions = [];
 
-        $purchase_event = new RateEvent($customer_id, $rate_actions);
+        $purchase_event = new RateEvent($user_id, $rate_actions);
         $client->addEventLog($purchase_event);
     }
 
@@ -376,10 +376,10 @@ class EventLogTest extends TestCase
         );
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-raise-error';
+        $user_id = 'php-raise-error';
         $rate_actions = 'P1234678';
 
-        $purchase_event = new RateEvent($customer_id, $rate_actions);
+        $purchase_event = new RateEvent($user_id, $rate_actions);
         $client->addEventLog($purchase_event);
     }
 
@@ -391,10 +391,10 @@ class EventLogTest extends TestCase
         );
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-raise-error';
+        $user_id = 'php-raise-error';
         $rate_actions = ['item_id' => 'P1112345'];
 
-        $purchase_event = new RateEvent($customer_id, $rate_actions);
+        $purchase_event = new RateEvent($user_id, $rate_actions);
         $client->addEventLog($purchase_event);
     }
 
@@ -406,10 +406,10 @@ class EventLogTest extends TestCase
         );
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-raise-error';
+        $user_id = 'php-raise-error';
         $rate_actions = ['item_id' => 'P1112345', 'price' => 3000];
 
-        $purchase_event = new RateEvent($customer_id, $rate_actions);
+        $purchase_event = new RateEvent($user_id, $rate_actions);
         $client->addEventLog($purchase_event);
     }
 
@@ -419,11 +419,11 @@ class EventLogTest extends TestCase
     public function testAddSinglecustomEventLog()
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-single-custom';
+        $user_id = 'php-add-single-custom';
         $custom_event = 'search';
         $custom_action = ['item_id' => 'P1000005', 'value' => null];
 
-        $custom_event = new CustomEvent($customer_id, $custom_event, $custom_action);
+        $custom_event = new CustomEvent($user_id, $custom_event, $custom_action);
         $response = $client->addEventLog($custom_event);
 
         self::assertSame($this->add_event_msg, $response->getMessage());
@@ -432,7 +432,7 @@ class EventLogTest extends TestCase
     public function testAddMultiplecustomEventLog()
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-multi-customs';
+        $user_id = 'php-add-multi-customs';
         $custom_event_type = 'search';
 
         $custom_action = array(
@@ -443,7 +443,7 @@ class EventLogTest extends TestCase
             'timestamp' => time()
         );
 
-        $custom_event = new CustomEvent($customer_id, $custom_event_type, $custom_action, $options);
+        $custom_event = new CustomEvent($user_id, $custom_event_type, $custom_action, $options);
         $response = $client->addEventLog($custom_event);
 
         self::assertSame($this->add_event_msg, $response->getMessage());
@@ -452,7 +452,7 @@ class EventLogTest extends TestCase
     public function testAddCustomEventLogWithIndexedArray()
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-add-multi-customs';
+        $user_id = 'php-add-multi-customs';
         $custom_event_type = 'search';
 
         $custom_action = array(
@@ -465,7 +465,7 @@ class EventLogTest extends TestCase
             'timestamp' => time()
         );
 
-        $custom_event = new CustomEvent($customer_id, $custom_event_type, $custom_action, $options);
+        $custom_event = new CustomEvent($user_id, $custom_event_type, $custom_action, $options);
         $response = $client->addEventLog($custom_event);
 
         self::assertSame($this->add_event_msg, $response->getMessage());
@@ -482,10 +482,10 @@ class EventLogTest extends TestCase
 
         $bad_secret = '123456777';
         $client = new ZaiClient(self::CLIENT_ID, $bad_secret);
-        $customer_id = 'php-raise-error';
+        $user_id = 'php-raise-error';
         $item_id = 'P1000005';
 
-        $custom_event = new ProductDetailViewEvent($customer_id, $item_id);
+        $custom_event = new ProductDetailViewEvent($user_id, $item_id);
         $client->addEventLog($custom_event); // This should throw ZaiClientException
     }
 
@@ -496,10 +496,10 @@ class EventLogTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-raise-error';
+        $user_id = 'php-raise-error';
         $item_ids = ['P1000005', 'P1000006', 'P100007'];
 
-        $view_event = new ProductDetailViewEvent($customer_id, $item_ids);
+        $view_event = new ProductDetailViewEvent($user_id, $item_ids);
         $client->updateEventLog($view_event); // This should throw ZaiClientException
     }
 
@@ -509,12 +509,12 @@ class EventLogTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-raise-error';
+        $user_id = 'php-raise-error';
         $orders = [
             ['item_id' => 'P1000007', 'price' => 11000],
         ];
 
-        $purchase_event = new PurchaseEvent($customer_id, $orders);
+        $purchase_event = new PurchaseEvent($user_id, $orders);
         $client->addEventLog($purchase_event);
     }
 
@@ -526,13 +526,13 @@ class EventLogTest extends TestCase
         );
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-raise-error';
+        $user_id = 'php-raise-error';
         $orders = [
             ['P20007' => ['price' => 11000, 'count' => 3]],
             ['P20008' => ['price' => 12000, 'count' => 2]],
         ];
 
-        $purchase_event = new PurchaseEvent($customer_id, $orders);
+        $purchase_event = new PurchaseEvent($user_id, $orders);
         $client->addEventLog($purchase_event);
     }
 
@@ -544,10 +544,10 @@ class EventLogTest extends TestCase
         );
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-raise-error';
+        $user_id = 'php-raise-error';
         $orders = [];
 
-        $purchase_event = new PurchaseEvent($customer_id, $orders);
+        $purchase_event = new PurchaseEvent($user_id, $orders);
         $client->addEventLog($purchase_event);
     }
 
@@ -556,10 +556,10 @@ class EventLogTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = generateRandomString(101);
+        $user_id = generateRandomString(101);
 
         $item_id = ['P12345'];
-        $view_event = new ProductDetailViewEvent($customer_id, $item_id);
+        $view_event = new ProductDetailViewEvent($user_id, $item_id);
         $client->addEventLog($view_event);
     }
 
@@ -568,10 +568,10 @@ class EventLogTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-raise-error';
+        $user_id = 'php-raise-error';
 
         $item_id = [generateRandomString(101)];
-        $view_event = new ProductDetailViewEvent($customer_id, $item_id);
+        $view_event = new ProductDetailViewEvent($user_id, $item_id);
         $client->addEventLog($view_event);
     }
 
@@ -581,11 +581,11 @@ class EventLogTest extends TestCase
         $this->expectExceptionMessage('Length of event type must be between 1 and 100.');
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-raise-error';
+        $user_id = 'php-raise-error';
 
         $custom_event_type = generateRandomString(102);
         $custom_action = ['item_id' => 'P99999', 'value' => 9];
-        $custom_event = new CustomEvent($customer_id, $custom_event_type, $custom_action);
+        $custom_event = new CustomEvent($user_id, $custom_event_type, $custom_action);
         $client->addEventLog($custom_event);
     }
 
@@ -595,13 +595,13 @@ class EventLogTest extends TestCase
         $this->expectExceptionMessage(sprintf("Number of total records cannot exceed 50, but your Event holds %d.", 55));
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $customer_id = 'php-raise-error';
+        $user_id = 'php-raise-error';
 
         $orders = array(
             ['item_id' => 'P1234567', 'price' => 11000, 'count' => 52],
             ['item_id' => 'P5678901', 'price' => 11000, 'count' => 3]
         );
-        $purchase_event = new PurchaseEvent($customer_id, $orders);
+        $purchase_event = new PurchaseEvent($user_id, $orders);
         $client->addEventLog($purchase_event);
     }
 }

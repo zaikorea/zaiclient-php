@@ -32,30 +32,30 @@ class RateEvent extends BaseEvent
      * 'value' keyword:
      * 
      *     // customer has rated an item to 0.5.
-     *     $customer_id =  '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1';
+     *     $user_id =  '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1';
      *     $rate_action = ['item_id => 'P1123456', 'value' => 0.5]
-     *     $rate_event = new RateEvent($customer_id, $rate_action);
+     *     $rate_event = new RateEvent($user_id, $rate_action);
      * 
      *     // customer has rated two items to 0.5, 0.8 respectively
      *     // at the same timestamp
-     *     $customer_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1';
+     *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1';
      *     $rate_actions = 
      *         ['item_id' => 'P1123456', 'value' => 0.5],
      *         ['item_id' => 'P1123458', 'value' => 0.8]
      *     ];
-     *     $rate_event_batch = new RateEvent($customer_id, $rate_actions);
+     *     $rate_event_batch = new RateEvent($user_id, $rate_actions);
      * 
      * The RateEvent class supports following options:
      *     - timesptamp: a custom timestamp given by the user, the user
      *                   can use this option to customize the timestamp
      *                   of the recorded event.
      * 
-     * @param int|string $customer_id
+     * @param int|string $user_id
      * @param array $rate_actions
      * @param array $options
      * 
      */
-    public function __construct($customer_id, $rate_action = array(), $options = array())
+    public function __construct($user_id, $rate_action = array(), $options = array())
     {
 
         // $rate_actions should not be an emtpy array
@@ -97,7 +97,7 @@ class RateEvent extends BaseEvent
             }
 
             array_push($events, new EventInBatch(
-                $customer_id,
+                $user_id,
                 $rate_action['item_id'],
                 $tmp_timestamp,
                 self::EVENT_TYPE,

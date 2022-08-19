@@ -28,25 +28,25 @@ class SearchEvent extends BaseEvent
      * item_id or an array of item_ids * default request options to apply 
      * to each request: 
      * 
-     *     $customer_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
+     *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
      *     $event_value = 'Blue Jeans'
-     *     $view_event = new SearchEvent($customer_id, $event_value);
+     *     $view_event = new SearchEvent($user_id, $event_value);
      * 
-     *     $customer_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
+     *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
      *     $event_value = ['Blue Jeans', 'Chanel Purfume'];
      *     $options = ['timestamp'=> 1657197315];
-     *     $view_event_batch = new SearchEvent($customer_id, $event_values, $options);
+     *     $view_event_batch = new SearchEvent($user_id, $event_values, $options);
      *
      * The SearchEvent class supports following options:
      *     - timesptamp: a custom timestamp given by the user, the user
      *                   can use this option to customize the timestamp
      *                   of the recorded event.
      * 
-     * @param int|string $customer_id
+     * @param int|string $user_id
      * @param string|array $event_values
      * @param array $options
      */
-    public function __construct($customer_id, $search_query, $options = array())
+    public function __construct($user_id, $search_query, $options = array())
     {
         // $page_type should not be an empty string
         if (!$search_query)
@@ -61,8 +61,7 @@ class SearchEvent extends BaseEvent
             );
 
         // change to array if $event_value is a single string
-        if (is_string($search_query))
-            $search_queries = array($search_query);
+        $search_queries = array($search_query);
 
         // set timestamp to custom timestamp given by the user
         $this->setTimestamp(strval(microtime(true)));
@@ -75,7 +74,7 @@ class SearchEvent extends BaseEvent
 
         foreach ($search_queries as $search_query) {
             array_push($events, new EventInBatch(
-                $customer_id,
+                $user_id,
                 self::ITEM_ID,
                 $tmp_timestamp,
                 self::EVENT_TYPE,
