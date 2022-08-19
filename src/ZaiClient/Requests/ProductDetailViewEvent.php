@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ViewEvent
+ * ProductDetailViewEvent
  * @author Uiseop Eom <tech@zaikorea.org>
  * @modifiedBy <name>
  */
@@ -13,13 +13,13 @@ use ZaiKorea\ZaiClient\Requests\EventInBatch;
 use ZaiKorea\ZaiClient\Configs\Config;
 use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
 
-class ViewEvent extends BaseEvent
+class ProductDetailViewEvent extends BaseEvent
 {
-    const EVENT_TYPE = 'view';
-    const EVENT_VALUE = 1;
+    const EVENT_TYPE = 'product_detail_view';
+    const EVENT_VALUE = 'null';
 
     /**
-     * ViewEvent accepts: 
+     * ProductDetailViewEvent accepts: 
      * - customer id
      * - single item_id or array of item_ids
      * - array of options
@@ -28,35 +28,40 @@ class ViewEvent extends BaseEvent
      * item_id or an array of item_ids * default request options to apply 
      * to each request: 
      * 
-     *     $customer_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
+     *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
      *     $item_id = 'P1123456'
-     *     $view_event = new ViewEvent($customer_id, $item_id);
+     *     $view_event = new ProductDetailViewEvent($user_id, $item_id);
      * 
-     *     $customer_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
+     *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
      *     $item_id = ['P11234567', 'P11234567'];
      *     $options = ['timestamp'=> 1657197315];
-     *     $view_event_batch = new ViewEvent($customer_id, $item_ids, $options);
+     *     $view_event_batch = new ProductDetailViewEvent($user_id, $item_ids, $options);
      *
-     * The ViewEvent class supports following options:
+     * The ProductDetailViewEvent class supports following options:
      *     - timesptamp: a custom timestamp given by the user, the user
      *                   can use this option to customize the timestamp
      *                   of the recorded event.
      * 
-     * @param int|string $customer_id
-     * @param string|array $item_ids
+     * @param int|string $user_id
+     * @param string|array $item_id
      * @param array $options
      */
-    public function __construct($customer_id, $item_ids, $options = array())
+    public function __construct($user_id, $item_id, $options = array())
     {
-        // $item_ids should not be an emtpy array
-        if (!$item_ids)
+        if (!$item_id)
             throw new \InvalidArgumentException(
-                sprintf(Config::NULL_ARG_ERRMSG, self::class, __FUNCTION__, 2)
+                'Length of item id must be between 1 and 100.'
             );
 
-        // change to array if $item_id is a single string
-        if (is_string($item_ids))
-            $item_ids = array($item_ids);
+        // $item_id should not be an array (doesn't support batch)
+        if (is_array($item_id))
+            throw new \InvalidArgumentException(
+                sprintf(Config::NON_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
+            );
+
+        // change to array if $item_id is a single string (BaseEvent supports)
+        if (is_string($item_id))
+            $item_ids = array($item_id);
 
         // set timestamp to custom timestamp given by the user
         $this->setTimestamp(strval(microtime(true)));
@@ -69,7 +74,7 @@ class ViewEvent extends BaseEvent
 
         foreach ($item_ids as $item_id) {
             array_push($events, new EventInBatch(
-                $customer_id,
+                $user_id,
                 $item_id,
                 $tmp_timestamp,
                 self::EVENT_TYPE,

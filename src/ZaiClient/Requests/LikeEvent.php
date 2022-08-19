@@ -19,7 +19,7 @@ use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
 class LikeEvent extends BaseEvent
 {
     const EVENT_TYPE = 'like';
-    const EVENT_VALUE = 1;
+    const EVENT_VALUE = 'null';
 
     /**
      * LikeEvent accepts: 
@@ -31,35 +31,40 @@ class LikeEvent extends BaseEvent
      * item_id or an array of item_ids * default request options to apply 
      * to each request: 
      * 
-     *     $customer_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
+     *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
      *     $item_id = 'P1123456'
-     *     $like_event = new LikeEvent($customer_id, $item_id);
+     *     $like_event = new LikeEvent($user_id, $item_id);
      * 
-     *     $customer_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
+     *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
      *     $item_id = ['P11234567', 'P11234567'];
      *     $options = ['timestamp'=> 1657197315];
-     *     $like_event_batch = new LikeEvent($customer_id, $item_ids, $options);
+     *     $like_event_batch = new LikeEvent($user_id, $item_ids, $options);
      *
      * The LikeEvent class supports following options:
      *     - timesptamp: a custom timestamp given by the user, the user
      *                   can use this option to customize the timestamp
      *                   of the recorded event.
      * 
-     * @param int|string $customer_id
+     * @param int|string $user_id
      * @param string|array $item_ids
      * @param array $options
      */
-    public function __construct($customer_id, $item_ids, $options = array())
+    public function __construct($user_id, $item_id, $options = array())
     {
-        // $item_ids should not be an emtpy array
-        if (!$item_ids)
+        // $item_id should not be an emtpy array
+        if (!$item_id)
             throw new \InvalidArgumentException(
-                sprintf(Config::NULL_ARG_ERRMSG, self::class, __FUNCTION__,  2)
+                'Length of item id must be between 1 and 100.'
+            );
+
+        // $page_type should not be an array (doesn't support batch)
+        if (is_array($item_id))
+            throw new \InvalidArgumentException(
+                sprintf(Config::BATCH_ERRMSG, self::class)
             );
 
         // change to array if $item_id is a single string
-        if (is_string($item_ids))
-            $item_ids = array($item_ids);
+        $item_ids = array($item_id);
 
         // set timestamp to custom timestamp given by the user
         $this->setTimestamp(strval(microtime(true)));
@@ -72,7 +77,7 @@ class LikeEvent extends BaseEvent
 
         foreach ($item_ids as $item_id) {
             array_push($events, new EventInBatch(
-                $customer_id,
+                $user_id,
                 $item_id,
                 $tmp_timestamp,
                 self::EVENT_TYPE,

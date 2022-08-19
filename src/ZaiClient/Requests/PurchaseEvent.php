@@ -34,14 +34,14 @@ class PurchaseEvent extends BaseEvent
      *     // imagine a customer can search for a specific item and
      *     // you want to log the search record, in this case there is
      *     // no need for a value in the action.
-     *     $customer_id =  '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1';
+     *     $user_id =  '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1';
      *     $order = [ 'item_id' => 'P123431', 'price' => 100001, 'count' => 5]
-     *     $purchase_event = new PurchaseEvent($customer_id, $order);
+     *     $purchase_event = new PurchaseEvent($user_id, $order);
      * 
      *     // imagine a customer can send a recommendation of multiple 
      *     // items to another user at once.
      *     // And you want to log the items and their prices.
-     *     $customer_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1';
+     *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1';
      *     $orders = [
      *         [ 
      *             'item_id' => 'P123431',
@@ -54,19 +54,19 @@ class PurchaseEvent extends BaseEvent
      *             'count' => 5
      *         ]
      *     ];
-     *     $purchase_event_batch = new PurchaseEvent($customer_id, $orders);
+     *     $purchase_event_batch = new PurchaseEvent($user_id, $orders);
      * 
      * The PurchaseEvent class supports following options:
      *     - timesptamp: a custom timestamp given by the user, the user
      *                   can use this option to customize the timestamp
      *                   of the recorded event.
      * 
-     * @param int|string $customer_id
+     * @param int|string $user_id
      * @param array $item_ids
      * @param array $options
      * 
      */
-    public function __construct($customer_id, $orders = array(), $options = array())
+    public function __construct($user_id, $orders = array(), $options = array())
     {
         // $orders should not be an emtpy array
         if (!$orders)
@@ -102,7 +102,7 @@ class PurchaseEvent extends BaseEvent
 
             for ($i = 0; $i < $order_spec['count']; $i++) {
                 array_push($events, new EventInBatch(
-                    $customer_id,
+                    $user_id,
                     $order_spec['item_id'],
                     $tmp_timestamp,
                     self::EVENT_TYPE,

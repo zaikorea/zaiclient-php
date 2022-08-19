@@ -33,35 +33,35 @@ class CustomEvent extends BaseEvent
      *     // imagine a customer can search for a specific item and
      *     // you want to log the search record, in this case there is
      *     // no need for a value in the action.
-     *     $customer_id =  '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1';
+     *     $user_id =  '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1';
      *     $cutom_event_type = 'search';
      *     $custom_action = ['item_id'=> 'P1123456', 'value'=> null];
-     *     $custom_event = new CustomEvent($customer_id, $custom_event_type, $custom_action);
+     *     $custom_event = new CustomEvent($user_id, $custom_event_type, $custom_action);
      * 
      *     // imagine a customer can send a recommendation of a single item
      *     // to other users at once. And you want to log the items and 
      *     // their prices.
-     *     $customer_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1';
+     *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1';
      *     $cutom_event_type = 'send';
      *     $custom_actions = 
      *         ['item_id' => 'P1123456', 'value' => 'USER_ID_1'],
      *         ['item_id' => 'P1123458', 'value' => 'USER_ID_2'],
      *         ['item_id' => 'P1123459', 'value' => 'USER_ID_3'],
      *     ];
-     *     $custom_event_batch = new CustomEvent($customer_id, $custom_event_type, $custom_actions);
+     *     $custom_event_batch = new CustomEvent($user_id, $custom_event_type, $custom_actions);
      * 
      * The CustomEvent class supports following options:
      *     - timesptamp: a custom timestamp given by the user, the user
      *                   can use this option to customize the timestamp
      *                   of the recorded event.
      * 
-     * @param int|string $customer_id
+     * @param int|string $user_id
      * @param string $custom_event_type
      * @param string|array $item_ids
      * @param array $options
      */
     public function __construct(
-        $customer_id,
+        $user_id,
         $custom_event_type,
         $custom_actions = array(),
         $options = array()
@@ -109,7 +109,7 @@ class CustomEvent extends BaseEvent
                 );
             }
             array_push($events, new EventInBatch(
-                $customer_id,
+                $user_id,
                 $custom_action['item_id'],
                 $tmp_timestamp,
                 $custom_event_type,
