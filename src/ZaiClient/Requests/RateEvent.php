@@ -11,7 +11,6 @@ namespace ZaiKorea\ZaiClient\Requests;
 use ZaiKorea\ZaiClient\Requests\BaseEvent;
 use ZaiKorea\ZaiClient\Requests\EventInBatch;
 use ZaiKorea\ZaiClient\Configs\Config;
-use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
 
 /** 
  * @final
@@ -88,7 +87,7 @@ class RateEvent extends BaseEvent
         $event = new EventInBatch(
             $user_id,
             $rate_action['item_id'],
-            $tmp_timestamp,
+            $this->getTimestamp(),
             self::EVENT_TYPE,
             $rate_action['value']
         );

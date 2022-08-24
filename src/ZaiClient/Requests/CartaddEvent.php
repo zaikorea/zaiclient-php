@@ -11,7 +11,6 @@ namespace ZaiKorea\ZaiClient\Requests;
 use ZaiKorea\ZaiClient\Requests\BaseEvent;
 use ZaiKorea\ZaiClient\Requests\EventInBatch;
 use ZaiKorea\ZaiClient\Configs\Config;
-use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
 
 /** 
  * @final
@@ -56,7 +55,6 @@ class CartaddEvent extends BaseEvent
             throw new \InvalidArgumentException(
                 'Length of item id must be between 1 and 100.'
             );
-        
         // $item_id should not be an array (doesn't support batch)
         if (is_array($item_id))
             throw new \InvalidArgumentException(

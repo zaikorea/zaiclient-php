@@ -11,7 +11,6 @@ namespace ZaiKorea\ZaiClient\Requests;
 use ZaiKorea\ZaiClient\Requests\BaseEvent;
 use ZaiKorea\ZaiClient\Requests\EventInBatch;
 use ZaiKorea\ZaiClient\Configs\Config;
-use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
 
 class ProductDetailViewEvent extends BaseEvent
 {
@@ -52,7 +51,6 @@ class ProductDetailViewEvent extends BaseEvent
             throw new \InvalidArgumentException(
                 'Length of item id must be between 1 and 100.'
             );
-
         // $item_id should not be an array (doesn't support batch)
         if (is_array($item_id))
             throw new \InvalidArgumentException(
@@ -64,7 +62,7 @@ class ProductDetailViewEvent extends BaseEvent
         if (isset($options['timestamp']))
             $this->setTimestamp($options['timestamp']);
 
-        $events = new EventInBatch(
+        $event = new EventInBatch(
             $user_id,
             $item_id,
             $this->getTimestamp(),

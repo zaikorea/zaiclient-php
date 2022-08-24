@@ -11,7 +11,6 @@ namespace ZaiKorea\ZaiClient\Requests;
 use ZaiKorea\ZaiClient\Requests\BaseEvent;
 use ZaiKorea\ZaiClient\Requests\EventInBatch;
 use ZaiKorea\ZaiClient\Configs\Config;
-use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
 
 class PageViewEvent extends BaseEvent
 {
@@ -53,13 +52,11 @@ class PageViewEvent extends BaseEvent
             throw new \InvalidArgumentException(
                 sprintf(Config::NON_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
             );
-
         // $page_type should be a non-empty string
         if (!$page_type)
             throw new \InvalidArgumentException(
                 sprintf(Config::NON_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
             );
-
         // $page_type should not be an array (doesn't support batch)
         if (is_array($page_type))
             throw new \InvalidArgumentException(

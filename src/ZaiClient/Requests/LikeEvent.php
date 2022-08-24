@@ -11,7 +11,6 @@ namespace ZaiKorea\ZaiClient\Requests;
 use ZaiKorea\ZaiClient\Requests\BaseEvent;
 use ZaiKorea\ZaiClient\Requests\EventInBatch;
 use ZaiKorea\ZaiClient\Configs\Config;
-use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
 
 /** 
  * @final
@@ -56,13 +55,11 @@ class LikeEvent extends BaseEvent
             throw new \InvalidArgumentException(
                 'Length of item id must be between 1 and 100.'
             );
-
         // $page_type should not be an array (doesn't support batch)
         if (is_array($item_id))
             throw new \InvalidArgumentException(
                 sprintf(Config::BATCH_ERRMSG, self::class)
             );
-
 
         // set timestamp to custom timestamp given by the user
         $this->setTimestamp(strval(microtime(true)));
