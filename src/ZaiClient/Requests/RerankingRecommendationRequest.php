@@ -22,8 +22,11 @@ class RerankingRecommendationRequest extends RecommendationRequest
      * @param string $user_id
      * @param string $item_ids
      */
-    public function __construct($user_id, $item_ids, $limit, $options = array())
+    public function __construct($user_id, $item_ids, $options = array())
     {
+        if (!(is_null($user_id) || strlen($user_id) > 0 && strlen($user_id) <= 100))
+            throw new \InvalidArgumentException('Length of user id must be between 1 and 100.');
+
         if (!is_array($item_ids))
             throw new \InvalidArgumentException("item_ids must be an array");
 
@@ -35,18 +38,17 @@ class RerankingRecommendationRequest extends RecommendationRequest
                 throw new \InvalidArgumentException('Length of item id must be between 1 and 100.');
         }
 
-        if (!(is_null(null) || strlen($user_id) > 0 && strlen($user_id) <= 100))
-            throw new \InvalidArgumentException('Length of user id must be between 1 and 100.');
-
-        if (!(is_null(null) || (0 < $limit && $limit <= 1000000)))
-            throw new \InvalidArgumentException('Limit must be null or between 1 and 1000,000.');
-
         if (!is_array($options))
             throw new \InvalidArgumentException("Options must be given as an array.");
 
         if (isset($options['offset'])) {
             if (!(0 <= $options['offset'] && $options['offset'] <= 1000000))
                 throw new \InvalidArgumentException('Offset must be between 0 and 1000,000.');
+        }
+
+        if (isset($options['limit'])) {
+            if (!(0 < $options['limit'] && $options['limit'] <= 1000000))
+                throw new \InvalidArgumentException('Limit must be between 0 and 1000,000.');
         }
 
         if (isset($options['recommendation_type'])) { // php tip! isset() returns false if the value of $options['recommendation_type'] is null
@@ -65,7 +67,7 @@ class RerankingRecommendationRequest extends RecommendationRequest
 
         $this->user_id = $user_id;
         $this->item_ids = $item_ids; // This should be an array
-        $this->limit = $limit;
+        $this->limit = isset($options['limit']) ? $options['limit'] : count($item_ids);
 
         $this->recommendation_type = isset($options['recommendation_type']) ? $options['recommendation_type'] : self::DEFAULT_RECOMMENDATION_TYPE;
         $this->offset = isset($options['offset']) ? $options['offset'] : self::DEFAULT_OFFSET;
