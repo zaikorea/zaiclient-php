@@ -40,6 +40,11 @@ abstract class RecommendationRequest implements \JsonSerializable
     protected $offset;
 
     /**
+     * @var string $options jsonString of options
+     */
+    protected $options;
+
+    /**
      * Get api path 
      * @return string PATH to use for request
      */
@@ -77,6 +82,28 @@ abstract class RecommendationRequest implements \JsonSerializable
     {
         return $this->recommendation_type;
     }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * Utility function
+     *
+     * @param array $arr
+     * @return boolean
+     */
+    public function isAssoc(array $arr)
+    {
+        if (array() === $arr) return false;
+        return array_keys($arr) !== range(0, count($arr) - 1);
+    }
+
 
     public function jsonSerialize()
     {

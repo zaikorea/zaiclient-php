@@ -13,6 +13,7 @@ class UserRecommendationRequest extends RecommendationRequest
 {
     const DEFAULT_RECOMMENDATION_TYPE = 'homepage';
     const DEFAULT_OFFSET = 0;
+    const DEFAULT_OPTIONS = "";
     const RECOMMENDER_PATH = '/user-recommendations';
 
 
@@ -37,11 +38,21 @@ class UserRecommendationRequest extends RecommendationRequest
                 throw new \InvalidArgumentException('Length of recommendation type must be between 1 and 100.');
         }
 
+        if (isset($options['options'])) {
+            if (!is_array($options['options']) || !$this->isAssoc($options['options'])) {
+                throw new \InvalidArgumentException("\$options['options'] must be an associative array.");
+            }
+            if (strlen(json_encode($options['options'])) >= 1000) {
+                throw new \InvalidArgumentException("\$options['options'] must be less than 1000 when converted to string");
+            }
+        } 
+
         $this->user_id = $user_id;
         $this->limit = $limit;
 
         $this->recommendation_type = isset($options['recommendation_type']) ? $options['recommendation_type'] : self::DEFAULT_RECOMMENDATION_TYPE;
         $this->offset = isset($options['offset']) ? $options['offset'] : self::DEFAULT_OFFSET;
+        $this->options = isset($options['options']) ? json_encode($options['options']) : self::DEFAULT_OPTIONS;
     }
 
     /**

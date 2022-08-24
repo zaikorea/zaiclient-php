@@ -13,6 +13,7 @@ class RelatedItemsRecommendationRequest extends RecommendationRequest
 {
     const DEFAULT_RECOMMENDATION_TYPE = "product_detail_page";
     const DEFAULT_OFFSET = 0;
+    const DEFAULT_OPTIONS = "";
     const RECOMMENDER_PATH = "/related-items";
 
     public function __construct($item_id, $limit, $options = array())
@@ -34,12 +35,22 @@ class RelatedItemsRecommendationRequest extends RecommendationRequest
             if (!(0 < strlen($options['recommendation_type'] && strlen($options['recommendation_type']) <= 100)))
                 throw new \InvalidArgumentException('Length of recommendation type must be between 1 and 100.');
         }
+        if (isset($options['options'])) {
+            if (!is_array($options['options']) || !$this->isAssoc($options['options'])) {
+                throw new \InvalidArgumentException("\$options['options'] must be an associative array.");
+            }
+            if (strlen(json_encode($options['options'])) >= 1000) {
+                echo strlen(json_encode($options['options']));
+                throw new \InvalidArgumentException("\$options['options'] must be less than 1000 when converted to string");
+            }
+        } 
 
         $this->item_id = $item_id;
         $this->limit = $limit;
 
         $this->recommendation_type = isset($options['recommendation_type']) ? $options['recommendation_type'] : self::DEFAULT_RECOMMENDATION_TYPE;
         $this->offset = isset($options['offset']) ? $options['offset'] : self::DEFAULT_OFFSET;
+        $this->options = isset($options['options']) ? json_encode($options['options']) : self::DEFAULT_OPTIONS;
     }
 
     /**
