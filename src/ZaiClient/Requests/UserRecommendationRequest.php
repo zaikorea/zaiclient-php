@@ -21,23 +21,18 @@ class UserRecommendationRequest extends RecommendationRequest
     {
         if (!(is_null($user_id) || strlen($user_id) > 0 && strlen($user_id) <= 100))
             throw new \InvalidArgumentException('Length of user id must be between 1 and 100.');
-
         if (!(0 < $limit && $limit <= 1000000))
             throw new \InvalidArgumentException('Limit must be between 1 and 1000,000.');
-
         if (!is_array($options))
             throw new \InvalidArgumentException('Options must be given as an array.');
-
         if (isset($options['offset'])) {
             if (!(0 <= $options['offset'] && $options['offset'] <= 1000000))
                 throw new \InvalidArgumentException('Offset must be between 0 and 1000,000.');
         }
-
         if (isset($options['recommendation_type'])) { // php tip! isset() returns false if the value of $options['recommendation_type'] is null
             if (!(0 < strlen($options['recommendation_type'] && strlen($options['recommendation_type']) <= 100)))
                 throw new \InvalidArgumentException('Length of recommendation type must be between 1 and 100.');
         }
-
         if (isset($options['options'])) {
             if (!is_array($options['options']) || !$this->isAssoc($options['options'])) {
                 throw new \InvalidArgumentException("\$options['options'] must be an associative array.");

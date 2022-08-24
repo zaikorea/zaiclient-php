@@ -26,10 +26,8 @@ class RerankingRecommendationRequest extends RecommendationRequest
     {
         if (!(is_null($user_id) || strlen($user_id) > 0 && strlen($user_id) <= 100))
             throw new \InvalidArgumentException('Length of user id must be between 1 and 100.');
-
         if (!is_array($item_ids))
             throw new \InvalidArgumentException("item_ids must be an array");
-
         if (!(0 < count($item_ids) && count($item_ids) <= 1000000))
             throw new \InvalidArgumentException("Length of item_ids must be between 1 and 1000,000.");
 
@@ -37,7 +35,6 @@ class RerankingRecommendationRequest extends RecommendationRequest
             if (!(strlen($item_id) > 0 && strlen($item_id) <= 100))
                 throw new \InvalidArgumentException('Length of item id must be between 1 and 100.');
         }
-
         if (!is_array($options))
             throw new \InvalidArgumentException("Options must be given as an array.");
 
@@ -45,17 +42,14 @@ class RerankingRecommendationRequest extends RecommendationRequest
             if (!(0 <= $options['offset'] && $options['offset'] <= 1000000))
                 throw new \InvalidArgumentException('Offset must be between 0 and 1000,000.');
         }
-
         if (isset($options['limit'])) {
             if (!(0 < $options['limit'] && $options['limit'] <= 1000000))
-                throw new \InvalidArgumentException('Limit must be between 0 and 1000,000.');
+                throw new \InvalidArgumentException('Limit must be between 1 and 1000,000.');
         }
-
         if (isset($options['recommendation_type'])) { // php tip! isset() returns false if the value of $options['recommendation_type'] is null
             if (!(0 < strlen($options['recommendation_type'] && strlen($options['recommendation_type']) <= 100)))
                 throw new \InvalidArgumentException('Length of recommendation type must be between 1 and 100.');
         }
-
         if (isset($options['options'])) {
             if (!is_array($options['options']) || !$this->isAssoc($options['options'])) {
                 throw new \InvalidArgumentException("\$options['options'] must be an associative array.");

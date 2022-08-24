@@ -13,11 +13,12 @@ class RecommendationTest extends TestCase
 {
     const CLIENT_ID = 'test';
     const SECRET = 'KVPzvdHTPWnt0xaEGc2ix-eqPXFCdEV5zcqolBr_h1k';
-    const LARGE_LIMIT_ERRMSG = 'Limit must be between 0 and 1000,000.';
+    const LIMIT_ERRMSG = 'Limit must be between 1 and 1000,000.';
     const ITEM_ID_ERRMSG = 'Length of item id must be between 1 and 100.';
     const LONG_OPTIONS_ERRMSG = "\$options['options'] must be less than 1000 when converted to string";
-
-    private $client_id = 'test';
+    const OPTIONS_TYPE_ERRMSG = 'Options must be given as an array.';
+    const REC_TYPE_ERRMSG = 'Length of recommendation type must be between 1 and 100.';
+    const ITEM_IDS_ERRMSG = 'Length of item_ids must be between 1 and 1000,000.';
 
     public function testGetRecommendationsWithUserRecommendationRequest()
     {
@@ -33,10 +34,24 @@ class RecommendationTest extends TestCase
         $request = new UserRecommendationRequest($user_id, $limit, $options);
         $response = $client->getRecommendations($request);
 
+        self::assertSame($request->getOptions(), '');
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertEquals($response->getItems(), ['user_homepage_ITEM_ID_0', 'user_homepage_ITEM_ID_1', 'user_homepage_ITEM_ID_2']);
         self::assertSame($response->getCount(), $limit, "items count don't match");
         self::assertTrue(time() - $response->getTimestamp() < 0.5);
+    }
+
+    public function testGetRecommendationsWithUserRecommendationWithDefaults()
+    {
+        $user_id = 'user';
+        $limit = 3;
+
+        $request = new UserRecommendationRequest($user_id, $limit);
+
+        self::assertSame($request->getOptions(), '');
+        self::assertSame($request->getOffset(), 0);
+        self::assertSame($request->getLimit(), $limit);
+        self::assertSame($request->getRecommendationType(), 'homepage');
     }
 
     public function testGetRecommendationsWithUserRecommendationRequestWithNull()
@@ -52,6 +67,7 @@ class RecommendationTest extends TestCase
         $request = new UserRecommendationRequest($user_id, $limit, $options);
         $response = $client->getRecommendations($request);
 
+        self::assertSame($request->getOptions(), '');
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertEquals($response->getItems(), ['None_homepage_ITEM_ID_0', 'None_homepage_ITEM_ID_1', 'None_homepage_ITEM_ID_2']);
         self::assertSame($response->getCount(), $limit, "items count don't match");
@@ -71,6 +87,7 @@ class RecommendationTest extends TestCase
         $request = new UserRecommendationRequest($user_id, $limit, $options);
         $response = $client->getRecommendations($request);
 
+        self::assertSame($request->getOptions(), '');
         self::assertSame($response->getItems()[0], 'testing_homepage_ITEM_ID_5');
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertSame($response->getCount(), $limit, "items count don't match");
@@ -121,6 +138,20 @@ class RecommendationTest extends TestCase
         self::assertTrue(time() - $response->getTimestamp() < 0.5);
     }
 
+    public function testGetRecommendationsWithRelatedItemsRecommendationRequestWithDefaults()
+    {
+
+        $item_id = "012345567788";
+        $limit = 10;
+
+        $request = new RelatedItemsRecommendationRequest($item_id, $limit);
+
+        self::assertSame($request->getOptions(), '');
+        self::assertSame($request->getOffset(), 0);
+        self::assertSame($request->getLimit(), $limit);
+        self::assertSame($request->getRecommendationType(), 'product_detail_page');
+    }
+
     public function testGetRecommendationsWithRelatedItemsRecommendationRequestWithOptions()
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
@@ -152,10 +183,11 @@ class RecommendationTest extends TestCase
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $user_id = "ZaiTest_User_id";
         $item_ids = ["1234", "5678", "9101112"];
-        $limit = count($item_ids);
+        $limit = 2;
         $options = [
             'recommendation_type' => 'all_products_page',
-            'offset' => 0
+            'offset' => 0,
+            'limit' => $limit
         ];
 
         $request = new RerankingRecommendationRequest($user_id, $item_ids, $options);
@@ -164,6 +196,19 @@ class RecommendationTest extends TestCase
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertSame($response->getCount(), $limit, "items count don't match");
         self::assertTrue(time() - $response->getTimestamp() < 0.5);
+    }
+
+    public function testGetRecommendationsWithRerankingRecommendationRequestWithDefaults()
+    {
+        $user_id = "ZaiTest_User_id";
+        $item_ids = ["1234", "5678", "9101112"];
+
+        $request = new RerankingRecommendationRequest($user_id, $item_ids);
+
+        self::assertSame($request->getOptions(), '');
+        self::assertSame($request->getOffset(), 0);
+        self::assertSame($request->getLimit(), count($item_ids));
+        self::assertSame($request->getRecommendationType(), 'all_products_page');
     }
 
     public function testGetRecommendationsWithRerankingRecommendationRequestWithOptions()
@@ -214,7 +259,7 @@ class RecommendationTest extends TestCase
     public function testUserRecommendationWithNullLimit()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Limit must be between 1 and 1000,000.');
+        $this->expectExceptionMessage(self::LIMIT_ERRMSG);
 
         $user_id = "ZaiTest_User_id";
         $limit = null;
@@ -229,7 +274,7 @@ class RecommendationTest extends TestCase
     public function testUserRecommendationWithNullRecommendationType()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Length of recommendation type must be between 1 and 100.');
+        $this->expectExceptionMessage(self::REC_TYPE_ERRMSG);
 
         $user_id = "LongRecommendationType";
         $limit = 3;
@@ -243,7 +288,7 @@ class RecommendationTest extends TestCase
     public function testUserRecommendationWithNoneArrayOptions()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Options must be given as an array.');
+        $this->expectExceptionMessage(self::OPTIONS_TYPE_ERRMSG);
 
         $user_id = "ZaiTest_User_id";
         $limit = 3;
@@ -268,43 +313,37 @@ class RecommendationTest extends TestCase
             'offset' => 5,
             'options' => $json_options
         ];
-
-        
         new UserRecommendationRequest($user_id, $limit, $options);
     }
 
     public function testRelatedItemsRecommendationWithNullLimit()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Limit must be between 1 and 1000,000.');
+        $this->expectExceptionMessage(self::LIMIT_ERRMSG);
 
         $user_id = "ZaiTest_User_id";
         $limit = null;
 
         $options = [
-            'recommendation_type' => 'homepage',
+            'recommendation_type' => 'product_datail_page',
             'offset' => 0
         ];
-        $request = new RelatedItemsRecommendationRequest($user_id, $limit, $options);
-        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $response = $client->getRecommendations($request);
+        new RelatedItemsRecommendationRequest($user_id, $limit, $options);
     }
 
     public function testRelatedRecommendationWithNullItemId()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Length of item id must be between 1 and 100.');
+        $this->expectExceptionMessage(self::ITEM_ID_ERRMSG);
 
         $item_id = null; 
         $limit = 10;
 
         $options = [
-            'recommendation_type' => 'homepage',
+            'recommendation_type' => 'product_datail_page',
             'offset' => 0
         ];
-        $request = new RelatedItemsRecommendationRequest($item_id, $limit, $options);
-        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $response = $client->getRecommendations($request);
+        new RelatedItemsRecommendationRequest($item_id, $limit, $options);
     }
 
     public function testRelatedRecommendationWithLongItemId()
@@ -325,12 +364,10 @@ class RecommendationTest extends TestCase
     public function testRerankingRecommendationWithEmptyItemIds()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Length of item_ids must be between 1 and 1000,000.');
+        $this->expectExceptionMessage(self::ITEM_IDS_ERRMSG);
 
-        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $user_id = "ZaiTest_User_id";
         $item_ids = [];
-        $limit = 3;
         $options = [
             'recommendation_type' => 'all_products_page',
             'offset' => 0
@@ -342,12 +379,10 @@ class RecommendationTest extends TestCase
     public function testRerankingRecommendationWithLargeLimit()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage(self::LARGE_LIMIT_ERRMSG);
+        $this->expectExceptionMessage(self::LIMIT_ERRMSG);
 
-        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $user_id = "ZaiTest_User_id";
         $item_ids = ['1234', '1234', '1234'];
-        $limit = 3;
         $options = [
             'limit' => 100000000,
             'recommendation_type' => 'all_products_page',
