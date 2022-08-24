@@ -43,7 +43,7 @@ class PageViewEvent extends BaseEvent
      *                   of the recorded event.
      * 
      * @param int|string $user_id
-     * @param string|array $event_values
+     * @param string $page_type
      * @param array $options
      */
     public function __construct($user_id, $page_type, $options = array())
@@ -60,35 +60,25 @@ class PageViewEvent extends BaseEvent
                 sprintf(Config::NON_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
             );
 
-        // change to array if $event_value is a single string
-        $page_type = array($page_type);
+        // $page_type should not be an array (doesn't support batch)
+        if (is_array($page_type))
+            throw new \InvalidArgumentException(
+                sprintf(Config::BATCH_ERRMSG, self::class)
+            );
 
         // set timestamp to custom timestamp given by the user
         $this->setTimestamp(strval(microtime(true)));
         if (isset($options['timestamp']))
             $this->setTimestamp($options['timestamp']);
 
-        $events = array();
+        $event = new EventInBatch(
+            $user_id,
+            self::ITEM_ID,
+            $this->getTimestamp(),
+            self::EVENT_TYPE,
+            $page_type
+        );
 
-        $tmp_timestamp = $this->getTimestamp();
-
-        foreach ($page_type as $event_value) {
-            array_push($events, new EventInBatch(
-                $user_id,
-                self::ITEM_ID,
-                $tmp_timestamp,
-                self::EVENT_TYPE,
-                $event_value
-            ));
-            $tmp_timestamp += Config::EPSILON;
-        }
-
-        if (count($events) > 50)
-            throw new BatchSizeLimitExceededException(count($events));
-
-        if (count($events) == 1)
-            $this->setPayload($events[0]);
-        else
-            $this->setPayload($events);
+        $this->setPayload($event);
     }
 }

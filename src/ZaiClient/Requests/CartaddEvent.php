@@ -46,7 +46,7 @@ class CartaddEvent extends BaseEvent
      *                   of the recorded event.
      * 
      * @param int|string $user_id
-     * @param string|array $item_id
+     * @param string $item_id
      * @param array $options
      */
     public function __construct($user_id, $item_id, $options = array())
@@ -57,40 +57,24 @@ class CartaddEvent extends BaseEvent
                 'Length of item id must be between 1 and 100.'
             );
         
-        // $page_type should not be an array (doesn't support batch)
+        // $item_id should not be an array (doesn't support batch)
         if (is_array($item_id))
             throw new \InvalidArgumentException(
                 sprintf(Config::BATCH_ERRMSG, self::class)
             );
 
-        // change to array if $item_id is a single string
-        $item_ids = array($item_id);
-
         $this->setTimestamp(strval(microtime(true)));
         if (isset($options['timestamp']))
             $this->setTimestamp($options['timestamp']);
 
-        $events = array();
+        $event = new EventInBatch(
+            $user_id,
+            $item_id,
+            $this->getTimestamp(),
+            self::EVENT_TYPE,
+            self::EVENT_VALUE
+        );
 
-        $tmp_timestamp = $this->getTimestamp();
-
-        foreach ($item_ids as $item_id) {
-            array_push($events, new EventInBatch(
-                $user_id,
-                $item_id,
-                $tmp_timestamp,
-                self::EVENT_TYPE,
-                self::EVENT_VALUE
-            ));
-            $tmp_timestamp += Config::EPSILON;
-        }
-
-        if (count($events) > 50)
-            throw new BatchSizeLimitExceededException(count($events));
-
-        if (count($events) == 1)
-            $this->setPayload($events[0]);
-        else
-            $this->setPayload($events);
+        $this->setPayload($event);
     }
 }
