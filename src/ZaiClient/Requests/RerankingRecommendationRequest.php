@@ -25,7 +25,7 @@ class RerankingRecommendationRequest extends RecommendationRequest
     public function __construct($user_id, $item_ids, $options = array())
     {
         if (!(is_null($user_id) || strlen($user_id) > 0 && strlen($user_id) <= 100))
-            throw new \InvalidArgumentException('Length of user id must be between 1 and 100.');
+            throw new \InvalidArgumentException('Length of user id must be between 1 and 100 or null.');
         if (!is_array($item_ids))
             throw new \InvalidArgumentException("item_ids must be an array");
         if (!(0 < count($item_ids) && count($item_ids) <= 1000000))

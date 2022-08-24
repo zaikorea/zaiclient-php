@@ -14,6 +14,7 @@ class RecommendationTest extends TestCase
     const CLIENT_ID = 'test';
     const SECRET = 'KVPzvdHTPWnt0xaEGc2ix-eqPXFCdEV5zcqolBr_h1k';
     const LIMIT_ERRMSG = 'Limit must be between 1 and 1000,000.';
+    const USER_ID_ERRMSG = 'Length of user id must be between 1 and 100 or null.';
     const ITEM_ID_ERRMSG = 'Length of item id must be between 1 and 100.';
     const LONG_OPTIONS_ERRMSG = "\$options['options'] must be less than 1000 when converted to string";
     const OPTIONS_TYPE_ERRMSG = 'Options must be given as an array.';
@@ -54,7 +55,7 @@ class RecommendationTest extends TestCase
         self::assertSame($request->getRecommendationType(), 'homepage');
     }
 
-    public function testGetRecommendationsWithUserRecommendationRequestWithNull()
+    public function testGetRecommendationsWithUserRecommendationRequestWithNullUserId()
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $user_id = null;
@@ -239,10 +240,25 @@ class RecommendationTest extends TestCase
 
 
     /* ------------------- Test Errors ---------------------  */
+    public function testUserRecommendationWithEmptyUserId()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(self::USER_ID_ERRMSG);
+
+        $user_id = "";
+        $limit = 50;
+
+        $options = [
+            'recommendation_type' => 'homepage',
+            'offset' => 0
+        ];
+        new UserRecommendationRequest($user_id, $limit, $options);
+    }
+
     public function testUserRecommendationWithLongUserId()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Length of user id must be between 1 and 100.');
+        $this->expectExceptionMessage(self::USER_ID_ERRMSG);
 
         $user_id = str_repeat('testing', 100);
         $limit = 50;
@@ -316,6 +332,36 @@ class RecommendationTest extends TestCase
         new UserRecommendationRequest($user_id, $limit, $options);
     }
 
+    public function testRelatedItemsRecommendationWithNullItemId()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(self::ITEM_ID_ERRMSG);
+
+        $user_id = null;
+        $limit = 10;
+
+        $options = [
+            'recommendation_type' => 'product_datail_page',
+            'offset' => 0
+        ];
+        new RelatedItemsRecommendationRequest($user_id, $limit, $options);
+    }
+
+    public function testRelatedItemsRecommendationWithEmptyItemId()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(self::ITEM_ID_ERRMSG);
+
+        $user_id = "";
+        $limit = 10;
+
+        $options = [
+            'recommendation_type' => 'product_datail_page',
+            'offset' => 0
+        ];
+        new RelatedItemsRecommendationRequest($user_id, $limit, $options);
+    }
+
     public function testRelatedItemsRecommendationWithNullLimit()
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -359,6 +405,21 @@ class RecommendationTest extends TestCase
             'offset' => 0
         ];
         new RelatedItemsRecommendationRequest($item_id, $limit, $options);
+    }
+
+    public function testRerankingRecommendationsWithEmptyUserId()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(self::USER_ID_ERRMSG);
+
+        $user_id = "";
+        $item_ids = [];
+        $options = [
+            'recommendation_type' => 'all_products_page',
+            'offset' => 0
+        ];
+
+        new RerankingRecommendationRequest($user_id, $item_ids, $options);
     }
 
     public function testRerankingRecommendationWithEmptyItemIds()
