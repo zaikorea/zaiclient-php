@@ -205,9 +205,9 @@ class ZaiClient
         }
 
         if ($key == 'connect_timeout')
-            return 30;
+            return 10;
 
         if ($key == 'read_timeout')
-            return 10;
+            return 30;
     }
 }
