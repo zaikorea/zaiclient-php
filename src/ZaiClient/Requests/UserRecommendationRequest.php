@@ -33,12 +33,12 @@ class UserRecommendationRequest extends RecommendationRequest
             if (!(0 < strlen($options['recommendation_type'] && strlen($options['recommendation_type']) <= 100)))
                 throw new \InvalidArgumentException('Length of recommendation type must be between 1 and 100.');
         }
-        if (isset($options['options'])) {
-            if (!is_array($options['options']) || !$this->isAssoc($options['options'])) {
-                throw new \InvalidArgumentException("\$options['options'] must be an associative array.");
+        if (isset($options['recommendation_options'])) {
+            if (!is_array($options['recommendation_options']) || !$this->isAssoc($options['recommendation_options'])) {
+                throw new \InvalidArgumentException("\$options['recommendation_options'] must be an associative array.");
             }
-            if (strlen(json_encode($options['options'])) >= 1000) {
-                throw new \InvalidArgumentException("\$options['options'] must be less than 1000 when converted to string");
+            if (strlen(json_encode($options['recommendation_options'])) >= 1000) {
+                throw new \InvalidArgumentException("\$options['recommendation_options'] must be less than 1000 when converted to string");
             }
         } 
 
@@ -47,7 +47,7 @@ class UserRecommendationRequest extends RecommendationRequest
 
         $this->recommendation_type = isset($options['recommendation_type']) ? $options['recommendation_type'] : self::DEFAULT_RECOMMENDATION_TYPE;
         $this->offset = isset($options['offset']) ? $options['offset'] : self::DEFAULT_OFFSET;
-        $this->options = isset($options['options']) ? json_encode($options['options']) : self::DEFAULT_OPTIONS;
+        $this->options = isset($options['recommendation_options']) ? json_encode($options['recommendation_options']) : self::DEFAULT_OPTIONS;
     }
 
     /**
