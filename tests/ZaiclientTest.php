@@ -57,6 +57,9 @@ class ZaiclientTest extends TestCase
             'read_timeout' => 60
         ];
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET, $options);
+        self::assertSame($client->getOptions()['connect_timeout'], 60);
+        self::assertSame($client->getOptions()['read_timeout'], 60);
+
         $user_id = 'php-add-single-productdetailview';
         $item_id = 'P1000005';
 

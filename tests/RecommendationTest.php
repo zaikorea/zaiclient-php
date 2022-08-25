@@ -16,7 +16,7 @@ class RecommendationTest extends TestCase
     const LIMIT_ERRMSG = 'Limit must be between 1 and 1000,000.';
     const USER_ID_ERRMSG = 'Length of user id must be between 1 and 100 or null.';
     const ITEM_ID_ERRMSG = 'Length of item id must be between 1 and 100.';
-    const LONG_OPTIONS_ERRMSG = "\$options['options'] must be less than 1000 when converted to string";
+    const LONG_OPTIONS_ERRMSG = "\$options['recommendation_options'] must be less than 1000 when converted to string";
     const OPTIONS_TYPE_ERRMSG = 'Options must be given as an array.';
     const REC_TYPE_ERRMSG = 'Length of recommendation type must be between 1 and 100.';
     const ITEM_IDS_ERRMSG = 'Length of item_ids must be between 1 and 1000,000.';
@@ -35,9 +35,9 @@ class RecommendationTest extends TestCase
         $request = new UserRecommendationRequest($user_id, $limit, $options);
         $response = $client->getRecommendations($request);
 
-        self::assertSame($request->getOptions(), '');
+        self::assertSame($request->getOptions(), null);
         self::assertNotNull($response->getItems(), "items in response is null");
-        self::assertEquals($response->getItems(), ['user_homepage_ITEM_ID_0', 'user_homepage_ITEM_ID_1', 'user_homepage_ITEM_ID_2']);
+        self::assertEquals($response->getItems(), ['user|homepage||ITEM_ID_0', 'user|homepage||ITEM_ID_1', 'user|homepage||ITEM_ID_2']);
         self::assertSame($response->getCount(), $limit, "items count don't match");
         self::assertTrue(time() - $response->getTimestamp() < 0.5);
     }
@@ -49,7 +49,7 @@ class RecommendationTest extends TestCase
 
         $request = new UserRecommendationRequest($user_id, $limit);
 
-        self::assertSame($request->getOptions(), '');
+        self::assertSame($request->getOptions(), null);
         self::assertSame($request->getOffset(), 0);
         self::assertSame($request->getLimit(), $limit);
         self::assertSame($request->getRecommendationType(), 'homepage');
@@ -68,9 +68,9 @@ class RecommendationTest extends TestCase
         $request = new UserRecommendationRequest($user_id, $limit, $options);
         $response = $client->getRecommendations($request);
 
-        self::assertSame($request->getOptions(), '');
+        self::assertSame($request->getOptions(), null);
         self::assertNotNull($response->getItems(), "items in response is null");
-        self::assertEquals($response->getItems(), ['None_homepage_ITEM_ID_0', 'None_homepage_ITEM_ID_1', 'None_homepage_ITEM_ID_2']);
+        self::assertEquals($response->getItems(), ['None|homepage||ITEM_ID_0', 'None|homepage||ITEM_ID_1', 'None|homepage||ITEM_ID_2']);
         self::assertSame($response->getCount(), $limit, "items count don't match");
         self::assertTrue(time() - $response->getTimestamp() < 0.5);
     }
@@ -88,8 +88,8 @@ class RecommendationTest extends TestCase
         $request = new UserRecommendationRequest($user_id, $limit, $options);
         $response = $client->getRecommendations($request);
 
-        self::assertSame($request->getOptions(), '');
-        self::assertSame($response->getItems()[0], 'testing_homepage_ITEM_ID_5');
+        self::assertSame($request->getOptions(), null);
+        self::assertSame($response->getItems()[0], 'testing|homepage||ITEM_ID_5');
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertSame($response->getCount(), $limit, "items count don't match");
         self::assertTrue(time() - $response->getTimestamp() < 0.5);
@@ -107,7 +107,7 @@ class RecommendationTest extends TestCase
         $options = [
             'recommendation_type' => 'homepage',
             'offset' => 5,
-            'options' => $json_options
+            'recommendation_options' => $json_options
         ];
 
         $request = new UserRecommendationRequest($user_id, $limit, $options);
@@ -115,7 +115,7 @@ class RecommendationTest extends TestCase
         
         self::assertSame($request->getRecommendationType(), 'homepage');
         self::assertSame($request->getOptions(), '{"123":1,"1234":"opt_1"}');
-        self::assertSame($response->getItems()[0], 'testing_homepage_ITEM_ID_5');
+        self::assertSame($response->getItems()[0], 'testing|homepage|123:1|1234:opt_1|ITEM_ID_5');
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertSame($response->getCount(), $limit, "items count don't match");
         self::assertTrue(time() - $response->getTimestamp() < 0.5);
@@ -147,7 +147,7 @@ class RecommendationTest extends TestCase
 
         $request = new RelatedItemsRecommendationRequest($item_id, $limit);
 
-        self::assertSame($request->getOptions(), '');
+        self::assertSame($request->getOptions(), null);
         self::assertSame($request->getOffset(), 0);
         self::assertSame($request->getLimit(), $limit);
         self::assertSame($request->getRecommendationType(), 'product_detail_page');
@@ -165,7 +165,7 @@ class RecommendationTest extends TestCase
         $options = [
             'recommendation_type' => 'product_detail_page',
             'offset' => 5,
-            'options' => $json_options
+            'recommendation_options' => $json_options
         ];
 
         $request = new RelatedItemsRecommendationRequest($item_id, $limit, $options);
@@ -173,7 +173,7 @@ class RecommendationTest extends TestCase
         
         self::assertSame($request->getRecommendationType(), 'product_detail_page');
         self::assertSame($request->getOptions(), '{"123":1,"1234":"opt_1"}');
-        self::assertSame($response->getItems()[0], $item_id . '_product_detail_page_ITEM_ID_5');
+        self::assertSame($response->getItems()[0], $item_id . '|product_detail_page|123:1|1234:opt_1|ITEM_ID_5');
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertSame($response->getCount(), $limit, "items count don't match");
         self::assertTrue(time() - $response->getTimestamp() < 0.5);
@@ -206,7 +206,7 @@ class RecommendationTest extends TestCase
 
         $request = new RerankingRecommendationRequest($user_id, $item_ids);
 
-        self::assertSame($request->getOptions(), '');
+        self::assertSame($request->getOptions(), null);
         self::assertSame($request->getOffset(), 0);
         self::assertSame($request->getLimit(), count($item_ids));
         self::assertSame($request->getRecommendationType(), 'all_products_page');
@@ -225,7 +225,7 @@ class RecommendationTest extends TestCase
         $options = [
             'recommendation_type' => 'all_products_page',
             'offset' => 0,
-            'options' => $json_options
+            'recommendation_options' => $json_options
         ];
 
         $request = new RerankingRecommendationRequest($user_id, $item_ids, $options);
@@ -327,7 +327,7 @@ class RecommendationTest extends TestCase
         $options = [
             'recommendation_type' => 'homepage',
             'offset' => 5,
-            'options' => $json_options
+            'recommendation_options' => $json_options
         ];
         new UserRecommendationRequest($user_id, $limit, $options);
     }

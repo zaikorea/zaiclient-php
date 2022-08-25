@@ -210,4 +210,9 @@ class ZaiClient
         if ($key == 'read_timeout')
             return 30;
     }
+
+    public function getOptions()
+    {
+        return $this->options;
+    }
 }
