@@ -13,7 +13,7 @@ class RelatedItemsRecommendationRequest extends RecommendationRequest
 {
     const DEFAULT_RECOMMENDATION_TYPE = "product_detail_page";
     const DEFAULT_OFFSET = 0;
-    const DEFAULT_OPTIONS = "";
+    const DEFAULT_OPTIONS = null;
     const RECOMMENDER_PATH = "/related-items";
 
     public function __construct($item_id, $limit, $options = array())

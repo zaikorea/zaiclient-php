@@ -13,7 +13,7 @@ class RerankingRecommendationRequest extends RecommendationRequest
 {
     const DEFAULT_RECOMMENDATION_TYPE = "all_products_page";
     const DEFAULT_OFFSET = 0;
-    const DEFAULT_OPTIONS = "";
+    const DEFAULT_OPTIONS = null;
     const RECOMMENDER_PATH = "/reranking";
 
 

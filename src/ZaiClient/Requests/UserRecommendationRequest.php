@@ -13,7 +13,7 @@ class UserRecommendationRequest extends RecommendationRequest
 {
     const DEFAULT_RECOMMENDATION_TYPE = 'homepage';
     const DEFAULT_OFFSET = 0;
-    const DEFAULT_OPTIONS = "";
+    const DEFAULT_OPTIONS = null;
     const RECOMMENDER_PATH = '/user-recommendations';
 
 
