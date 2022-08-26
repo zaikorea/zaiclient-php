@@ -27,8 +27,6 @@ use ZaiKorea\ZaiClient\Configs\Config;
  */
 class ZaiClient
 {
-    const DEFAULT_CONNECT_TIMEOUT = 30;
-    const DEFAULT_READ_TIMEOUT = 10;
     private $zai_client_id;
     private $zai_secret;
     private $guzzle_client;
