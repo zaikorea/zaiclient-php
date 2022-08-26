@@ -31,16 +31,20 @@ class ZaiClient
     private $zai_secret;
     private $guzzle_client;
     private $json_mapper;
+    private $options;
 
 
-    public function __construct($client_id, $secret)
+    public function __construct($client_id, $secret, $options=array())
     {
         $this->zai_client_id = $client_id;
         $this->zai_secret = $secret;
 
         $this->guzzle_client = new \GuzzleHttp\Client();
         $this->json_mapper = new JsonMapper();
-        //$this->json_mapper->bEnforceMapType = false;
+        $this->options = [
+            'connect_timeout' => $this->resolveTimeoutOptions('connect_timeout', $options),
+            'read_timeout' => $this->resolveTimeoutOptions('read_timeout', $options)
+        ];
     }
 
     /**
@@ -56,15 +60,17 @@ class ZaiClient
         );
         $body = json_encode($event->getPayload());
 
-        $guzzle_request = new Request(
-            'POST',
-            Config::EVENTS_API_ENDPOINT . Config::EVENTS_API_PATH,
-            $headers,
-            Utils::streamFor($body)
-        );
-
         try {
-            $response = $this->guzzle_client->send($guzzle_request);
+            $response = $this->guzzle_client->request(
+                'POST', 
+                Config::EVENTS_API_ENDPOINT . Config::EVENTS_API_PATH,
+                [
+                    'headers' => $headers,
+                    'body' => Utils::streamFor($body),
+                    'connect_timeout' => $this->options['connect_timeout'],
+                    'read_timeout' => $this->options['read_timeout']
+                ]
+            );
         } catch (RequestException $e) {
             throw new ZaiClientException($e->getMessage(), $e);
         } catch (TransferException $e) {
@@ -92,15 +98,17 @@ class ZaiClient
         );
         $body = json_encode($event->getPayload());
 
-        $guzzle_request = new Request(
-            'PUT',
-            Config::EVENTS_API_ENDPOINT . Config::EVENTS_API_PATH,
-            $headers,
-            Utils::streamFor($body)
-        );
-
         try {
-            $response = $this->guzzle_client->send($guzzle_request);
+            $response = $this->guzzle_client->request(
+                'PUT', 
+                Config::EVENTS_API_ENDPOINT . Config::EVENTS_API_PATH,
+                [
+                    'headers' => $headers,
+                    'body' => Utils::streamFor($body),
+                    'connect_timeout' => $this->options['connect_timeout'],
+                    'read_timeout' => $this->options['read_timeout']
+                ]
+            );
         } catch (RequestException $e) {
             throw new ZaiClientException($e->getMessage(), $e);
         } catch (TransferException $e) {
@@ -125,15 +133,17 @@ class ZaiClient
         );
         $body = json_encode($event->getPayload());
 
-        $guzzle_request = new Request(
-            'DELETE',
-            Config::EVENTS_API_ENDPOINT . Config::EVENTS_API_PATH,
-            $headers,
-            Utils::streamFor($body)
-        );
-
         try {
-            $response = $this->guzzle_client->send($guzzle_request);
+            $response = $this->guzzle_client->request(
+                'DELETE', 
+                Config::EVENTS_API_ENDPOINT . Config::EVENTS_API_PATH,
+                [
+                    'headers' => $headers,
+                    'body' => Utils::streamFor($body),
+                    'connect_timeout' => $this->options['connect_timeout'],
+                    'read_timeout' => $this->options['read_timeout']
+                ]
+            );
         } catch (RequestException $e) {
             throw new ZaiClientException($e->getMessage(), $e);
         } catch (TransferException $e) {
@@ -160,15 +170,17 @@ class ZaiClient
         );
         $body = json_encode($request);
 
-        $guzzle_request = new Request(
-            'POST',
-            $request->getURIPath($this->zai_client_id),
-            $headers,
-            Utils::streamFor($body)
-        );
-
         try {
-            $response = $this->guzzle_client->send($guzzle_request);
+            $response = $this->guzzle_client->request(
+                'POST', 
+                $request->getURIPath($this->zai_client_id),
+                [
+                    'headers' => $headers,
+                    'body' => Utils::streamFor($body),
+                    'connect_timeout' => $this->options['connect_timeout'],
+                    'read_timeout' => $this->options['read_timeout']
+                ]
+            );
         } catch (RequestException $e) {
             throw new ZaiClientException($e->getMessage(), $e);
         } catch (TransferException $e) {
@@ -178,5 +190,27 @@ class ZaiClient
         $response_body = json_decode($response->getBody());
         $recommendation_response = $this->json_mapper->map($response_body, new RecommendationResponse());
         return $recommendation_response;
+    }
+
+    public function resolveTimeoutOptions($key, $options)
+    {
+        if (isset($options[$key])) {
+            if (!is_int($options[$key]))
+                throw new \InvalidArgumentException('Timeout options should be an integer');
+            
+            if ($options[$key] > 0)
+                return $options[$key];
+        }
+
+        if ($key == 'connect_timeout')
+            return 10;
+
+        if ($key == 'read_timeout')
+            return 30;
+    }
+
+    public function getOptions()
+    {
+        return $this->options;
     }
 }

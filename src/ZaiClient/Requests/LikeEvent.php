@@ -11,7 +11,6 @@ namespace ZaiKorea\ZaiClient\Requests;
 use ZaiKorea\ZaiClient\Requests\BaseEvent;
 use ZaiKorea\ZaiClient\Requests\EventInBatch;
 use ZaiKorea\ZaiClient\Configs\Config;
-use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
 
 /** 
  * @final
@@ -56,42 +55,25 @@ class LikeEvent extends BaseEvent
             throw new \InvalidArgumentException(
                 'Length of item id must be between 1 and 100.'
             );
-
         // $page_type should not be an array (doesn't support batch)
         if (is_array($item_id))
             throw new \InvalidArgumentException(
                 sprintf(Config::BATCH_ERRMSG, self::class)
             );
 
-        // change to array if $item_id is a single string
-        $item_ids = array($item_id);
-
         // set timestamp to custom timestamp given by the user
         $this->setTimestamp(strval(microtime(true)));
         if (isset($options['timestamp']))
             $this->setTimestamp($options['timestamp']);
 
-        $events = array();
-
-        $tmp_timestamp = $this->getTimestamp();
-
-        foreach ($item_ids as $item_id) {
-            array_push($events, new EventInBatch(
+            $event = new EventInBatch(
                 $user_id,
                 $item_id,
-                $tmp_timestamp,
+                $this->getTimestamp(),
                 self::EVENT_TYPE,
                 self::EVENT_VALUE
-            ));
-            $tmp_timestamp += Config::EPSILON;
-        }
+            );
 
-        if (count($events) > 50)
-            throw new BatchSizeLimitExceededException(count($events));
-
-        if (count($events) == 1)
-            $this->setPayload($events[0]);
-        else
-            $this->setPayload($events);
+        $this->setPayload($event);
     }
 }

@@ -73,11 +73,9 @@ class PurchaseEvent extends BaseEvent
             throw new \InvalidArgumentException(
                 sprintf(Config::EMPTY_ARR_ERRMSG, self::class, __FUNCTION__, 2)
             );
-
         // change to 2D array if $orders is 1D array (order on single item) 
         if (gettype(reset($orders)) != 'array')
             $orders = array($orders);
-
         // Validate if $order is sequential array
         if (array_keys($orders) !== range(0, count($orders) - 1))
             throw new \InvalidArgumentException(

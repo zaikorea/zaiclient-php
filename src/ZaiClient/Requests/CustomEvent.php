@@ -71,22 +71,18 @@ class CustomEvent extends BaseEvent
             throw new \InvalidArgumentException(
                 sprintf(Config::NON_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
             );
-
         if (!$custom_actions)
             throw new \InvalidArgumentException(
                 sprintf(Config::EMPTY_ARR_ERRMSG, self::class, __FUNCTION__, 3)
             );
-
         // change to 2D array if $custom_actions is 1D array (action on single item) 
         if (gettype(reset($custom_actions)) != 'array')
             $custom_actions = array($custom_actions);
-
         // Validate if $custom_event_type is sequential array
         if (array_keys($custom_actions) !== range(0, count($custom_actions) - 1))
             throw new \InvalidArgumentException(
                 sprintf(Config::NON_SEQ_ARR_ERRMSG, self::class, __FUNCTION__, 3)
             );
-
 
         $this->setTimestamp(strval(microtime(true)));
         if (isset($options['timestamp']))

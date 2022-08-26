@@ -11,7 +11,6 @@ namespace ZaiKorea\ZaiClient\Requests;
 use ZaiKorea\ZaiClient\Requests\BaseEvent;
 use ZaiKorea\ZaiClient\Requests\EventInBatch;
 use ZaiKorea\ZaiClient\Configs\Config;
-use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
 
 /** 
  * @final
@@ -57,61 +56,41 @@ class RateEvent extends BaseEvent
      */
     public function __construct($user_id, $rate_action = array(), $options = array())
     {
-
         // $rate_actions should not be an emtpy array
         if (!is_array($rate_action) || !$rate_action)
             throw new \InvalidArgumentException(
                 sprintf(Config::EMPTY_ARR_ERRMSG, self::class, __FUNCTION__, 2)
             );
-
         // $rate_actions should be 1d array
         if (count($rate_action) != count($rate_action, COUNT_RECURSIVE)) 
             throw new \InvalidArgumentException(
                 'Rate event doesn\'t support batch'
             );
-            
-
         // change to 2D array if $rate_actions is 1D array (rate on single item) 
         if (gettype(reset($rate_action)) != 'array')
             $rate_actions = array($rate_action);
-
         // Validate if $rate_actions is sequential array
         if (array_keys($rate_actions) !== range(0, count($rate_actions) - 1))
             throw new \InvalidArgumentException(
                 sprintf(Config::NON_SEQ_ARR_ERRMSG, self::class, __FUNCTION__, 2)
             );
+        if (array_keys($rate_action) != array('item_id', 'value')) {
+            throw new \InvalidArgumentException(
+                sprintf(Config::ARR_FORM_ERRMSG, self::class, __FUNCTION__, 2, "[ ['item_id' => P12345, 'value' => 5.0] ] (1D array available if recording single rate action)")
+            );
+        }
 
         $this->setTimestamp(strval(microtime(true)));
         if (isset($options['timestamp']))
             $this->setTimestamp($options['timestamp']);
 
-        $events = array();
-
-        $tmp_timestamp = $this->getTimestamp();
-
-        foreach ($rate_actions as $rate_action) {
-            if (array_keys($rate_action) != array('item_id', 'value')) {
-                throw new \InvalidArgumentException(
-                    sprintf(Config::ARR_FORM_ERRMSG, self::class, __FUNCTION__, 2, "[ ['item_id' => P12345, 'value' => 5.0] ] (1D array available if recording single rate action)")
-                );
-            }
-
-            array_push($events, new EventInBatch(
-                $user_id,
-                $rate_action['item_id'],
-                $tmp_timestamp,
-                self::EVENT_TYPE,
-                $rate_action['value']
-            ));
-            $tmp_timestamp += Config::EPSILON;
-        }
-
-        if (count($events) > 50)
-            throw new BatchSizeLimitExceededException(count($events));
-
-        if (count($events) == 1)
-            $this->setPayload($events[0]);
-        else
-            $this->setPayload($events);
+        $event = new EventInBatch(
+            $user_id,
+            $rate_action['item_id'],
+            $this->getTimestamp(),
+            self::EVENT_TYPE,
+            $rate_action['value']
+        );
+        $this->setPayload($event);
     }
 }
