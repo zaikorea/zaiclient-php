@@ -54,8 +54,8 @@ class RerankingRecommendationRequest extends RecommendationRequest
             if (!is_array($options['recommendation_options']) || !$this->isAssoc($options['recommendation_options'])) {
                 throw new \InvalidArgumentException("\$options['recommendation_options'] must be an associative array.");
             }
-            if (strlen(json_encode($options['recommendation_options'])) >= 1000) {
-                throw new \InvalidArgumentException("\$options['recommendation_options'] must be less than 1000 when converted to string");
+            if (strlen(json_encode($options['recommendation_options'])) > 1000) {
+                throw new \InvalidArgumentException("\$options['recommendation_options'] must be less than or equal to 1000 when converted to string");
             }
         } 
 

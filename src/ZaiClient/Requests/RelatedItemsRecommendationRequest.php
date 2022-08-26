@@ -37,9 +37,9 @@ class RelatedItemsRecommendationRequest extends RecommendationRequest
             if (!is_array($options['recommendation_options']) || !$this->isAssoc($options['recommendation_options'])) {
                 throw new \InvalidArgumentException("\$options['recommendation_options'] must be an associative array.");
             }
-            if (strlen(json_encode($options['recommendation_options'])) >= 1000) {
+            if (strlen(json_encode($options['recommendation_options'])) > 1000) {
                 echo strlen(json_encode($options['recommendation_options']));
-                throw new \InvalidArgumentException("\$options['recommendation_options'] must be less than 1000 when converted to string");
+                throw new \InvalidArgumentException("\$options['recommendation_options'] must be less than or equal to 1000 when converted to string");
             }
         } 
 

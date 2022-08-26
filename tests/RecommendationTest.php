@@ -16,7 +16,7 @@ class RecommendationTest extends TestCase
     const LIMIT_ERRMSG = 'Limit must be between 1 and 1000,000.';
     const USER_ID_ERRMSG = 'Length of user id must be between 1 and 100 or null.';
     const ITEM_ID_ERRMSG = 'Length of item id must be between 1 and 100.';
-    const LONG_OPTIONS_ERRMSG = "\$options['recommendation_options'] must be less than 1000 when converted to string";
+    const LONG_OPTIONS_ERRMSG = "\$options['recommendation_options'] must be less than or equal to 1000 when converted to string";
     const OPTIONS_TYPE_ERRMSG = 'Options must be given as an array.';
     const REC_TYPE_ERRMSG = 'Length of recommendation type must be between 1 and 100.';
     const ITEM_IDS_ERRMSG = 'Length of item_ids must be between 1 and 1000,000.';
