@@ -26,6 +26,11 @@ class RecommendationResponse
      * @var float $timestamp timestamp from server
      */
     private $timestamp;
+    
+    /**
+     * @var array $metadata associative array
+     */
+    private $metadata;
 
     /**
      * Set Items with array of item_ids
@@ -55,6 +60,15 @@ class RecommendationResponse
     }
 
     /**
+     * Set Metadata with associative array
+     * @param string $metadata
+     */
+    public function setMetadata($metadata)
+    {
+        $this->metadata = json_decode($metadata, $assoc=True);
+    }
+
+    /**
      * Get Array of items
      * @return int
      */
@@ -81,12 +95,22 @@ class RecommendationResponse
         return $this->timestamp;
     }
 
+    /**
+     * Get Metadata
+     * @return array Metadata from server
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
+
     public function __toString()
     {
         return "RecommendationResponse{\n" .
             "\titems=" . implode(" | ", $this->items) . "\n" .
             "\tcount={$this->count}\n" .
             "\ttimestamp={$this->timestamp}\n" .
+            "\tmetadata=" . print_r($this->metadata, true) . "\n" .
             "}\n";
     }
 }

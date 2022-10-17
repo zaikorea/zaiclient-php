@@ -35,10 +35,20 @@ class RecommendationTest extends TestCase
         $request = new UserRecommendationRequest($user_id, $limit, $options);
         $response = $client->getRecommendations($request);
 
-        self::assertSame($request->getOptions(), null);
-        self::assertNotNull($response->getItems(), "items in response is null");
+        $expected_metadata = [
+            'user_id' => isset($user_id) ? $user_id : null,
+            'item_id' => isset($item_id) ? $item_id : null,
+            'item_ids' => isset($item_ids) ? $item_ids : null,
+            'limit' => isset($limit) ? $limit : null,
+            'offset' => isset($options['offset']) ? $options['offset'] : $request::DEFAULT_OFFSET,
+            'options' => isset($options['recommendation_options']) ? $options['recommendation_options'] : array(),
+            'call_type' => substr($request::RECOMMENDER_PATH, 1),
+            'recommendation_type' => isset($options['recommendation_type']) ? $options['recommendation_type'] : $request::DEFAULT_RECOMMENDATION_TYPE
+        ];
+
         self::assertEquals($response->getItems(), ['ITEM_ID_0', 'ITEM_ID_1', 'ITEM_ID_2']);
         self::assertSame($response->getCount(), $limit, "items count don't match");
+        self::assertSame($response->getMetadata(), $expected_metadata);
         self::assertTrue(time() - $response->getTimestamp() < 0.5);
     }
 
@@ -68,10 +78,20 @@ class RecommendationTest extends TestCase
         $request = new UserRecommendationRequest($user_id, $limit, $options);
         $response = $client->getRecommendations($request);
 
-        self::assertSame($request->getOptions(), null);
-        self::assertNotNull($response->getItems(), "items in response is null");
+        $expected_metadata = [
+            'user_id' => isset($user_id) ? $user_id : null,
+            'item_id' => isset($item_id) ? $item_id : null,
+            'item_ids' => isset($item_ids) ? $item_ids : null,
+            'limit' => isset($limit) ? $limit : null,
+            'offset' => isset($options['offset']) ? $options['offset'] : $request::DEFAULT_OFFSET,
+            'options' => isset($options['recommendation_options']) ? $options['recommendation_options'] : array(),
+            'call_type' => substr($request::RECOMMENDER_PATH, 1),
+            'recommendation_type' => isset($options['recommendation_type']) ? $options['recommendation_type'] : $request::DEFAULT_RECOMMENDATION_TYPE
+        ];
+
         self::assertEquals($response->getItems(), ['ITEM_ID_0', 'ITEM_ID_1', 'ITEM_ID_2']);
         self::assertSame($response->getCount(), $limit, "items count don't match");
+        self::assertSame($response->getMetadata(), $expected_metadata);
         self::assertTrue(time() - $response->getTimestamp() < 0.5);
     }
 
@@ -88,10 +108,21 @@ class RecommendationTest extends TestCase
         $request = new UserRecommendationRequest($user_id, $limit, $options);
         $response = $client->getRecommendations($request);
 
-        self::assertSame($request->getOptions(), null);
+        $expected_metadata = [
+            'user_id' => isset($user_id) ? $user_id : null,
+            'item_id' => isset($item_id) ? $item_id : null,
+            'item_ids' => isset($item_ids) ? $item_ids : null,
+            'limit' => isset($limit) ? $limit : null,
+            'offset' => isset($options['offset']) ? $options['offset'] : $request::DEFAULT_OFFSET,
+            'options' => isset($options['recommendation_options']) ? $options['recommendation_options'] : array(),
+            'call_type' => substr($request::RECOMMENDER_PATH, 1),
+            'recommendation_type' => isset($options['recommendation_type']) ? $options['recommendation_type'] : $request::DEFAULT_RECOMMENDATION_TYPE
+        ];
+
         self::assertSame($response->getItems()[0], 'ITEM_ID_5');
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertSame($response->getCount(), $limit, "items count don't match");
+        self::assertSame($response->getMetadata(), $expected_metadata);
         self::assertTrue(time() - $response->getTimestamp() < 0.5);
     }
 
@@ -112,12 +143,22 @@ class RecommendationTest extends TestCase
 
         $request = new UserRecommendationRequest($user_id, $limit, $options);
         $response = $client->getRecommendations($request);
+
+        $expected_metadata = [
+            'user_id' => isset($user_id) ? $user_id : null,
+            'item_id' => isset($item_id) ? $item_id : null,
+            'item_ids' => isset($item_ids) ? $item_ids : null,
+            'limit' => isset($limit) ? $limit : null,
+            'offset' => isset($options['offset']) ? $options['offset'] : $request::DEFAULT_OFFSET,
+            'options' => isset($options['recommendation_options']) ? $options['recommendation_options'] : array(),
+            'call_type' => substr($request::RECOMMENDER_PATH, 1),
+            'recommendation_type' => isset($options['recommendation_type']) ? $options['recommendation_type'] : $request::DEFAULT_RECOMMENDATION_TYPE
+        ];
         
-        self::assertSame($request->getRecommendationType(), 'homepage');
-        self::assertSame($request->getOptions(), '{"123":1,"1234":"opt_1"}');
         self::assertSame($response->getItems()[0], 'ITEM_ID_5');
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertSame($response->getCount(), $limit, "items count don't match");
+        self::assertSame($response->getMetadata(), $expected_metadata);
         self::assertTrue(time() - $response->getTimestamp() < 0.5);
     }
 
@@ -134,8 +175,20 @@ class RecommendationTest extends TestCase
         $request = new RelatedItemsRecommendationRequest($item_id, $limit, $options);
         $response = $client->getRecommendations($request);
 
+        $expected_metadata = [
+            'user_id' => isset($user_id) ? $user_id : null,
+            'item_id' => isset($item_id) ? $item_id : null,
+            'item_ids' => isset($item_ids) ? $item_ids : null,
+            'limit' => isset($limit) ? $limit : null,
+            'offset' => isset($options['offset']) ? $options['offset'] : $request::DEFAULT_OFFSET,
+            'options' => isset($options['recommendation_options']) ? $options['recommendation_options'] : array(),
+            'call_type' => substr($request::RECOMMENDER_PATH, 1),
+            'recommendation_type' => isset($options['recommendation_type']) ? $options['recommendation_type'] : $request::DEFAULT_RECOMMENDATION_TYPE
+        ];
+
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertSame($response->getCount(), $limit, "items count don't match");
+        self::assertSame($response->getMetadata(), $expected_metadata);
         self::assertTrue(time() - $response->getTimestamp() < 0.5);
     }
 
@@ -170,12 +223,22 @@ class RecommendationTest extends TestCase
 
         $request = new RelatedItemsRecommendationRequest($item_id, $limit, $options);
         $response = $client->getRecommendations($request);
-        
-        self::assertSame($request->getRecommendationType(), 'product_detail_page');
-        self::assertSame($request->getOptions(), '{"123":1,"1234":"opt_1"}');
+
+        $expected_metadata = [
+            'user_id' => isset($user_id) ? $user_id : null,
+            'item_id' => isset($item_id) ? $item_id : null,
+            'item_ids' => isset($item_ids) ? $item_ids : null,
+            'limit' => isset($limit) ? $limit : null,
+            'offset' => isset($options['offset']) ? $options['offset'] : $request::DEFAULT_OFFSET,
+            'options' => isset($options['recommendation_options']) ? $options['recommendation_options'] : array(),
+            'call_type' => substr($request::RECOMMENDER_PATH, 1),
+            'recommendation_type' => isset($options['recommendation_type']) ? $options['recommendation_type'] : $request::DEFAULT_RECOMMENDATION_TYPE
+        ];
+
         self::assertSame($response->getItems()[0], 'ITEM_ID_5');
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertSame($response->getCount(), $limit, "items count don't match");
+        self::assertSame($response->getMetadata(), $expected_metadata);
         self::assertTrue(time() - $response->getTimestamp() < 0.5);
     }
 
@@ -194,8 +257,20 @@ class RecommendationTest extends TestCase
         $request = new RerankingRecommendationRequest($user_id, $item_ids, $options);
         $response = $client->getRecommendations($request);
 
+        $expected_metadata = [
+            'user_id' => isset($user_id) ? $user_id : null,
+            'item_id' => isset($item_id) ? $item_id : null,
+            'item_ids' => isset($item_ids) ? $item_ids : null,
+            'limit' => isset($limit) ? $limit : null,
+            'offset' => isset($options['offset']) ? $options['offset'] : $request::DEFAULT_OFFSET,
+            'options' => isset($options['recommendation_options']) ? $options['recommendation_options'] : array(),
+            'call_type' => substr($request::RECOMMENDER_PATH, 1),
+            'recommendation_type' => isset($options['recommendation_type']) ? $options['recommendation_type'] : $request::DEFAULT_RECOMMENDATION_TYPE
+        ];
+
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertSame($response->getCount(), $limit, "items count don't match");
+        self::assertSame($response->getMetadata(), $expected_metadata);
         self::assertTrue(time() - $response->getTimestamp() < 0.5);
     }
 
@@ -230,11 +305,21 @@ class RecommendationTest extends TestCase
 
         $request = new RerankingRecommendationRequest($user_id, $item_ids, $options);
         $response = $client->getRecommendations($request);
+
+        $expected_metadata = [
+            'user_id' => isset($user_id) ? $user_id : null,
+            'item_id' => isset($item_id) ? $item_id : null,
+            'item_ids' => isset($item_ids) ? $item_ids : null,
+            'limit' => isset($limit) ? $limit : null,
+            'offset' => isset($options['offset']) ? $options['offset'] : $request::DEFAULT_OFFSET,
+            'options' => isset($options['recommendation_options']) ? $options['recommendation_options'] : array(),
+            'call_type' => substr($request::RECOMMENDER_PATH, 1),
+            'recommendation_type' => isset($options['recommendation_type']) ? $options['recommendation_type'] : $request::DEFAULT_RECOMMENDATION_TYPE
+        ];
         
-        self::assertSame($request->getRecommendationType(), 'all_products_page');
-        self::assertSame($request->getOptions(), '{"123":1,"1234":"opt_1"}');
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertSame($response->getCount(), $limit, "items count don't match");
+        self::assertSame($response->getMetadata(), $expected_metadata);
         self::assertTrue(time() - $response->getTimestamp() < 0.5);
     }
 
