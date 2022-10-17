@@ -32,7 +32,8 @@ class ZaiClient
     private $guzzle_client;
     private $json_mapper;
     private $options;
-
+    private $ml_api_endpoint;
+    private $collector_api_endpoint;
 
     public function __construct($client_id, $secret, $options=array())
     {
@@ -43,8 +44,12 @@ class ZaiClient
         $this->json_mapper = new JsonMapper();
         $this->options = [
             'connect_timeout' => $this->resolveTimeoutOptions('connect_timeout', $options),
-            'read_timeout' => $this->resolveTimeoutOptions('read_timeout', $options)
+            'read_timeout' => $this->resolveTimeoutOptions('read_timeout', $options),
+            'custom_endpoint' => $this->resolveEndpointOptions('custom_endpoint', $options)
         ];
+
+        $this->ml_api_endpoint = sprintf(Config::ML_API_ENDPOINT, $this->options['custom_endpoint']);
+        $this->collector_api_endpoint = sprintf(Config::EVENTS_API_ENDPOINT, $this->options['custom_endpoint']);
     }
 
     /**
@@ -63,7 +68,7 @@ class ZaiClient
         try {
             $response = $this->guzzle_client->request(
                 'POST', 
-                Config::EVENTS_API_ENDPOINT . Config::EVENTS_API_PATH,
+                $this->collector_api_endpoint . Config::EVENTS_API_PATH,
                 [
                     'headers' => $headers,
                     'body' => Utils::streamFor($body),
@@ -101,7 +106,7 @@ class ZaiClient
         try {
             $response = $this->guzzle_client->request(
                 'PUT', 
-                Config::EVENTS_API_ENDPOINT . Config::EVENTS_API_PATH,
+                $this->collector_api_endpoint . Config::EVENTS_API_PATH,
                 [
                     'headers' => $headers,
                     'body' => Utils::streamFor($body),
@@ -136,7 +141,7 @@ class ZaiClient
         try {
             $response = $this->guzzle_client->request(
                 'DELETE', 
-                Config::EVENTS_API_ENDPOINT . Config::EVENTS_API_PATH,
+                $this->collector_api_endpoint . Config::EVENTS_API_PATH,
                 [
                     'headers' => $headers,
                     'body' => Utils::streamFor($body),
@@ -163,17 +168,18 @@ class ZaiClient
      */
     public function getRecommendations($request)
     {
+        $path = $request->getPath($this->zai_client_id);
         $headers = ZaiHeaders::generateZaiHeaders(
             $this->zai_client_id,
             $this->zai_secret,
-            $request->getPath($this->zai_client_id)
+            $path
         );
         $body = json_encode($request);
 
         try {
             $response = $this->guzzle_client->request(
                 'POST', 
-                $request->getURIPath($this->zai_client_id),
+                $this->ml_api_endpoint . $path,
                 [
                     'headers' => $headers,
                     'body' => Utils::streamFor($body),
@@ -207,6 +213,23 @@ class ZaiClient
 
         if ($key == 'read_timeout')
             return 30;
+    }
+
+    public function resolveEndpointOptions($key, $options)
+    {
+        if (isset($options[$key])) {
+            if (!is_string($options[$key]))
+                throw new \InvalidArgumentException('Custom endpoint option must be a string');
+            
+            $pattern = "/^[a-zA-Z0-9-]*$/";
+
+            $is_match = preg_match($pattern, $options[$key]);
+
+            if ($is_match)
+                return $options[$key];
+        }
+
+        return "";
     }
 
     public function getOptions()

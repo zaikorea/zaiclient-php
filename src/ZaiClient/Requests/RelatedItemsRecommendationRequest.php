@@ -60,12 +60,4 @@ class RelatedItemsRecommendationRequest extends RecommendationRequest
         return sprintf(Config::ML_API_PATH_PREFIX . self::RECOMMENDER_PATH, $client_id);
     }
 
-    /**
-     * Get full URI with path 
-     * @return string PATH to use for request
-     */
-    public function getURIPath($client_id)
-    {
-        return Config::ML_API_ENDPOINT . $this->getPath($client_id);
-    }
 }
