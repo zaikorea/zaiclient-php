@@ -20,14 +20,14 @@ class RelatedItemsRecommendationRequest extends RecommendationRequest
     {
         if (is_null($item_id) || !(strlen($item_id) > 0 && strlen($item_id) <= 100))
             throw new \InvalidArgumentException('Length of item id must be between 1 and 100.');
-        if (!(0 < $limit && $limit <= 1000000))
-            throw new \InvalidArgumentException('Limit must be between 1 and 1000,000.');
+        if (!(0 < $limit && $limit <= 10000))
+            throw new \InvalidArgumentException('Limit must be between 1 and 10,000.');
         if (!is_array($options))
             throw new \InvalidArgumentException("Options must be given as an array.");
         if (isset($options['offset'])) {
 
-            if (!(0 <= $options['offset'] && $options['offset'] <= 1000000))
-                throw new \InvalidArgumentException('Offset must be between 0 and 1000,000.');
+            if (!(0 <= $options['offset'] && $options['offset'] <= 10000))
+                throw new \InvalidArgumentException('Offset must be between 0 and 10,000.');
         }
         if (isset($options['recommendation_type'])) { // php tip! isset() returns false if the value of $options['recommendation_type'] is null
             if (!(0 < strlen($options['recommendation_type'] && strlen($options['recommendation_type']) <= 100)))

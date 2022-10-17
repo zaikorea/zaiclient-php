@@ -29,16 +29,17 @@ class EventInBatch implements \JsonSerializable
         $this->item_id = is_string($item_id) ? $item_id : strval($item_id);
         $this->timestamp = strval($timestamp);
         $this->event_type = $event_type;
-        $this->event_value = is_null($event_value) ? "null" : strval($event_value);
+        $this->event_value = is_null($event_value) ? 
+            "null" : substr(strval($event_value), 0, 100); // clip by 100 letters
 
-        if (!(strlen($this->user_id) > 0 && strlen($this->user_id) <= 100))
-            throw new \InvalidArgumentException('Length of user id must be between 1 and 100.');
+        if (!(strlen($this->user_id) > 0 && strlen($this->user_id) <= 500))
+            throw new \InvalidArgumentException('Length of user id must be between 1 and 500.');
 
-        if (!(strlen($this->item_id) > 0 && strlen($this->item_id) <= 100))
-            throw new \InvalidArgumentException('Length of item id must be between 1 and 100.');
+        if (!(strlen($this->item_id) > 0 && strlen($this->item_id) <= 500))
+            throw new \InvalidArgumentException('Length of item id must be between 1 and 500.');
 
-        if (!(strlen($this->event_type) > 0 && strlen($this->event_type) <= 100))
-            throw new \InvalidArgumentException('Length of event type must be between 1 and 100.');
+        if (!(strlen($this->event_type) > 0 && strlen($this->event_type) <= 500))
+            throw new \InvalidArgumentException('Length of event type must be between 1 and 500.');
     }
 
     function jsonSerialize()
