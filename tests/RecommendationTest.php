@@ -14,11 +14,11 @@ class RecommendationTest extends TestCase
     const CLIENT_ID = 'test';
     const SECRET = 'KVPzvdHTPWnt0xaEGc2ix-eqPXFCdEV5zcqolBr_h1k';
     const LIMIT_ERRMSG = 'Limit must be between 1 and 10,000.';
-    const USER_ID_ERRMSG = 'Length of user id must be between 1 and 100 or null.';
-    const ITEM_ID_ERRMSG = 'Length of item id must be between 1 and 100.';
+    const USER_ID_ERRMSG = 'Length of user id must be between 1 and 500 or null.';
+    const ITEM_ID_ERRMSG = 'Length of item id must be between 1 and 500.';
     const LONG_OPTIONS_ERRMSG = "\$options['recommendation_options'] must be less than or equal to 1000 when converted to string";
     const OPTIONS_TYPE_ERRMSG = 'Options must be given as an array.';
-    const REC_TYPE_ERRMSG = 'Length of recommendation type must be between 1 and 100.';
+    const REC_TYPE_ERRMSG = 'Length of recommendation type must be between 1 and 500.';
     const ITEM_IDS_ERRMSG = 'Length of item_ids must be between 1 and 10,000.';
 
     public function testGetRecommendationsWithUserRecommendationRequest()
@@ -372,7 +372,7 @@ class RecommendationTest extends TestCase
         new UserRecommendationRequest($user_id, $limit, $options);
     }
 
-    public function testUserRecommendationWithNullRecommendationType()
+    public function testUserRecommendationWithLongRecommendationType()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(self::REC_TYPE_ERRMSG);
@@ -381,7 +381,7 @@ class RecommendationTest extends TestCase
         $limit = 3;
 
         $options = [
-            'recommendation_type' => generateRandomString(101),
+            'recommendation_type' => generateRandomString(501),
         ];
         new UserRecommendationRequest($user_id, $limit, $options);
     }

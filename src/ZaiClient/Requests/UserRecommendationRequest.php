@@ -19,9 +19,9 @@ class UserRecommendationRequest extends RecommendationRequest
 
     public function __construct($user_id, $limit, $options = array())
     {
-        if (!(is_null($user_id) || strlen($user_id) > 0 && strlen($user_id) <= 100))
-            throw new \InvalidArgumentException('Length of user id must be between 1 and 100 or null.');
-        if (!(0 < $limit && $limit <= 10000))
+        if (!(is_null($user_id) || strlen($user_id) > 0 && strlen($user_id) <= 500))
+            throw new \InvalidArgumentException('Length of user id must be between 1 and 500 or null.');
+        if (is_null($limit) || !(0 <= $limit && $limit <= 10000))
             throw new \InvalidArgumentException('Limit must be between 1 and 10,000.');
         if (!is_array($options))
             throw new \InvalidArgumentException('Options must be given as an array.');
@@ -30,8 +30,8 @@ class UserRecommendationRequest extends RecommendationRequest
                 throw new \InvalidArgumentException('Offset must be between 0 and 10,000.');
         }
         if (isset($options['recommendation_type'])) { // php tip! isset() returns false if the value of $options['recommendation_type'] is null
-            if (!(0 < strlen($options['recommendation_type'] && strlen($options['recommendation_type']) <= 100)))
-                throw new \InvalidArgumentException('Length of recommendation type must be between 1 and 100.');
+            if (!(0 < strlen($options['recommendation_type'] && strlen($options['recommendation_type']) <= 500)))
+                throw new \InvalidArgumentException('Length of recommendation type must be between 1 and 500.');
         }
         if (isset($options['recommendation_options'])) {
             if (!is_array($options['recommendation_options']) || !$this->isAssoc($options['recommendation_options'])) {

@@ -157,6 +157,18 @@ class EventLogTest extends TestCase
         self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
+    public function testAddPageViewEventLogWithLongEventValue()
+    {
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
+        $user_id = 'php-add-pageview';
+        $event_value = generateRandomString(503);
+
+        $page_view_event = new PageViewEvent($user_id, $event_value);
+        $response = $client->addEventLog($page_view_event);
+
+        self::assertSame($this->add_event_msg, $response->getMessage());
+    }
+
     public function testAddPageViewEventLogWithEmptyEventValue()
     {
         $this->expectException(\InvalidArgumentException::class);

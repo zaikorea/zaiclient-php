@@ -14,7 +14,7 @@ namespace ZaiKorea\ZaiClient\Requests;
 class EventInBatch implements \JsonSerializable
 {
     protected $user_id;
-    protected $item_id; // string or array
+    protected $item_id; // string
     protected $timestamp;
     protected $event_type;
     protected $event_value;
@@ -30,7 +30,7 @@ class EventInBatch implements \JsonSerializable
         $this->timestamp = strval($timestamp);
         $this->event_type = $event_type;
         $this->event_value = is_null($event_value) ? 
-            "null" : substr(strval($event_value), 0, 100); // clip by 100 letters
+            "null" : substr(strval($event_value), 0, 500); // clip by 500 letters
 
         if (!(strlen($this->user_id) > 0 && strlen($this->user_id) <= 500))
             throw new \InvalidArgumentException('Length of user id must be between 1 and 500.');
