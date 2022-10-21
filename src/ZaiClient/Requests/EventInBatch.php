@@ -38,8 +38,12 @@ class EventInBatch implements \JsonSerializable
         if (!(strlen($this->item_id) > 0 && strlen($this->item_id) <= 500))
             throw new \InvalidArgumentException('Length of item id must be between 1 and 500.');
 
+        if (!($this->timestamp >= 1648871097 || $this->timestamp <= 2147483647))
+            throw new \InvalidArgumentException('Invalid timestamp.');
         if (!(strlen($this->event_type) > 0 && strlen($this->event_type) <= 500))
             throw new \InvalidArgumentException('Length of event type must be between 1 and 500.');
+        if (strlen($this->event_value) == 0)
+            throw new \InvalidArgumentException('Length of event value must be at least 1.')
     }
 
     function jsonSerialize()
