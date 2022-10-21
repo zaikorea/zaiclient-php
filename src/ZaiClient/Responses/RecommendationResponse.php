@@ -66,6 +66,11 @@ class RecommendationResponse
     public function setMetadata($metadata)
     {
         $this->metadata = json_decode($metadata, $assoc=True);
+        if (!is_array($this->metadata)) {
+            $warningMessage = "Failed to parse the metadata to object, returning an empty object. metadata: " . $metadata;
+            trigger_error($warningMessage, E_USER_WARNING);
+            $this->metadata = array();
+        }
     }
 
     /**
