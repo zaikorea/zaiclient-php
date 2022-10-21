@@ -69,5 +69,25 @@ class ZaiclientTest extends TestCase
         self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
+    public function testClientWithCustomEndpoint()
+    {
+        $options = [
+            'custom_endpoint' => '-dev',
+        ];
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET, $options);
+        self::assertSame($client->getCollectorApiEndpoint(), 'https://collector-api-dev.zaikorea.org');
+        self::assertSame($client->getMlApiEndpoint(), 'https://ml-api-dev.zaikorea.org');
+    }
+
+    public function testClientWithBadCustomEndpoint()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $options = [
+            'custom_endpoint' => '-@dev',
+        ];
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET, $options);
+    }
+
 }
 

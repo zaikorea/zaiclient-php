@@ -227,6 +227,8 @@ class ZaiClient
 
             if ($is_match)
                 return $options[$key];
+            else
+                throw new \InvalidArgumentException('Only alphanumeric characters are allowed for custom endpoint.');
         }
 
         return "";
@@ -235,5 +237,15 @@ class ZaiClient
     public function getOptions()
     {
         return $this->options;
+    }
+    
+    public function getCollectorApiEndpoint()
+    {
+        return $this->collector_api_endpoint;
+    }
+
+    public function getMlApiEndpoint()
+    {
+        return $this->ml_api_endpoint;
     }
 }
