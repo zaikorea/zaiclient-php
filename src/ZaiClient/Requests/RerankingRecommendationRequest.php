@@ -28,7 +28,7 @@ class RerankingRecommendationRequest extends RecommendationRequest
             throw new \InvalidArgumentException('Length of user id must be between 1 and 500 or null.');
         if (!is_array($item_ids))
             throw new \InvalidArgumentException("item_ids must be an array");
-        if (!(0 < count($item_ids) && count($item_ids) <= 10000))
+        if (!(0 <= count($item_ids) && count($item_ids) <= 10000))
             throw new \InvalidArgumentException("Length of item_ids must be between 0 and 10,000.");
 
         foreach ($item_ids as $item_id) {
