@@ -21,7 +21,7 @@ class RelatedItemsRecommendationRequest extends RecommendationRequest
         if (is_null($item_id) || !(strlen($item_id) > 0 && strlen($item_id) <= 500))
             throw new \InvalidArgumentException('Length of item id must be between 1 and 500.');
         if (is_null($limit) || !(0 <= $limit && $limit <= 10000))
-            throw new \InvalidArgumentException('Limit must be between 1 and 10,000.');
+            throw new \InvalidArgumentException('Limit must be between 0 and 10,000.');
         if (!is_array($options))
             throw new \InvalidArgumentException("Options must be given as an array.");
         if (isset($options['offset'])) {
