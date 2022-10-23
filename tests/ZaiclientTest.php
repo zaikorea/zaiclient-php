@@ -72,7 +72,7 @@ class ZaiclientTest extends TestCase
     public function testClientWithCustomEndpoint()
     {
         $options = [
-            'custom_endpoint' => '-dev',
+            'custom_endpoint' => 'dev',
         ];
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET, $options);
         self::assertSame($client->getCollectorApiEndpoint(), 'https://collector-api-dev.zaikorea.org');

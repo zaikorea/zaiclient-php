@@ -226,7 +226,7 @@ class ZaiClient
             $is_match = preg_match($pattern, $options[$key]);
 
             if ($is_match)
-                return $options[$key];
+                return "-" . $options[$key];
             else
                 throw new \InvalidArgumentException('Only alphanumeric characters are allowed for custom endpoint.');
         }
