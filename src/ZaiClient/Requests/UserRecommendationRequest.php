@@ -20,7 +20,7 @@ class UserRecommendationRequest extends RecommendationRequest
     public function __construct($user_id, $limit, $options = array())
     {
         if (!(is_null($user_id) || strlen($user_id) > 0 && strlen($user_id) <= 500))
-            throw new \InvalidArgumentException('Length of user id must be between 1 and 500 or null.');
+            throw new \InvalidArgumentException('Length of user id must be between 1 and 500.');
         if (is_null($limit) || !(0 <= $limit && $limit <= 10000))
             throw new \InvalidArgumentException('Limit must be between 0 and 10,000.');
         if (!is_array($options))
