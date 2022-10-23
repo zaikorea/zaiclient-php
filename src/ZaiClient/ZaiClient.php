@@ -221,6 +221,9 @@ class ZaiClient
             if (!is_string($options[$key]))
                 throw new \InvalidArgumentException('Custom endpoint option must be a string');
             
+            if (strlen($options[$key]) > 10)
+                throw new \InvalidArgumentException('Custom endpoint should be less than or equal to 10.');
+            
             $pattern = "/^[a-zA-Z0-9-]*$/";
 
             $is_match = preg_match($pattern, $options[$key]);
