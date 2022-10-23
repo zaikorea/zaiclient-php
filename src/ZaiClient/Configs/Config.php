@@ -10,10 +10,10 @@ namespace ZaiKorea\ZaiClient\Configs;
 
 class Config
 {
-    const EVENTS_API_ENDPOINT = 'https://collector-api.zaikorea.org';
+    const EVENTS_API_ENDPOINT = "https://collector-api%s.zaikorea.org";
     const EVENTS_API_PATH = '/events';
 
-    const ML_API_ENDPOINT = 'https://ml-api.zaikorea.org';
+    const ML_API_ENDPOINT = "https://ml-api%s.zaikorea.org";
     const ML_API_PATH_PREFIX = '/clients/%s/recommenders';
 
     const HMAC_ALGORITHM = 'sha256';

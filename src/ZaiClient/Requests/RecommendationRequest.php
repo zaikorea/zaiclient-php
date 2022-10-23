@@ -51,12 +51,6 @@ abstract class RecommendationRequest implements \JsonSerializable
     abstract public function getPath($client_id);
 
     /**
-     * Get full URI with path 
-     * @return string PATH to use for request
-     */
-    abstract public function getURIPath($client_id);
-
-    /**
      * 
      * @return int
      */

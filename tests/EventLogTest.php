@@ -157,6 +157,18 @@ class EventLogTest extends TestCase
         self::assertSame($this->add_event_msg, $response->getMessage());
     }
 
+    public function testAddPageViewEventLogWithLongEventValue()
+    {
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
+        $user_id = 'php-add-pageview';
+        $event_value = generateRandomString(503);
+
+        $page_view_event = new PageViewEvent($user_id, $event_value);
+        $response = $client->addEventLog($page_view_event);
+
+        self::assertSame($this->add_event_msg, $response->getMessage());
+    }
+
     public function testAddPageViewEventLogWithEmptyEventValue()
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -575,15 +587,15 @@ class EventLogTest extends TestCase
         $client->addEventLog($view_event);
     }
 
-    public function testBadEventTypeCustomerEvent()
+    public function testBadEventTypeCustomEvent()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Length of event type must be between 1 and 100.');
+        $this->expectExceptionMessage('Length of event type must be between 1 and 500.');
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $user_id = 'php-raise-error';
 
-        $custom_event_type = generateRandomString(102);
+        $custom_event_type = generateRandomString(501);
         $custom_action = ['item_id' => 'P99999', 'value' => 9];
         $custom_event = new CustomEvent($user_id, $custom_event_type, $custom_action);
         $client->addEventLog($custom_event);
