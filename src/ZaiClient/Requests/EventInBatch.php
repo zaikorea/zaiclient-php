@@ -43,7 +43,7 @@ class EventInBatch implements \JsonSerializable
         if (!(strlen($this->event_type) > 0 && strlen($this->event_type) <= 500))
             throw new \InvalidArgumentException('Length of event type must be between 1 and 500.');
         if (strlen($this->event_value) == 0)
-            throw new \InvalidArgumentException('Length of event value must be at least 1.')
+            throw new \InvalidArgumentException('Length of event value must be at least 1.');
     }
 
     function jsonSerialize()

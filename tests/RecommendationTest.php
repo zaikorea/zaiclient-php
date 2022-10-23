@@ -13,7 +13,7 @@ class RecommendationTest extends TestCase
 {
     const CLIENT_ID = 'test';
     const SECRET = 'KVPzvdHTPWnt0xaEGc2ix-eqPXFCdEV5zcqolBr_h1k';
-    const LIMIT_ERRMSG = 'Limit must be between 1 and 10,000.';
+    const LIMIT_ERRMSG = 'Limit must be between 0 and 10,000.';
     const USER_ID_ERRMSG = 'Length of user id must be between 1 and 500 or null.';
     const ITEM_ID_ERRMSG = 'Length of item id must be between 1 and 500.';
     const LONG_OPTIONS_ERRMSG = "\$options['recommendation_options'] must be less than or equal to 1000 when converted to string";
@@ -437,14 +437,14 @@ class RecommendationTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(self::ITEM_ID_ERRMSG);
 
-        $user_id = "";
+        $item_id = "";
         $limit = 10;
 
         $options = [
             'recommendation_type' => 'product_datail_page',
             'offset' => 0
         ];
-        new RelatedItemsRecommendationRequest($user_id, $limit, $options);
+        new RelatedItemsRecommendationRequest($item_id, $limit, $options);
     }
 
     public function testRelatedItemsRecommendationWithNullLimit()
@@ -498,21 +498,6 @@ class RecommendationTest extends TestCase
         $this->expectExceptionMessage(self::USER_ID_ERRMSG);
 
         $user_id = "";
-        $item_ids = [];
-        $options = [
-            'recommendation_type' => 'all_products_page',
-            'offset' => 0
-        ];
-
-        new RerankingRecommendationRequest($user_id, $item_ids, $options);
-    }
-
-    public function testRerankingRecommendationWithEmptyItemIds()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage(self::ITEM_IDS_ERRMSG);
-
-        $user_id = "ZaiTest_User_id";
         $item_ids = [];
         $options = [
             'recommendation_type' => 'all_products_page',
