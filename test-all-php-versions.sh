@@ -4,7 +4,7 @@ for version in "${PHP_VERSIONS[@]}"
 do
     echo "testing php $version"
     source ~/.phpbrew/bashrc
-    phpbrew switch 7.0.33
+    phpbrew switch ${version}
     php -v
     php ../composers/v7.x/composer.phar install -q
     ./vendor/bin/phpunit tests
