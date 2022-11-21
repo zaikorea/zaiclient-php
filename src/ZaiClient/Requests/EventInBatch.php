@@ -46,6 +46,7 @@ class EventInBatch implements \JsonSerializable
             throw new \InvalidArgumentException('Length of event value must be at least 1.');
     }
 
+    #[\ReturnTypeWillChange]
     function jsonSerialize()
     {
         $vars = get_object_vars($this);

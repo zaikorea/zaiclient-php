@@ -98,7 +98,7 @@ abstract class RecommendationRequest implements \JsonSerializable
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
 
-
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $vars = get_object_vars($this);

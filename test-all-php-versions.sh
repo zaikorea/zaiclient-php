@@ -11,3 +11,16 @@ do
     rm -rf vendor
     rm composer.lock
 done
+
+PHP_VERSIONS=('8.0.21' '8.1.3')
+for version in "${PHP_VERSIONS[@]}"
+do
+    echo "testing php $version"
+    source ~/.phpbrew/bashrc
+    phpbrew switch ${version}
+    php -v
+    php ../composers/v8.x/composer.phar install -q
+    ./vendor/bin/phpunit tests
+    rm -rf vendor
+    rm composer.lock
+done
