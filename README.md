@@ -2,7 +2,7 @@
 
 Z.Ai API를 PHP 환경에서 간편하게 이용할 수 있는 REST client SDK입니다.
 
-[guzzlehttp/guzzle](https://github.com/guzzle/guzzle) 패키지를 이용하며, PHP 7을 지원합니다.
+[guzzlehttp/guzzle](https://github.com/guzzle/guzzle) 패키지를 이용하며, PHP 7, 8을 지원합니다.
 
 ## Documentation
 SDK에 대한 documentation은 [ZAiDocs](https://docs.zaikorea.org/collector/php)에서 확인 가능합니다.
