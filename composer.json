@@ -1,6 +1,6 @@
 {
     "name": "zaikorea/zaiclient",
-    "version": "2.2.0",
+    "version": "2.2.1",
     "description": "Z.Ai official client SDK",
     "hompage": "https://www.zaikorea.org",
     "autoload": {
