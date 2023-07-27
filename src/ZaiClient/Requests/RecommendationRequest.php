@@ -45,13 +45,13 @@ abstract class RecommendationRequest implements \JsonSerializable
     protected $options;
 
     /**
-     * Get api path 
+     * Get api path
      * @return string PATH to use for request
      */
     abstract public function getPath($client_id);
 
     /**
-     * 
+     *
      * @return int
      */
     public function getLimit()
@@ -60,7 +60,7 @@ abstract class RecommendationRequest implements \JsonSerializable
     }
 
     /**
-     * 
+     *
      * @return int
      */
     public function getOffset()
@@ -69,7 +69,7 @@ abstract class RecommendationRequest implements \JsonSerializable
     }
 
     /**
-     * 
+     *
      * @return string
      */
     public function getRecommendationType()
@@ -78,7 +78,7 @@ abstract class RecommendationRequest implements \JsonSerializable
     }
 
     /**
-     * 
+     *
      * @return string
      */
     public function getOptions()
@@ -94,7 +94,8 @@ abstract class RecommendationRequest implements \JsonSerializable
      */
     public function isAssoc(array $arr)
     {
-        if (array() === $arr) return false;
+        if (array() === $arr)
+            return false;
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
 

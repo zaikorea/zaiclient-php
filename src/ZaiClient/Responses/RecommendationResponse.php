@@ -2,7 +2,7 @@
 
 /**
  * Recommendation response
- * 
+ *
  * A friendly reference for deserializing array
  * https://github.com/cweiske/jsonmapper/issues/41
  */
@@ -26,7 +26,7 @@ class RecommendationResponse
      * @var float $timestamp timestamp from server
      */
     private $timestamp;
-    
+
     /**
      * @var array $metadata associative array
      */
@@ -51,7 +51,7 @@ class RecommendationResponse
     }
 
     /**
-     * Set timestamp 
+     * Set timestamp
      * @param float $timestamp
      */
     public function setTimestamp($timestamp)
@@ -65,7 +65,7 @@ class RecommendationResponse
      */
     public function setMetadata($metadata)
     {
-        $this->metadata = json_decode($metadata, $assoc=True);
+        $this->metadata = json_decode($metadata, $assoc = True);
         if (!is_array($this->metadata)) {
             $warningMessage = "Failed to parse the metadata to object, returning an empty object. metadata: " . $metadata;
             trigger_error($warningMessage, E_USER_WARNING);

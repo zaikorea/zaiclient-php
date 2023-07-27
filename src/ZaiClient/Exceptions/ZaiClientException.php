@@ -11,7 +11,7 @@ namespace ZaiKorea\ZaiClient\Exceptions;
 use \GuzzleHttp\Exception\RequestException;
 
 /**
- * Exception class thrown when the connection succeeded but 
+ * Exception class thrown when the connection succeeded but
  * request failed due to client or server error.
  */
 class ZaiClientException extends \Exception

@@ -11,7 +11,7 @@ namespace ZaiKorea\ZaiClient\Exceptions;
 use \GuzzleHttp\Exception\BadResponseException;
 
 /**
- * 
+ *
  */
 class BatchSizeLimitExceededException extends \Exception
 {

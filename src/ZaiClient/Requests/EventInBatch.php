@@ -8,7 +8,7 @@
 
 namespace ZaiKorea\ZaiClient\Requests;
 
-/** 
+/**
  * @final
  */
 class EventInBatch implements \JsonSerializable
@@ -29,7 +29,7 @@ class EventInBatch implements \JsonSerializable
         $this->item_id = is_string($item_id) ? $item_id : strval($item_id);
         $this->timestamp = strval($timestamp);
         $this->event_type = $event_type;
-        $this->event_value = is_null($event_value) ? 
+        $this->event_value = is_null($event_value) ?
             "null" : substr(strval($event_value), 0, 500); // clip by 500 letters
 
         if (!(strlen($this->user_id) > 0 && strlen($this->user_id) <= 500))

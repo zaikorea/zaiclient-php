@@ -154,7 +154,7 @@ class RecommendationTest extends TestCase
             'call_type' => substr($request::RECOMMENDER_PATH, 1),
             'recommendation_type' => isset($options['recommendation_type']) ? $options['recommendation_type'] : $request::DEFAULT_RECOMMENDATION_TYPE
         ];
-        
+
         self::assertSame($response->getItems()[0], 'ITEM_ID_5');
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertSame($response->getCount(), $limit, "items count don't match");
@@ -316,7 +316,7 @@ class RecommendationTest extends TestCase
             'call_type' => substr($request::RECOMMENDER_PATH, 1),
             'recommendation_type' => isset($options['recommendation_type']) ? $options['recommendation_type'] : $request::DEFAULT_RECOMMENDATION_TYPE
         ];
-        
+
         self::assertNotNull($response->getItems(), "items in response is null");
         self::assertSame($response->getCount(), $limit, "items count don't match");
         self::assertSame($response->getMetadata(), $expected_metadata);
@@ -467,7 +467,7 @@ class RecommendationTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(self::ITEM_ID_ERRMSG);
 
-        $item_id = null; 
+        $item_id = null;
         $limit = 10;
 
         $options = [
@@ -482,7 +482,7 @@ class RecommendationTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(self::ITEM_ID_ERRMSG);
 
-        $item_id = str_repeat('1234', 1000); 
+        $item_id = str_repeat('1234', 1000);
         $limit = 10;
 
         $options = [
