@@ -26,6 +26,24 @@ class ZaiclientTest extends TestCase
     const CLIENT_ID = 'test';
     const SECRET = 'KVPzvdHTPWnt0xaEGc2ix-eqPXFCdEV5zcqolBr_h1k';
     private $add_event_msg = 'The given event was added successfully.';
+    private $mockHttpClient = null;
+
+    /**
+     * @beforeClass
+     */
+    protected function setUpTestClass()
+    {
+        $this->mockHttpClient = TestUtils::createMockHttpClient($this);
+
+    }
+
+    /**
+     * @afterClass
+     */
+    protected function teardownTestClass()
+    {
+        $this->mockHttpClient = null;
+    }
 
     public function testClient()
     {
@@ -87,6 +105,22 @@ class ZaiclientTest extends TestCase
             'custom_endpoint' => '-@dev',
         ];
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET, $options);
+    }
+
+    public function testSendRequest()
+    {
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET, $options = array(), $this->mockHttpClient);
+        $mock_request = [
+            "method" => "POST",
+            "body" => [
+                "foo" => "bar",
+                "baz" => "qux",
+            ],
+        ];
+
+        $response_json = $client->sendRequest($mock_request);
+
+        self::assertJsonStringEqualsJsonFile(TestUtils::getDefaultResponseBody(), $response_json);
     }
 
 }
