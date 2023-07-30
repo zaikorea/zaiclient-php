@@ -35,7 +35,7 @@ class ZaiClient
     private $ml_api_endpoint;
     private $collector_api_endpoint;
 
-    public function __construct($client_id, $secret, $options=array())
+    public function __construct($client_id, $secret, $options = array())
     {
         $this->zai_client_id = $client_id;
         $this->zai_secret = $secret;
@@ -54,7 +54,7 @@ class ZaiClient
 
     /**
      * @param BaseEvent $event
-     * @return int StatusCode
+     * @return mixed StatusCode
      */
     public function addEventLog($event)
     {
@@ -67,7 +67,7 @@ class ZaiClient
 
         try {
             $response = $this->guzzle_client->request(
-                'POST', 
+                'POST',
                 $this->collector_api_endpoint . Config::EVENTS_API_PATH,
                 [
                     'headers' => $headers,
@@ -105,7 +105,7 @@ class ZaiClient
 
         try {
             $response = $this->guzzle_client->request(
-                'PUT', 
+                'PUT',
                 $this->collector_api_endpoint . Config::EVENTS_API_PATH,
                 [
                     'headers' => $headers,
@@ -140,7 +140,7 @@ class ZaiClient
 
         try {
             $response = $this->guzzle_client->request(
-                'DELETE', 
+                'DELETE',
                 $this->collector_api_endpoint . Config::EVENTS_API_PATH,
                 [
                     'headers' => $headers,
@@ -162,7 +162,7 @@ class ZaiClient
 
     /**
      *  Get recommendation from Z.Ai ML API server
-     * 
+     *
      * @param RecommendationRequest $request Request can be one of <UserRecomendation | RelatedItems | Reranking>Recomendations
      * @return RecommendationResponse Json serializable class
      */
@@ -178,7 +178,7 @@ class ZaiClient
 
         try {
             $response = $this->guzzle_client->request(
-                'POST', 
+                'POST',
                 $this->ml_api_endpoint . $path,
                 [
                     'headers' => $headers,
@@ -203,7 +203,7 @@ class ZaiClient
         if (isset($options[$key])) {
             if (!is_int($options[$key]))
                 throw new \InvalidArgumentException('Timeout options should be an integer');
-            
+
             if ($options[$key] > 0)
                 return $options[$key];
         }
@@ -220,10 +220,10 @@ class ZaiClient
         if (isset($options[$key])) {
             if (!is_string($options[$key]))
                 throw new \InvalidArgumentException('Custom endpoint option must be a string');
-            
+
             if (strlen($options[$key]) > 10)
                 throw new \InvalidArgumentException('Custom endpoint should be less than or equal to 10.');
-            
+
             $pattern = "/^[a-zA-Z0-9-]*$/";
 
             $is_match = preg_match($pattern, $options[$key]);
@@ -241,7 +241,7 @@ class ZaiClient
     {
         return $this->options;
     }
-    
+
     public function getCollectorApiEndpoint()
     {
         return $this->collector_api_endpoint;
