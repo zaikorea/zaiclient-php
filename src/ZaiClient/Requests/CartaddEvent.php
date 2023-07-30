@@ -12,7 +12,7 @@ use ZaiKorea\ZaiClient\Requests\BaseEvent;
 use ZaiKorea\ZaiClient\Requests\EventInBatch;
 use ZaiKorea\ZaiClient\Configs\Config;
 
-/** 
+/**
  * @final
  */
 class CartaddEvent extends BaseEvent
@@ -21,19 +21,19 @@ class CartaddEvent extends BaseEvent
     const EVENT_VALUE = 'null';
 
     /**
-     * CartaddEvent accepts: 
+     * CartaddEvent accepts:
      * - customer id
      * - single item_id or array of item_ids
      * - array of options
-     * 
-     * Here's an example of creating a Cartadd event using a single 
-     * item_id or an array of item_ids * default request options to apply 
-     * to each request: 
-     * 
+     *
+     * Here's an example of creating a Cartadd event using a single
+     * item_id or an array of item_ids * default request options to apply
+     * to each request:
+     *
      *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
      *     $item_id = 'P1123456'
      *     $cartadd_event = new CartaddEvent($user_id, $item_id);
-     * 
+     *
      *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
      *     $item_id = ['P11234567', 'P11234567'];
      *     $options = ['timestamp'=> 1657197315];
@@ -43,7 +43,7 @@ class CartaddEvent extends BaseEvent
      *     - timesptamp: a custom timestamp given by the user, the user
      *                   can use this option to customize the timestamp
      *                   of the recorded event.
-     * 
+     *
      * @param int|string $user_id
      * @param string $item_id
      * @param array $options

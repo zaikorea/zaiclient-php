@@ -19,19 +19,19 @@ class SearchEvent extends BaseEvent
     const ITEM_ID = 'null';
 
     /**
-     * SearchEvent accepts: 
+     * SearchEvent accepts:
      * - customer id
      * - single item_id or array of item_ids
      * - array of options
-     * 
-     * Here's an example of creating a View event using a single 
-     * item_id or an array of item_ids * default request options to apply 
-     * to each request: 
-     * 
+     *
+     * Here's an example of creating a View event using a single
+     * item_id or an array of item_ids * default request options to apply
+     * to each request:
+     *
      *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
      *     $event_value = 'Blue Jeans'
      *     $view_event = new SearchEvent($user_id, $event_value);
-     * 
+     *
      *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
      *     $event_value = ['Blue Jeans', 'Chanel Purfume'];
      *     $options = ['timestamp'=> 1657197315];
@@ -41,7 +41,7 @@ class SearchEvent extends BaseEvent
      *     - timesptamp: a custom timestamp given by the user, the user
      *                   can use this option to customize the timestamp
      *                   of the recorded event.
-     * 
+     *
      * @param int|string $user_id
      * @param string|array $event_values
      * @param array $options
@@ -79,7 +79,8 @@ class SearchEvent extends BaseEvent
                 $tmp_timestamp,
                 self::EVENT_TYPE,
                 $search_query
-            ));
+            )
+            );
             $tmp_timestamp += Config::EPSILON;
         }
 

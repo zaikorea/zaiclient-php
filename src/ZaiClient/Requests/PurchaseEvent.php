@@ -13,7 +13,7 @@ use ZaiKorea\ZaiClient\Requests\EventInBatch;
 use ZaiKorea\ZaiClient\Configs\Config;
 use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
 
-/** 
+/**
  * @final
  */
 class PurchaseEvent extends BaseEvent
@@ -21,50 +21,50 @@ class PurchaseEvent extends BaseEvent
     const EVENT_TYPE = 'purchase';
 
     /**
-     * PurchaseEvent accepts: 
+     * PurchaseEvent accepts:
      * - customer id
      * - 1D array with 'item_id' and 'value' keyword
      * - array of options
-     * 
+     *
      * Here's an example of creating a Purchase event using an 1D associative
-     * array with 'item_id', 'price', and 'count' as keywords, or a 2D sequential 
-     * array. When passing 2D array, each row should have 'item_id' and 
+     * array with 'item_id', 'price', and 'count' as keywords, or a 2D sequential
+     * array. When passing 2D array, each row should have 'item_id' and
      * 'value' keyword:
-     * 
+     *
      *     // imagine a customer can search for a specific item and
      *     // you want to log the search record, in this case there is
      *     // no need for a value in the action.
      *     $user_id =  '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1';
      *     $order = [ 'item_id' => 'P123431', 'price' => 100001, 'count' => 5]
      *     $purchase_event = new PurchaseEvent($user_id, $order);
-     * 
-     *     // imagine a customer can send a recommendation of multiple 
+     *
+     *     // imagine a customer can send a recommendation of multiple
      *     // items to another user at once.
      *     // And you want to log the items and their prices.
      *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1';
      *     $orders = [
-     *         [ 
+     *         [
      *             'item_id' => 'P123431',
-     *             'price' => 10000, 
-     *             'count' => 3 
+     *             'price' => 10000,
+     *             'count' => 3
      *         ],
-     *         [ 
+     *         [
      *             'item_id' => 'P123435',
-     *             'price' => 10001, 
+     *             'price' => 10001,
      *             'count' => 5
      *         ]
      *     ];
      *     $purchase_event_batch = new PurchaseEvent($user_id, $orders);
-     * 
+     *
      * The PurchaseEvent class supports following options:
      *     - timesptamp: a custom timestamp given by the user, the user
      *                   can use this option to customize the timestamp
      *                   of the recorded event.
-     * 
+     *
      * @param int|string $user_id
      * @param array $item_ids
      * @param array $options
-     * 
+     *
      */
     public function __construct($user_id, $orders = array(), $options = array())
     {
@@ -73,7 +73,7 @@ class PurchaseEvent extends BaseEvent
             throw new \InvalidArgumentException(
                 sprintf(Config::EMPTY_ARR_ERRMSG, self::class, __FUNCTION__, 2)
             );
-        // change to 2D array if $orders is 1D array (order on single item) 
+        // change to 2D array if $orders is 1D array (order on single item)
         if (gettype(reset($orders)) != 'array')
             $orders = array($orders);
         // Validate if $order is sequential array
@@ -105,7 +105,8 @@ class PurchaseEvent extends BaseEvent
                     $tmp_timestamp,
                     self::EVENT_TYPE,
                     $order_spec['price']
-                ));
+                )
+                );
                 $tmp_timestamp += Config::EPSILON;
             }
         }

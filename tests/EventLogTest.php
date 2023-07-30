@@ -129,7 +129,7 @@ class EventLogTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            sprintf(Config::NON_STR_ARG_ERRMSG, ProductDetailViewEvent::class, '__construct', 2)    
+            sprintf(Config::NON_STR_ARG_ERRMSG, ProductDetailViewEvent::class, '__construct', 2)
         );
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $user_id = 'php-add-multi-productdetailview';

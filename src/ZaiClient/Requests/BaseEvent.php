@@ -9,12 +9,12 @@ namespace ZaiKorea\ZaiClient\Requests;
 class BaseEvent
 {
 
-    /** 
+    /**
      * @var $payload Payload for the http request to Recommender API.
      */
     protected $payload;
 
-    /** 
+    /**
      * @var $timestamp Timestamp of the event happening
      */
     protected $timestamp;

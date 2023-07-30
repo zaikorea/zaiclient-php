@@ -40,7 +40,7 @@ class RelatedItemsRecommendationRequest extends RecommendationRequest
                 echo strlen(json_encode($options['recommendation_options']));
                 throw new \InvalidArgumentException("\$options['recommendation_options'] must be less than or equal to 1000 when converted to string");
             }
-        } 
+        }
 
         $this->item_id = $item_id;
         $this->limit = $limit;
@@ -51,7 +51,7 @@ class RelatedItemsRecommendationRequest extends RecommendationRequest
     }
 
     /**
-     * Get api path 
+     * Get api path
      * @return string PATH to use for request
      */
     public function getPath($client_id)
