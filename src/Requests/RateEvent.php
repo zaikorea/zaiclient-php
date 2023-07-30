@@ -6,11 +6,11 @@
  * @modifiedBy <name>
  */
 
-namespace ZaiKorea\ZaiClient\Requests;
+namespace ZaiClient\Requests;
 
-use ZaiKorea\ZaiClient\Requests\BaseEvent;
-use ZaiKorea\ZaiClient\Requests\EventInBatch;
-use ZaiKorea\ZaiClient\Configs\Config;
+use ZaiClient\Requests\BaseEvent;
+use ZaiClient\Requests\EventInBatch;
+use ZaiClient\Configs\Config;
 
 /**
  * @final

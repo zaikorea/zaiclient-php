@@ -5,7 +5,12 @@
     "hompage": "https://www.zaikorea.org",
     "autoload": {
         "psr-4": {
-            "ZaiKorea\\": "src/"
+            "ZaiClient\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ZaiClient\\Tests\\": "tests/"
         }
     },
     "authors": [

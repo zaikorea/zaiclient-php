@@ -4,7 +4,7 @@
  * EventLogger response
  */
 
-namespace ZaiKorea\ZaiClient\Responses;
+namespace ZaiClient\Responses;
 
 class EventLoggerResponse
 {

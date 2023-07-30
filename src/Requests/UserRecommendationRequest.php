@@ -4,10 +4,10 @@
  * Recommendation request
  */
 
-namespace ZaiKorea\ZaiClient\Requests;
+namespace ZaiClient\Requests;
 
-use ZaiKorea\ZaiClient\Requests\RecommendationRequest;
-use ZaiKorea\ZaiClient\Configs\Config;
+use ZaiClient\Requests\RecommendationRequest;
+use ZaiClient\Configs\Config;
 
 class UserRecommendationRequest extends RecommendationRequest
 {

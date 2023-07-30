@@ -6,7 +6,7 @@
  * @modifiedBy <name>
  */
 
-namespace ZaiKorea\ZaiClient\Requests;
+namespace ZaiClient\Requests;
 
 /**
  * @final

@@ -4,7 +4,7 @@
  * Recommendation request
  */
 
-namespace ZaiKorea\ZaiClient\Requests;
+namespace ZaiClient\Requests;
 
 abstract class RecommendationRequest implements \JsonSerializable
 {

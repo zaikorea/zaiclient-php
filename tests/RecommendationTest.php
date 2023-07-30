@@ -1,13 +1,13 @@
 <?php
 
-namespace ZaiKorea\ZaiClient;
+namespace ZaiClient;
 
 use PHPUnit\Framework\TestCase;
-use ZaiKorea\ZaiClient\Requests\UserRecommendationRequest;
-use ZaiKorea\ZaiClient\Requests\RelatedItemsRecommendationRequest;
-use ZaiKorea\ZaiClient\Requests\RerankingRecommendationRequest;
+use ZaiClient\Requests\UserRecommendationRequest;
+use ZaiClient\Requests\RelatedItemsRecommendationRequest;
+use ZaiClient\Requests\RerankingRecommendationRequest;
 
-require_once 'TestUtils.php';
+use ZaiClient\Tests\TestUtils;
 
 class RecommendationTest extends TestCase
 {
@@ -381,7 +381,7 @@ class RecommendationTest extends TestCase
         $limit = 3;
 
         $options = [
-            'recommendation_type' => generateRandomString(501),
+            'recommendation_type' => TestUtils::generateRandomString(501),
         ];
         new UserRecommendationRequest($user_id, $limit, $options);
     }

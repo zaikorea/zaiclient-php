@@ -6,20 +6,20 @@
  * @modifiedBy <name>
  */
 
-namespace ZaiKorea\ZaiClient;
+namespace ZaiClient;
 
 use PHPUnit\Framework\TestCase;
-use ZaiKorea\ZaiClient\Requests\PurchaseEvent;
-use ZaiKorea\ZaiClient\Requests\ProductDetailViewEvent;
-use ZaiKorea\ZaiClient\Requests\PageViewEvent;
-use ZaiKorea\ZaiClient\Requests\SearchEvent;
-use ZaiKorea\ZaiClient\Requests\LikeEvent;
-use ZaiKorea\ZaiClient\Requests\CartaddEvent;
-use ZaiKorea\ZaiClient\Requests\RateEvent;
-use ZaiKorea\ZaiClient\Requests\CustomEvent;
-use ZaiKorea\ZaiClient\Exceptions\ZaiClientException;
-use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
-use ZaiKorea\ZaiClient\Configs\Config;
+use ZaiClient\Requests\PurchaseEvent;
+use ZaiClient\Requests\ProductDetailViewEvent;
+use ZaiClient\Requests\PageViewEvent;
+use ZaiClient\Requests\SearchEvent;
+use ZaiClient\Requests\LikeEvent;
+use ZaiClient\Requests\CartaddEvent;
+use ZaiClient\Requests\RateEvent;
+use ZaiClient\Requests\CustomEvent;
+use ZaiClient\Exceptions\ZaiClientException;
+use ZaiClient\Exceptions\BatchSizeLimitExceededException;
+use ZaiClient\Configs\Config;
 
 class ZaiclientTest extends TestCase
 {

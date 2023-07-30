@@ -6,12 +6,12 @@
  * @modifiedBy <name>
  */
 
-namespace ZaiKorea\ZaiClient\Requests;
+namespace ZaiClient\Requests;
 
-use ZaiKorea\ZaiClient\Requests\BaseEvent;
-use ZaiKorea\ZaiClient\Requests\EventInBatch;
-use ZaiKorea\ZaiClient\Configs\Config;
-use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
+use ZaiClient\Requests\BaseEvent;
+use ZaiClient\Requests\EventInBatch;
+use ZaiClient\Configs\Config;
+use ZaiClient\Exceptions\BatchSizeLimitExceededException;
 
 /**
  * @final
@@ -103,13 +103,15 @@ class CustomEvent extends BaseEvent
                     )
                 );
             }
-            array_push($events, new EventInBatch(
-                $user_id,
-                $custom_action['item_id'],
-                $tmp_timestamp,
-                $custom_event_type,
-                $custom_action['value']
-            )
+            array_push(
+                $events,
+                new EventInBatch(
+                    $user_id,
+                    $custom_action['item_id'],
+                    $tmp_timestamp,
+                    $custom_event_type,
+                    $custom_action['value']
+                )
             );
             $tmp_timestamp += Config::EPSILON;
         }

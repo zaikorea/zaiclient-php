@@ -6,7 +6,7 @@
  * @modifiedBy <name>
  */
 
-namespace ZaiKorea\ZaiClient\Configs;
+namespace ZaiClient\Configs;
 
 class Config
 {

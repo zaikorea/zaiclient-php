@@ -6,23 +6,24 @@
  * @modifiedBy <name>
  */
 
-namespace ZaiKorea\ZaiClient;
+namespace ZaiClient\Tests;
 
 use PHPUnit\Framework\TestCase;
-use ZaiKorea\ZaiClient\Requests\PurchaseEvent;
-use ZaiKorea\ZaiClient\Requests\ProductDetailViewEvent;
-use ZaiKorea\ZaiClient\Requests\PageViewEvent;
-use ZaiKorea\ZaiClient\Requests\SearchEvent;
-use ZaiKorea\ZaiClient\Requests\LikeEvent;
-use ZaiKorea\ZaiClient\Requests\CartaddEvent;
-use ZaiKorea\ZaiClient\Requests\RateEvent;
-use ZaiKorea\ZaiClient\Requests\CustomEvent;
-use ZaiKorea\ZaiClient\Exceptions\ZaiClientException;
-use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
-use ZaiKorea\ZaiClient\Configs\Config;
 
+use ZaiClient\ZaiClient;
+use ZaiClient\Requests\PurchaseEvent;
+use ZaiClient\Requests\ProductDetailViewEvent;
+use ZaiClient\Requests\PageViewEvent;
+use ZaiClient\Requests\SearchEvent;
+use ZaiClient\Requests\LikeEvent;
+use ZaiClient\Requests\CartaddEvent;
+use ZaiClient\Requests\RateEvent;
+use ZaiClient\Requests\CustomEvent;
+use ZaiClient\Exceptions\ZaiClientException;
+use ZaiClient\Exceptions\BatchSizeLimitExceededException;
+use ZaiClient\Configs\Config;
+use ZaiClient\Tests\TestUtils;
 
-require_once 'TestUtils.php';
 
 class EventLogTest extends TestCase
 {
@@ -161,7 +162,7 @@ class EventLogTest extends TestCase
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $user_id = 'php-add-pageview';
-        $event_value = generateRandomString(503);
+        $event_value = TestUtils::generateRandomString(503);
 
         $page_view_event = new PageViewEvent($user_id, $event_value);
         $response = $client->addEventLog($page_view_event);
@@ -568,7 +569,7 @@ class EventLogTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $user_id = generateRandomString(101);
+        $user_id = TestUtils::generateRandomString(101);
 
         $item_id = ['P12345'];
         $view_event = new ProductDetailViewEvent($user_id, $item_id);
@@ -582,7 +583,7 @@ class EventLogTest extends TestCase
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $user_id = 'php-raise-error';
 
-        $item_id = [generateRandomString(101)];
+        $item_id = [TestUtils::generateRandomString(101)];
         $view_event = new ProductDetailViewEvent($user_id, $item_id);
         $client->addEventLog($view_event);
     }
@@ -595,7 +596,7 @@ class EventLogTest extends TestCase
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
         $user_id = 'php-raise-error';
 
-        $custom_event_type = generateRandomString(501);
+        $custom_event_type = TestUtils::generateRandomString(501);
         $custom_action = ['item_id' => 'P99999', 'value' => 9];
         $custom_event = new CustomEvent($user_id, $custom_event_type, $custom_action);
         $client->addEventLog($custom_event);

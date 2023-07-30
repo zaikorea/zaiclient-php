@@ -4,7 +4,7 @@
  * BaseEvent
  */
 
-namespace ZaiKorea\ZaiClient\Requests;
+namespace ZaiClient\Requests;
 
 class BaseEvent
 {

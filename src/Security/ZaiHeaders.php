@@ -5,9 +5,9 @@
  * @author Uiseop Eom <tech@zaikorea.org>
  */
 
-namespace ZaiKorea\ZaiClient\Security;
+namespace ZaiClient\Security;
 
-use ZaiKorea\ZaiClient\Configs\Config;
+use ZaiClient\Configs\Config;
 
 /**
  * Utils

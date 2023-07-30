@@ -6,12 +6,12 @@
  * @modifiedBy <name>
  */
 
-namespace ZaiKorea\ZaiClient\Requests;
+namespace ZaiClient\Requests;
 
-use ZaiKorea\ZaiClient\Requests\BaseEvent;
-use ZaiKorea\ZaiClient\Requests\EventInBatch;
-use ZaiKorea\ZaiClient\Configs\Config;
-use ZaiKorea\ZaiClient\Exceptions\BatchSizeLimitExceededException;
+use ZaiClient\Requests\BaseEvent;
+use ZaiClient\Requests\EventInBatch;
+use ZaiClient\Configs\Config;
+use ZaiClient\Exceptions\BatchSizeLimitExceededException;
 
 class SearchEvent extends BaseEvent
 {
@@ -73,13 +73,15 @@ class SearchEvent extends BaseEvent
         $tmp_timestamp = $this->getTimestamp();
 
         foreach ($search_queries as $search_query) {
-            array_push($events, new EventInBatch(
-                $user_id,
-                self::ITEM_ID,
-                $tmp_timestamp,
-                self::EVENT_TYPE,
-                $search_query
-            )
+            array_push(
+                $events,
+                new EventInBatch(
+                    $user_id,
+                    self::ITEM_ID,
+                    $tmp_timestamp,
+                    self::EVENT_TYPE,
+                    $search_query
+                )
             );
             $tmp_timestamp += Config::EPSILON;
         }

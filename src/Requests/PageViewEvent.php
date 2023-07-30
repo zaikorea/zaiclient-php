@@ -1,26 +1,26 @@
 <?php
 
 /**
- * ProductDetailViewEvent
+ * PageViewEvent
  * @author Uiseop Eom <tech@zaikorea.org>
  * @modifiedBy <name>
  */
 
-namespace ZaiKorea\ZaiClient\Requests;
+namespace ZaiClient\Requests;
 
-use ZaiKorea\ZaiClient\Requests\BaseEvent;
-use ZaiKorea\ZaiClient\Requests\EventInBatch;
-use ZaiKorea\ZaiClient\Configs\Config;
+use ZaiClient\Requests\BaseEvent;
+use ZaiClient\Requests\EventInBatch;
+use ZaiClient\Configs\Config;
 
-class ProductDetailViewEvent extends BaseEvent
+class PageViewEvent extends BaseEvent
 {
-    const EVENT_TYPE = 'product_detail_view';
-    const EVENT_VALUE = 'null';
+    const EVENT_TYPE = 'page_view';
+    const ITEM_ID = 'null';
 
     /**
-     * ProductDetailViewEvent accepts:
+     * PageViewEvent accepts:
      * - customer id
-     * - single item_id or array of item_ids
+     * - single event_value or array of event_values
      * - array of options
      *
      * Here's an example of creating a View event using a single
@@ -28,33 +28,39 @@ class ProductDetailViewEvent extends BaseEvent
      * to each request:
      *
      *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
-     *     $item_id = 'P1123456'
-     *     $view_event = new ProductDetailViewEvent($user_id, $item_id);
+     *     $event_value = 'homepage'
+     *     $view_event = new PageViewEvent($user_id, $event_value);
      *
      *     $user_id = '3f672ed3-4ea2-435f-91ff-ac32a3e4d1f1'
-     *     $item_id = ['P11234567', 'P11234567'];
+     *     $evant_values = ['homepage', 'category'];
      *     $options = ['timestamp'=> 1657197315];
-     *     $view_event_batch = new ProductDetailViewEvent($user_id, $item_ids, $options);
+     *     $view_event_batch = new PageViewEvent($user_id, $event_values, $options);
      *
-     * The ProductDetailViewEvent class supports following options:
+     * The PageViewEvent class supports following options:
      *     - timesptamp: a custom timestamp given by the user, the user
      *                   can use this option to customize the timestamp
      *                   of the recorded event.
      *
      * @param int|string $user_id
-     * @param string $item_id
+     * @param string $page_type
      * @param array $options
      */
-    public function __construct($user_id, $item_id, $options = array())
+    public function __construct($user_id, $page_type, $options = array())
     {
-        if (!$item_id)
-            throw new \InvalidArgumentException(
-                'Length of item id must be between 1 and 100.'
-            );
-        // $item_id should not be an array (doesn't support batch)
-        if (is_array($item_id))
+        // $page_type should be a string
+        if (!is_string($page_type))
             throw new \InvalidArgumentException(
                 sprintf(Config::NON_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
+            );
+        // $page_type should be a non-empty string
+        if (!$page_type)
+            throw new \InvalidArgumentException(
+                sprintf(Config::NON_STR_ARG_ERRMSG, self::class, __FUNCTION__, 2)
+            );
+        // $page_type should not be an array (doesn't support batch)
+        if (is_array($page_type))
+            throw new \InvalidArgumentException(
+                sprintf(Config::BATCH_ERRMSG, self::class)
             );
 
         // set timestamp to custom timestamp given by the user
@@ -64,10 +70,10 @@ class ProductDetailViewEvent extends BaseEvent
 
         $event = new EventInBatch(
             $user_id,
-            $item_id,
+            self::ITEM_ID,
             $this->getTimestamp(),
             self::EVENT_TYPE,
-            self::EVENT_VALUE
+            $page_type
         );
 
         $this->setPayload($event);
