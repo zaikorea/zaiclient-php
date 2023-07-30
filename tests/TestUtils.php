@@ -1,11 +1,28 @@
 <?php
-function generateRandomString($length = 101) 
+namespace ZaiClient\Tests;
+
+use Ramsey\Uuid\Uuid;
+
+class TestUtils
 {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charactersLength = strlen($characters);
-    $randomString = '';
-    for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    static function generateRandomString($length = 101)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $characters_length = strlen($characters);
+        $random_string = '';
+        for ($i = 0; $i < $length; $i++) {
+            $random_string .= $characters[rand(0, $characters_length - 1)];
+        }
+        return $random_string;
     }
-    return $randomString;
+
+    static function generateUuid()
+    {
+        $uuid = Uuid::uuid4();
+
+        return $uuid->toString();
+    }
+
+    // TODO: You might need to filter null values
+
 }
