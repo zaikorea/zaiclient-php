@@ -6,21 +6,20 @@
  */
 
 
-namespace ZaiKorea\ZaiClient;
+namespace ZaiClient;
 
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Utils;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
-use ZaiKorea\ZaiClient\Requests\RecommendationRequest;
-use ZaiKorea\ZaiClient\Responses\RecommendationResponse;
-use ZaiKorea\ZaiClient\Responses\EventLoggerResponse;
-use ZaiKorea\ZaiClient\Security\ZaiHeaders;
-use ZaiKorea\ZaiClient\Exceptions\ZaiClientException;
-use ZaiKorea\ZaiClient\Exceptions\ZaiNetworkIOException;
-
+use GuzzleHttp\Psr7\Utils;
 use JsonMapper;
-use ZaiKorea\ZaiClient\Configs\Config;
+use ZaiClient\Configs\Config;
+use ZaiClient\Exceptions\ZaiClientException;
+use ZaiClient\Exceptions\ZaiNetworkIOException;
+use ZaiClient\Requests\BaseEvent;
+use ZaiClient\Requests\RecommendationRequest;
+use ZaiClient\Responses\EventLoggerResponse;
+use ZaiClient\Responses\RecommendationResponse;
+use ZaiClient\Security\ZaiHeaders;
 
 /**
  * Client for easy usage of Z.Ai recommendation API

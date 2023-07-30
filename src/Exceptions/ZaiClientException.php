@@ -6,7 +6,7 @@
  * @modifiedBy <name>
  */
 
-namespace ZaiKorea\ZaiClient\Exceptions;
+namespace ZaiClient\Exceptions;
 
 use \GuzzleHttp\Exception\RequestException;
 

@@ -7,7 +7,7 @@
  * https://github.com/cweiske/jsonmapper/issues/41
  */
 
-namespace ZaiKorea\ZaiClient\Responses;
+namespace ZaiClient\Responses;
 
 class RecommendationResponse
 {
