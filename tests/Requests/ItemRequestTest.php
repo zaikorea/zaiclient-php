@@ -3,14 +3,16 @@ namespace ZaiClient\Tests\Requests;
 
 use PHPUnit\Framework\TestCase;
 
+use ZaiClient\Tests\TestUtils;
+
 use ZaiClient\Configs\Config;
 use ZaiClient\Requests\Items\ItemRequest;
 
 
 
+
 class ItemRequestTest extends TestCase
 {
-
     function testClassConstructorWithEmptyProperties()
     {
         $method = "POST";
@@ -18,38 +20,45 @@ class ItemRequestTest extends TestCase
         $name = "Test Item Name";
         $properties = [];
 
-        $expected_json = json_encode([
-            "item_id" => $id,
-            "item_name" => $name,
-            "category_id_1" => null,
-            "category_name_1" => null,
-            "category_id_2" => null,
-            "category_name_2" => null,
-            "category_id_3" => null,
-            "category_name_3" => null,
-            "brand_id" => null,
-            "brand_name" => null,
-            "description" => null,
-            "created_timestamp" => null,
-            "updated_timestamp" => null,
-            "is_active" => null,
-            "is_soldout" => null,
-            "promote_on" => null,
-            "item_group" => null,
-            "rating" => null,
-            "price" => null,
-            "click_counts" => null,
-            "purchase_counts" => null,
-            "image_url" => null,
-            "item_url" => null,
-            "miscellaneous" => null
-        ]);
+        $expected_json = json_encode(
+            array_merge(
+                TestUtils::getEmptyItemRequestPayload(),
+                [
+                    "item_id" => $id,
+                    "item_name" => $name
+                ]
+            )
+        );
 
         $item_request = new ItemRequest($method, $id, $name, $properties);
         $payload_json = json_encode($item_request->get_payload());
 
         $this->assertJsonStringEqualsJsonString($expected_json, $payload_json);
         $this->assertSame(Config::ITEMS_API_PATH, $item_request->get_path(null));
+    }
+
+    function testClassConstructorWithNoName()
+    {
+        $method = "POST";
+        $id = "Item_Id_1";
+        $name = null;
+        $properties = [];
+
+        $expected_json = json_encode(
+            array_merge(
+                TestUtils::getEmptyItemRequestPayload(),
+                [
+                    "item_id" => $id,
+                ]
+            )
+        );
+
+        $item_request = new ItemRequest($method, $id, $name, $properties);
+
+        $acutal_json = json_encode($item_request->get_payload());
+
+        $this->assertJson(json_encode($acutal_json));
+        $this->assertJsonStringEqualsJsonString($expected_json, $acutal_json);
     }
 
     function testClassConstructorWithProperties()
@@ -61,39 +70,53 @@ class ItemRequestTest extends TestCase
             "category_id_1" => "Category_Id_1",
         ];
 
-        $expected_json = json_encode([
-            "item_id" => $id,
-            "item_name" => $name,
-            "category_id_1" => "Category_Id_1",
-            "category_name_1" => null,
-            "category_id_2" => null,
-            "category_name_2" => null,
-            "category_id_3" => null,
-            "category_name_3" => null,
-            "brand_id" => null,
-            "brand_name" => null,
-            "description" => null,
-            "created_timestamp" => null,
-            "updated_timestamp" => null,
-            "is_active" => null,
-            "is_soldout" => null,
-            "promote_on" => null,
-            "item_group" => null,
-            "rating" => null,
-            "price" => null,
-            "click_counts" => null,
-            "purchase_counts" => null,
-            "image_url" => null,
-            "item_url" => null,
-            "miscellaneous" => null
-        ]);
+        $expected_json = json_encode(
+            array_merge(
+                TestUtils::getEmptyItemRequestPayload(),
+                [
+                    "item_id" => $id,
+                    "item_name" => $name,
+                    "category_id_1" => "Category_Id_1",
+                ]
+            )
+        );
 
         $item_request = new ItemRequest($method, $id, $name, $properties);
 
-        $item_json = json_encode($item_request->get_payload());
+        $acutal_json = json_encode($item_request->get_payload());
 
-        $this->assertJson(json_encode($item_json));
-        $this->assertJsonStringEqualsJsonString($expected_json, $item_json);
+        $this->assertJson(json_encode($acutal_json));
+        $this->assertJsonStringEqualsJsonString($expected_json, $acutal_json);
         $this->assertSame(Config::ITEMS_API_PATH, $item_request->get_path(null));
     }
+
+    function testClassConstructorWithIllegalProperties()
+    {
+        $method = "POST";
+        $id = "Item_Id_1";
+        $name = "Test Item Name";
+        $properties = [
+            "category_id_1" => "Category_Id_1",
+            "illegal_property" => "This should not be return in get_payload()",
+        ];
+
+        $expected_json = json_encode(
+            array_merge(
+                TestUtils::getEmptyItemRequestPayload(),
+                [
+                    "item_id" => $id,
+                    "name" => $name,
+                    "category_id_1" => "Category_Id_1",
+                ]
+            )
+        );
+
+        $item_request = new ItemRequest($method, $id, $name, $properties);
+
+        $acutal_json = json_encode($item_request->get_payload());
+
+        $this->assertJson(json_encode($acutal_json));
+        $this->assertJsonStringNotEqualsJsonString($expected_json, $acutal_json);
+    }
+
 }

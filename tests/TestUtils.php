@@ -23,6 +23,56 @@ class TestUtils
         return $uuid->toString();
     }
 
+    /**
+     * A fixture like function to create a mock http client
+     * @param TestCase $test_class
+     */
+    static function createMockHttpClient($test_class, $mock_body = null)
+    {
+        $mockHttpClient = $test_class->getMockBuilder(Client::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['request'])
+            ->getMock();
+
+        $body = is_null($mock_body) ? TestUtils::get_default_response_body() : $mock_body;
+
+        $mockHttpClient->expects($test_class->any())
+            ->method('request')
+            ->willReturn(new Response(200, [], $body));
+
+        return $mockHttpClient;
+    }
+
+    static function getEmptyItemRequestPayload()
+    {
+        return [
+            "item_id" => null,
+            "item_name" => null,
+            "category_id_1" => null,
+            "category_name_1" => null,
+            "category_id_2" => null,
+            "category_name_2" => null,
+            "category_id_3" => null,
+            "category_name_3" => null,
+            "brand_id" => null,
+            "brand_name" => null,
+            "description" => null,
+            "created_timestamp" => null,
+            "updated_timestamp" => null,
+            "is_active" => null,
+            "is_soldout" => null,
+            "promote_on" => null,
+            "item_group" => null,
+            "rating" => null,
+            "price" => null,
+            "click_counts" => null,
+            "purchase_counts" => null,
+            "image_url" => null,
+            "item_url" => null,
+            "miscellaneous" => null,
+        ];
+    }
+
     // TODO: You might need to filter null values
 
 }
