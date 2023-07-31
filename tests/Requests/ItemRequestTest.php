@@ -1,11 +1,4 @@
 <?php
-
-/**
- * EventLogTest
- * @author Uiseop Eom <tech@zaikorea.org>
- * @modifiedBy <name>
- */
-
 namespace ZaiClient\Tests\Requests;
 
 use PHPUnit\Framework\TestCase;
