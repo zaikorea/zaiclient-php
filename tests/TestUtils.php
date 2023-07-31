@@ -1,10 +1,23 @@
 <?php
 namespace ZaiClient\Tests;
 
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Client;
+use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 
 class TestUtils
 {
+    /**
+     * A Wrapper function to get a constant like variable that is returned by json_encode.
+     * `const DEFAULT_BODY = json_encode(['message' => 'success']);` causes error
+     * @return string
+     */
+    static function getDefaultResponseBody()
+    {
+        return json_encode(['message' => 'success']);
+    }
+
     static function generateRandomString($length = 101)
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -34,7 +47,7 @@ class TestUtils
             ->setMethods(['request'])
             ->getMock();
 
-        $body = is_null($mock_body) ? TestUtils::get_default_response_body() : $mock_body;
+        $body = is_null($mock_body) ? TestUtils::getDefaultResponseBody() : $mock_body;
 
         $mockHttpClient->expects($test_class->any())
             ->method('request')

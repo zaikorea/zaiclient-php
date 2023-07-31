@@ -9,17 +9,10 @@
 namespace ZaiClient;
 
 use PHPUnit\Framework\TestCase;
-use ZaiClient\Requests\PurchaseEvent;
+
+use ZaiClient\Requests\Items\ItemRequest;
 use ZaiClient\Requests\ProductDetailViewEvent;
-use ZaiClient\Requests\PageViewEvent;
-use ZaiClient\Requests\SearchEvent;
-use ZaiClient\Requests\LikeEvent;
-use ZaiClient\Requests\CartaddEvent;
-use ZaiClient\Requests\RateEvent;
-use ZaiClient\Requests\CustomEvent;
-use ZaiClient\Exceptions\ZaiClientException;
-use ZaiClient\Exceptions\BatchSizeLimitExceededException;
-use ZaiClient\Configs\Config;
+use ZaiClient\Tests\TestUtils;
 
 class ZaiclientTest extends TestCase
 {
@@ -29,18 +22,17 @@ class ZaiclientTest extends TestCase
     private $mockHttpClient = null;
 
     /**
-     * @beforeClass
+     * @before
      */
-    protected function setUpTestClass()
+    public function setUpTestClass()
     {
         $this->mockHttpClient = TestUtils::createMockHttpClient($this);
-
     }
 
     /**
-     * @afterClass
+     * @after
      */
-    protected function teardownTestClass()
+    public function teardownTestClass()
     {
         $this->mockHttpClient = null;
     }
@@ -110,17 +102,29 @@ class ZaiclientTest extends TestCase
     public function testSendRequest()
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET, $options = array(), $this->mockHttpClient);
-        $mock_request = [
-            "method" => "POST",
-            "body" => [
-                "foo" => "bar",
-                "baz" => "qux",
-            ],
-        ];
 
-        $response_json = $client->sendRequest($mock_request);
+        // Test With ItemRequest
+        $request = new ItemRequest("POST", "P1000005", "test-item");
 
-        self::assertJsonStringEqualsJsonFile(TestUtils::getDefaultResponseBody(), $response_json);
+        $response = $client->sendRequest($request);
+
+        $response_body = $response->getBody();
+
+        // To consume the stream, read the first 1024 bytes.
+        // If you want to retrieve the entire contents of the stream, use getContents() instead of read().
+        self::assertJsonStringEqualsJsonString(TestUtils::getDefaultResponseBody(), $response_body->getContents());
     }
 
+    public function testSendRequestWithCustomEndPoint()
+    {
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET, $options = ["custom_endpoint" => "test-dev"], $this->mockHttpClient);
+
+        // Test With ItemRequest
+        $request = new ItemRequest("POST", "P1000005", "test-item");
+
+
+        $endpoint = sprintf($request->getBaseUrl(), $client->getOptions()['custom_endpoint']) . $request->getPath(null);
+
+        self::assertSame("https://collector-api-test-dev.zaikorea.org/items", $endpoint);
+    }
 }
