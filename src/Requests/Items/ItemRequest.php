@@ -28,21 +28,21 @@ class ItemRequest extends Request
     }
 
 
-    public function get_payload($is_test = false)
+    public function getPayload($is_test = false)
     {
 
         return $this->payload;
     }
 
 
-    public function get_path($client_id)
+    public function getPath($client_id)
     {
 
         return config::ITEMS_API_PATH;
     }
 
 
-    public function get_query_param()
+    public function getQueryParam()
     {
 
         return [];

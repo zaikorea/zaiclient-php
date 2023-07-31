@@ -19,9 +19,9 @@ class AddItemTest extends TestCase
 
         $add_item_request = new AddItem($id, $name, $properties);
 
-        $this->assertEquals("POST", $add_item_request->method);
-        $this->assertEquals(Config::ITEMS_API_PATH, $add_item_request->get_path(null));
-        $this->assertEquals([], $add_item_request->get_query_param());
+        $this->assertEquals("POST", $add_item_request->getMethod());
+        $this->assertEquals(Config::ITEMS_API_PATH, $add_item_request->getPath(null));
+        $this->assertEquals([], $add_item_request->getQueryParam());
         $this->assertJsonStringEqualsJsonString(
             json_encode(
                 array_merge(
@@ -33,7 +33,7 @@ class AddItemTest extends TestCase
                     ]
                 )
             ),
-            json_encode($add_item_request->get_payload())
+            json_encode($add_item_request->getPayload())
         );
     }
 }

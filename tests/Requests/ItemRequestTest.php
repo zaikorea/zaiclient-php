@@ -31,10 +31,10 @@ class ItemRequestTest extends TestCase
         );
 
         $item_request = new ItemRequest($method, $id, $name, $properties);
-        $payload_json = json_encode($item_request->get_payload());
+        $payload_json = json_encode($item_request->getPayload());
 
         $this->assertJsonStringEqualsJsonString($expected_json, $payload_json);
-        $this->assertSame(Config::ITEMS_API_PATH, $item_request->get_path(null));
+        $this->assertSame(Config::ITEMS_API_PATH, $item_request->getPath(null));
     }
 
     function testClassConstructorWithNoName()
@@ -55,7 +55,7 @@ class ItemRequestTest extends TestCase
 
         $item_request = new ItemRequest($method, $id, $name, $properties);
 
-        $acutal_json = json_encode($item_request->get_payload());
+        $acutal_json = json_encode($item_request->getPayload());
 
         $this->assertJson(json_encode($acutal_json));
         $this->assertJsonStringEqualsJsonString($expected_json, $acutal_json);
@@ -83,11 +83,11 @@ class ItemRequestTest extends TestCase
 
         $item_request = new ItemRequest($method, $id, $name, $properties);
 
-        $acutal_json = json_encode($item_request->get_payload());
+        $acutal_json = json_encode($item_request->getPayload());
 
         $this->assertJson(json_encode($acutal_json));
         $this->assertJsonStringEqualsJsonString($expected_json, $acutal_json);
-        $this->assertSame(Config::ITEMS_API_PATH, $item_request->get_path(null));
+        $this->assertSame(Config::ITEMS_API_PATH, $item_request->getPath(null));
     }
 
     function testClassConstructorWithIllegalProperties()
@@ -97,7 +97,7 @@ class ItemRequestTest extends TestCase
         $name = "Test Item Name";
         $properties = [
             "category_id_1" => "Category_Id_1",
-            "illegal_property" => "This should not be return in get_payload()",
+            "illegal_property" => "This should not be return in getPayload()",
         ];
 
         $expected_json = json_encode(
@@ -113,7 +113,7 @@ class ItemRequestTest extends TestCase
 
         $item_request = new ItemRequest($method, $id, $name, $properties);
 
-        $acutal_json = json_encode($item_request->get_payload());
+        $acutal_json = json_encode($item_request->getPayload());
 
         $this->assertJson(json_encode($acutal_json));
         $this->assertJsonStringNotEqualsJsonString($expected_json, $acutal_json);

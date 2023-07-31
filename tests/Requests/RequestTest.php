@@ -20,7 +20,7 @@ class RequestTest extends TestCase
         $base_url = 'https://test.zai-dev.com';
         $request = new Request($method, $base_url);
 
-        $request->get_path('Test_Client_Id');
+        $request->getPath('Test_Client_Id');
     }
 
 
@@ -33,7 +33,7 @@ class RequestTest extends TestCase
         $base_url = 'https://test.zai-dev.com';
         $request = new Request($method, $base_url);
 
-        $request->get_payload('Test_Client_Id');
+        $request->getPayload('Test_Client_Id');
     }
 
     function testRequestGetQueryParam()
@@ -45,6 +45,6 @@ class RequestTest extends TestCase
         $base_url = 'https://test.zai-dev.com';
         $request = new Request($method, $base_url);
 
-        $request->get_payload('Test_Client_Id');
+        $request->getQueryParam();
     }
 }
