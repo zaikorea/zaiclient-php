@@ -14,7 +14,7 @@ class Validator
         $length = strlen($value);
 
         if ($length < $min || $length > $max) {
-            throw new InvalidArgumentException("Value must be between $min and $max characters.");
+            throw new InvalidArgumentException("$value must be between $min and $max characters.");
         }
 
         return $value;
@@ -30,7 +30,7 @@ class Validator
         if (preg_match("/^\d{10}\.\d+$/", $timestamp)) { // e.g. 1690737483.076
             return $value;
         } else {
-            throw new InvalidArgumentException("Value must be a valid microseconds unix timestamp string.");
+            throw new InvalidArgumentException("$value must be a valid microseconds unix timestamp string.");
         }
     }
 
@@ -41,7 +41,7 @@ class Validator
         }
 
         if (!is_bool($value)) {
-            throw new InvalidArgumentException("Value must be a boolean.");
+            throw new InvalidArgumentException(strval($value) . "must be a boolean.");
         }
 
         return $value;
@@ -54,7 +54,7 @@ class Validator
         }
 
         if (!is_float($value) || ($min !== null && $value < $min) || ($max !== null && $value > $max)) {
-            throw new InvalidArgumentException("Value must be a float between $min and $max.");
+            throw new InvalidArgumentException(strval($value) . " must be a float between $min and $max.");
         }
 
         return $value;
@@ -67,7 +67,7 @@ class Validator
         }
 
         if (!is_int($value) || ($min !== null && $value < $min) || ($max !== null && $value > $max)) {
-            throw new InvalidArgumentException("Value must be an integer between $min and $max.");
+            throw new InvalidArgumentException(strval($value) . " must be an integer between $min and $max.");
         }
 
         return $value;
