@@ -94,7 +94,7 @@ class EventRequestTest extends TestCase
     }
 
     /* ----------------------- Unhappy Path --------------------- */
-    public function testClassConstructorWhereItemIdsAreNotList()
+    public function testClassConstructorWhereItemIdsAreNotArray()
     {
         $this->expectException(InvalidArgumentException::class);
         $user_id = "User_Id_1";
@@ -113,7 +113,7 @@ class EventRequestTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $user_id = "User_Id_1";
         $item_id = ["Item_Id_1"];
-        $timestamp = (int) microtime(true);
+        $timestamp = "invalid_timestamp";
         $event_type = "test_event_type";
         $event_values = ["test_event_value"];
         $from_values = ["test_from_value"];
@@ -122,7 +122,7 @@ class EventRequestTest extends TestCase
         new EventRequest($user_id, $item_id, $timestamp, $event_type, $event_values, $from_values, $is_zai_recommendation);
     }
 
-    public function testClassConstructorWhereTimestampIsList()
+    public function testClassConstructorWhereTimestampIsArray()
     {
         $this->expectException(InvalidArgumentException::class);
         $user_id = "User_Id_1";
@@ -150,7 +150,7 @@ class EventRequestTest extends TestCase
         new EventRequest($user_id, $item_id, $timestamp, $event_type, $event_values, $from_values, $is_zai_recommendation);
     }
 
-    public function testClassConstructorWhereEventTypeIsList()
+    public function testClassConstructorWhereEventTypeIsArray()
     {
         $this->expectException(InvalidArgumentException::class);
         $user_id = "User_Id_1";
@@ -164,21 +164,21 @@ class EventRequestTest extends TestCase
         new EventRequest($user_id, $item_id, $timestamp, $event_type, $event_values, $from_values, $is_zai_recommendation);
     }
 
-    public function testClassConstructorWhereEventValuesIsNotList()
+    public function testClassConstructorWhereEventValuesIsNotArray()
     {
         $this->expectException(InvalidArgumentException::class);
         $user_id = "User_Id_1";
         $item_id = ["Item_Id_1"];
         $timestamp = microtime(true);
         $event_type = "event";
-        $event_values = "not a list";
+        $event_values = "not a Array";
         $from_values = ["test_from_value"];
         $is_zai_recommendation = [true];
 
         new EventRequest($user_id, $item_id, $timestamp, $event_type, $event_values, $from_values, $is_zai_recommendation);
     }
 
-    public function testClassConstructorWhereFromValuesIsNotList()
+    public function testClassConstructorWhereFromValuesIsNotArray()
     {
         $this->expectException(InvalidArgumentException::class);
         $user_id = "User_Id_1";
@@ -186,13 +186,13 @@ class EventRequestTest extends TestCase
         $timestamp = microtime(true);
         $event_type = "event";
         $event_values = ["value"];
-        $from_values = "not a list";
+        $from_values = "not a Array";
         $is_zai_recommendation = [true];
 
         new EventRequest($user_id, $item_id, $timestamp, $event_type, $event_values, $from_values, $is_zai_recommendation);
     }
 
-    public function testClassConstructorWhereIsZaiRecommendationNotList()
+    public function testClassConstructorWhereIsZaiRecommendationNotArray()
     {
         $this->expectException(InvalidArgumentException::class);
         $user_id = "User_Id_1";
@@ -205,4 +205,19 @@ class EventRequestTest extends TestCase
 
         new EventRequest($user_id, $item_id, $timestamp, $event_type, $event_values, $from_values, $is_zai_recommendation);
     }
+
+    public function testClassConstructorWhereArrayLengthIsDifferent()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $user_id = "User_Id_1";
+        $item_id = ["Item_Id_1", "Item_Id_2"];
+        $timestamp = microtime(true);
+        $event_type = "test_event_type";
+        $event_values = ["test_event_value"];
+        $from_values = ["test_from_value"];
+        $is_zai_recommendation = true;
+
+        new EventRequest($user_id, $item_id, $timestamp, $event_type, $event_values, $from_values, $is_zai_recommendation);
+    }
+
 }
