@@ -57,7 +57,7 @@ class Recommendation implements JsonSerializable
         $recommendation_type,
         $limit,
         $offset,
-        $options
+        $recommendation_options
     ) {
         $this->user_id = Validator::validateString($user_id, 1, 500, [
             "nullable" => true,
@@ -76,8 +76,20 @@ class Recommendation implements JsonSerializable
         );
         $this->recommendation_type = Validator::validateString($recommendation_type, 1, 500);
         $this->limit = Validator::validateInt($limit, 0, 10000);
-        $this->offset = Validator::validateInt($offset, 0, 10000);
-        $this->options = $options;
+        $this->offset = Validator::validateInt($offset, 0, 10000, true);
+        $this->options = $this->encodeOptions($recommendation_options);
+    }
+
+    private function encodeOptions($options)
+    {
+        Validator::validateJsonSerializable($options, 1000, true);
+
+        // Error not raised
+        if (is_null($options)) {
+            return null;
+        }
+
+        return json_encode($options);
     }
 
     #[\ReturnTypeWillChange]

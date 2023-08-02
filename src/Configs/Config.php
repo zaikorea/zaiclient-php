@@ -19,6 +19,11 @@ class Config
     const ML_API_ENDPOINT = "https://ml-api%s.zaikorea.org";
     const ML_API_PATH_PREFIX = '/clients/%s/recommenders';
 
+    const USER_RECOMMENDATION_PATH = '/user-recommendations';
+    const RELATED_ITEMS_PATH = "/related-items";
+
+    const RERANKING_RECOMMENDATION_PATH_PREFIX = "/reranking-recommendations";
+
     const HMAC_ALGORITHM = 'sha256';
     const HMAC_SCHEME = 'ZAi';
     const ZAI_CLIENT_ID_HEADER = 'X-ZAI-CLIENT-ID';

@@ -75,7 +75,7 @@ class RecommendationTest extends TestCase
         $recommendation_type,
         $limit,
         $offset,
-        $options
+        $recommendation_options
     ) {
         $expected = json_encode(
             [
@@ -85,7 +85,7 @@ class RecommendationTest extends TestCase
                 "recommendation_type" => $recommendation_type,
                 "limit" => $limit,
                 "offset" => $offset,
-                "options" => $options
+                "options" => is_null($recommendation_options) ? null : json_encode($recommendation_options)
             ]
         );
 
@@ -96,7 +96,7 @@ class RecommendationTest extends TestCase
             $recommendation_type,
             $limit,
             $offset,
-            $options
+            $recommendation_options
         );
 
         $actual = json_encode($recommendation);
@@ -116,7 +116,7 @@ class RecommendationTest extends TestCase
         $recommendation_type,
         $limit,
         $offset,
-        $options
+        $recommendation_options
     ) {
         $this->expectException(InvalidArgumentException::class);
 
@@ -127,7 +127,7 @@ class RecommendationTest extends TestCase
             $recommendation_type,
             $limit,
             $offset,
-            $options
+            $recommendation_options
         );
     }
 

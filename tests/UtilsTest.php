@@ -19,6 +19,12 @@ class UtilsTest extends TestCase
                     "model" => "test_model",
                     "a" => "b",
                 ],
+            ],
+            [
+                [
+                    "test_option_1" => "test_value_1",
+                    "test_option_2" => "test_value_2",
+                ]
             ]
         ];
     }
@@ -35,6 +41,12 @@ class UtilsTest extends TestCase
             [
                 ["str_1", "str_2", "str_3"],
             ],
+            [
+                [
+                    "not associated array element",
+                    "not associated array element"
+                ]
+            ]
         ];
 
     }
