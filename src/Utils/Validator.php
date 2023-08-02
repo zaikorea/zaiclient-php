@@ -116,7 +116,7 @@ class Validator
         $value,
         $arrMin,
         $arrMax,
-        $options = [
+        $lenConstr = [
             "min" => 0,
             "max" => 500,
         ],
@@ -139,7 +139,7 @@ class Validator
                 ]);
             }
         } catch (InvalidArgumentException $e) {
-            throw new InvalidArgumentException("Array must contain strings between {$options['min']} and {$options['max']} characters.");
+            throw new InvalidArgumentException("Array must contain strings between {$lenConstr['min']} and {$lenConstr['max']} characters.");
         }
 
         return $value;
