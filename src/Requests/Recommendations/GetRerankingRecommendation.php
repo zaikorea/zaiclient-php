@@ -3,20 +3,22 @@ namespace ZaiClient\Requests\Recommendations;
 
 use InvalidArgumentException;
 use ZaiClient\Configs\Config;
-use ZaiClient\Utils\Util;
-use ZaiClient\Utils\Validator;
 use ZaiClient\Requests\Recommendations\RecommendationRequest;
 
-class GetUserRecommendation extends RecommendationRequest
+class GetRerankingRecommendation extends RecommendationRequest
 {
     const DEFAULT_OFFSET = 0;
-    const DEFAULT_RECOMMENDATION_TYPE = "homepage";
+    const DEFAULT_RECOMMENDATION_TYPE = "category";
 
     public function __construct(
-        $user_id = null,
-        $limit,
+        $user_id,
+        $item_ids,
         $request_options = array())
     {
+        if (!is_array($item_ids)) {
+            throw new InvalidArgumentException("item_ids must be an array");
+        }
+
         if (!is_array($request_options)) {
             throw new InvalidArgumentException("request_options must be an array");
         }
@@ -24,13 +26,13 @@ class GetUserRecommendation extends RecommendationRequest
         parent::__construct(
             $user_id,
             null,
-            null,
+            $item_ids,
             (array_key_exists("recommendation_type", $request_options)
                 ? $request_options["recommendation_type"]
                 : self::DEFAULT_RECOMMENDATION_TYPE),
-            Validator::validateInt($limit, 1, 10000, [
-                "var_name" => "\$limit",
-            ]),
+            (array_key_exists("limit", $request_options)
+                ? $request_options["limit"]
+                : count($item_ids)),
             (array_key_exists("offset", $request_options)
                 ? $request_options["offset"]
                 : self::DEFAULT_OFFSET),
@@ -42,8 +44,6 @@ class GetUserRecommendation extends RecommendationRequest
 
     public function getPath($client_id)
     {
-        return sprintf(Config::ML_API_PATH_PREFIX, $client_id) . Config::USER_RECOMMENDATION_PATH;
+        return sprintf(Config::ML_API_PATH_PREFIX, $client_id) . Config::RERANKING_RECOMMENDATION_PATH;
     }
-
-
 }

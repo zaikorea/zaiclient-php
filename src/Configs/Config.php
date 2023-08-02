@@ -22,6 +22,7 @@ class Config
     const USER_RECOMMENDATION_PATH = '/user-recommendations';
     const RELATED_ITEMS_PATH = "/related-items";
 
+    const RERANKING_RECOMMENDATION_PATH = "/reranking-recommendations";
     const RERANKING_RECOMMENDATION_PATH_PREFIX = "/reranking-recommendations";
 
     const HMAC_ALGORITHM = 'sha256';

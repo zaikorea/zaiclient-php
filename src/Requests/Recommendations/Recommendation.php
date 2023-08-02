@@ -75,14 +75,22 @@ class Recommendation implements JsonSerializable
             ["nullable" => true, "var_name" => "\$item_ids"]
         );
         $this->recommendation_type = Validator::validateString($recommendation_type, 1, 500);
-        $this->limit = Validator::validateInt($limit, 0, 10000);
-        $this->offset = Validator::validateInt($offset, 0, 10000, true);
+        $this->limit = Validator::validateInt($limit, 0, 10000, [
+            "var_name" => "\$limit",
+        ]);
+        $this->offset = Validator::validateInt($offset, 0, 10000, [
+            "nullable" => true,
+            "var_name" => "\$offset",
+        ]);
         $this->options = $this->encodeOptions($recommendation_options);
     }
 
     private function encodeOptions($options)
     {
-        Validator::validateJsonSerializable($options, 1000, true);
+        Validator::validateJsonSerializable($options, 1000, [
+            "nullable" => true,
+            "var_name" => "\$options",
+        ]);
 
         // Error not raised
         if (is_null($options)) {

@@ -3,17 +3,21 @@ namespace ZaiClient\Requests\Recommendations;
 
 use InvalidArgumentException;
 use ZaiClient\Configs\Config;
-use ZaiClient\Utils\Util;
-use ZaiClient\Utils\Validator;
 use ZaiClient\Requests\Recommendations\RecommendationRequest;
+use ZaiClient\Utils\Validator;
 
-class GetUserRecommendation extends RecommendationRequest
+class GetRelatedRecommendation extends RecommendationRequest
 {
     const DEFAULT_OFFSET = 0;
-    const DEFAULT_RECOMMENDATION_TYPE = "homepage";
+    const DEFAULT_RECOMMENDATION_TYPE = "product_detail_page";
 
+    /**
+     * @param string $item_id
+     * @param int $limit
+     * @param array $request_options
+     */
     public function __construct(
-        $user_id = null,
+        $item_id,
         $limit,
         $request_options = array())
     {
@@ -22,8 +26,10 @@ class GetUserRecommendation extends RecommendationRequest
         }
 
         parent::__construct(
-            $user_id,
             null,
+            Validator::validateString($item_id, 1, 500, [
+                "var_name" => "\$user_id",
+            ]),
             null,
             (array_key_exists("recommendation_type", $request_options)
                 ? $request_options["recommendation_type"]
@@ -42,8 +48,6 @@ class GetUserRecommendation extends RecommendationRequest
 
     public function getPath($client_id)
     {
-        return sprintf(Config::ML_API_PATH_PREFIX, $client_id) . Config::USER_RECOMMENDATION_PATH;
+        return sprintf(Config::ML_API_PATH_PREFIX, $client_id) . Config::RELATED_ITEMS_PATH;
     }
-
-
 }
