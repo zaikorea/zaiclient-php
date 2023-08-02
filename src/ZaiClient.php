@@ -8,6 +8,7 @@
 
 namespace ZaiClient;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Psr7\Utils;
@@ -16,6 +17,7 @@ use ZaiClient\Configs\Config;
 use ZaiClient\Exceptions\ZaiClientException;
 use ZaiClient\Exceptions\ZaiNetworkIOException;
 use ZaiClient\Requests\BaseEvent;
+use ZaiClient\Requests\Request;
 use ZaiClient\Requests\RecommendationRequest;
 use ZaiClient\Responses\EventLoggerResponse;
 use ZaiClient\Responses\RecommendationResponse;
@@ -34,12 +36,11 @@ class ZaiClient
     private $ml_api_endpoint;
     private $collector_api_endpoint;
 
-    public function __construct($client_id, $secret, $options = array())
+    public function __construct($client_id, $secret, $options = array(), $client = null)
     {
         $this->zai_client_id = $client_id;
         $this->zai_secret = $secret;
 
-        $this->guzzle_client = new \GuzzleHttp\Client();
         $this->json_mapper = new JsonMapper();
         $this->options = [
             'connect_timeout' => $this->resolveTimeoutOptions('connect_timeout', $options),
@@ -49,7 +50,16 @@ class ZaiClient
 
         $this->ml_api_endpoint = sprintf(Config::ML_API_ENDPOINT, $this->options['custom_endpoint']);
         $this->collector_api_endpoint = sprintf(Config::EVENTS_API_ENDPOINT, $this->options['custom_endpoint']);
+
+        if ($client && getenv('ZAI_CLIENT_TEST') == 'true')
+            $this->guzzle_client = $client;
+        else
+            $this->guzzle_client = new \GuzzleHttp\Client();
     }
+
+    /**
+     * @param Request
+     */
 
     /**
      * @param BaseEvent $event
@@ -195,6 +205,51 @@ class ZaiClient
         $response_body = json_decode($response->getBody());
         $recommendation_response = $this->json_mapper->map($response_body, new RecommendationResponse());
         return $recommendation_response;
+    }
+
+    /**
+     * Send Request to Zai API server
+     *
+     * @param Request $request
+     */
+    public function sendRequest($request, $options = ['is_test' => false])
+    {
+        $method = $request->getMethod();
+        $path = $request->getPath($this->zai_client_id);
+        $headers = ZaiHeaders::generateZaiHeaders(
+            $this->zai_client_id,
+            $this->zai_secret,
+            $path
+        );
+
+        $body = json_encode(
+            $request->getPayload(
+                key_exists('is_test', $options) ? $options['is_test'] : false
+            )
+        );
+
+        $url = sprintf(
+            $request->getBaseUrl(), $this->options['custom_endpoint']
+        ) . $path;
+
+        try {
+            $response = $this->guzzle_client->request(
+                $method,
+                $url,
+                [
+                    'headers' => $headers,
+                    'body' => Utils::streamFor($body),
+                    'connect_timeout' => $this->options['connect_timeout'],
+                    'read_timeout' => $this->options['read_timeout']
+                ]
+            );
+        } catch (RequestException $e) {
+            throw new ZaiClientException($e->getMessage(), $e);
+        } catch (TransferException $e) {
+            throw new ZaiNetworkIOException($e->getMessage(), $e);
+        }
+
+        return $response;
     }
 
     public function resolveTimeoutOptions($key, $options)

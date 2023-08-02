@@ -11,7 +11,10 @@ namespace ZaiClient\Configs;
 class Config
 {
     const EVENTS_API_ENDPOINT = "https://collector-api%s.zaikorea.org";
+    const COLLECTOR_API_ENDPOINT = "https://collector-api%s.zaikorea.org";
+
     const EVENTS_API_PATH = '/events';
+    const ITEMS_API_PATH = '/items';
 
     const ML_API_ENDPOINT = "https://ml-api%s.zaikorea.org";
     const ML_API_PATH_PREFIX = '/clients/%s/recommenders';
