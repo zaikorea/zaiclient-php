@@ -248,7 +248,7 @@ class AddPurchaseEventTest extends TestCase
             $this->assertEquals(
                 $expected_timestamp,
                 $actual_timestamp,
-                "Should match within 0.1 microsecond",
+                "Timestamp should match within 0.1 microsecond",
                 0.1 // Delta
             );
 

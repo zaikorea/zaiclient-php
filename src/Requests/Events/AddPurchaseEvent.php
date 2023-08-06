@@ -51,7 +51,7 @@ class AddPurchaseEvent extends EventRequest
                 : null),
             self::DEFAULT_EVENT_TYPE,
             array_map(function ($order) {
-                return $order["price"];
+                return (string) $order["price"];
             }, $flattenedOrders),
             array_fill(0, count($flattenedOrders), null),
             array_map(function ($order) {

@@ -34,8 +34,8 @@ class AddProductDetailViewEvent extends EventRequest
             (array_key_exists("from", $request_options)
                 ? [$request_options["from"]]
                 : [null]),
-            (array_key_exists("is_zai_recommendation", $request_options)
-                ? [$request_options["is_zai_recommendation"]]
+            (array_key_exists("is_zai_rec", $request_options)
+                ? [$request_options["is_zai_rec"]]
                 : [false])
         );
     }
