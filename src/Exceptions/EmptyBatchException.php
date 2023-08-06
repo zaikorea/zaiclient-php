@@ -8,12 +8,10 @@
 
 namespace ZaiClient\Exceptions;
 
-use \GuzzleHttp\Exception\BadResponseException;
-
 /**
  *
  */
-class BatchSizeLimitExceededException extends \Exception
+class EmptyBatchException extends \Exception
 {
     public function __construct($records_num)
     {

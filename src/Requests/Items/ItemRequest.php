@@ -2,10 +2,8 @@
 namespace ZaiClient\Requests\Items;
 
 use ZaiClient\Configs\Config;
-use ZaiClient\http;
 use ZaiClient\Requests\Items\Item;
 use ZaiClient\Requests\Request;
-use ZaiClient\ZaiClientException;
 
 class ItemRequest extends Request
 {
@@ -24,7 +22,7 @@ class ItemRequest extends Request
         $properties["item_id"] = $id;
         $properties["item_name"] = $name;
 
-        $this->payload = new Item($properties);
+        $this->payload = new Item($properties); // All validation is done in Item class
     }
 
 

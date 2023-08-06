@@ -1,6 +1,8 @@
 <?php
 namespace ZaiClient\Tests\Requests;
 
+use InvalidArgumentException;
+
 use PHPUnit\Framework\TestCase;
 
 use ZaiClient\Configs\Config;
@@ -35,5 +37,44 @@ class AddItemTest extends TestCase
             ),
             json_encode($add_item_request->getPayload())
         );
+    }
+
+    public function testClassConstructorWithEmptyItemId()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $id = "";
+        $name = "Test Item Name";
+        $properties = [
+            "category_id_1" => "Category_Id_1",
+        ];
+
+        new AddItem($id, $name, $properties);
+    }
+
+    public function testClassConstructorWithItemIdOverMaxLength()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $id = TestUtils::generateRandomString(2001);
+        $name = "Test Item Name";
+        $properties = [
+            "category_id_1" => "Category_Id_1",
+        ];
+
+        new AddItem($id, $name, $properties);
+    }
+
+    public function testClassConstructorWithEmptyItemName()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $id = "Item_Id_1";
+        $name = "";
+        $properties = [
+            "category_id_1" => "Category_Id_1",
+        ];
+
+        new AddItem($id, $name, $properties);
     }
 }
