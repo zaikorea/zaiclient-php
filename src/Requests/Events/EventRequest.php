@@ -18,7 +18,7 @@ class EventRequest extends Request
      * @param array[string] $item_ids
      * @param float $timestamp
      * @param string $event_type
-     * @param array[string] $event_values
+     * @param array[string|int|float] $event_values
      * @param array[string] $from_values
      * @param array[bool] $is_zai_recommendations
      */
@@ -38,35 +38,26 @@ class EventRequest extends Request
         $events = [];
         $tmp_timestamp = is_null($timestamp) ? microtime(true) : $timestamp;
         $this->timestamp = $tmp_timestamp;
+
         parent::__construct("POST", config::COLLECTOR_API_ENDPOINT);
-        $i = 0;
-        foreach (array_combine($item_ids, $event_values) as $item_id => $event_value) {
-            if ($i < count($from_values)) {
-                $from_value = $from_values[$i];
-            } else {
-                $from_value = null;
-            }
-            if ($i < count($is_zai_recommendations)) {
-                $is_zai_recommendation = $is_zai_recommendations[$i];
-            } else {
-                $is_zai_recommendation = null;
-            }
+
+        for ($i = 0; $i < count($item_ids); $i++) {
             array_push(
                 $events,
                 new Event(
                     $user_id,
-                    $item_id,
+                    $item_ids[$i],
                     $tmp_timestamp,
                     $event_type,
-                    substr($event_value, 0, 500),
-                    is_null($from_value) ? null : substr($from_value, 0, 500),
-                    $is_zai_recommendation,
+                    substr($event_values[$i], 0, 500),
+                    is_null($from_values[$i]) ? null : substr($from_values[$i], 0, 500),
+                    $is_zai_recommendations[$i],
                     null // TODO: Events don't have to set time_to_live
                 )
             );
             $tmp_timestamp += config::EPSILON;
-            $i += 1;
         }
+
         if (count($events) > config::BATCH_REQUEST_CAP) {
             throw new BatchSizeLimitExceededException();
         }
@@ -83,6 +74,11 @@ class EventRequest extends Request
     public function getTimestamp()
     {
         return $this->timestamp;
+    }
+
+    protected function setTimestamp($timestamp)
+    {
+        $this->timestamp = $timestamp;
     }
 
     public function getPath($client_id)
