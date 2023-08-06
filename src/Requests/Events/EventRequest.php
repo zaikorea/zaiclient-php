@@ -10,16 +10,8 @@ use ZaiClient\Requests\Events\Event;
 
 class EventRequest extends Request
 {
-
-    public $user_id;
-    public $item_ids;
-    public $timestamp;
-    public $event_type;
-    public $event_values;
-    public $from_values;
-    public $is_zai_recommendations;
-    public $_timestamp;
-    public $payload;
+    private $payload;
+    private $timestamp;
 
     /**
      * @param string $user_id
@@ -30,7 +22,7 @@ class EventRequest extends Request
      * @param array[string] $from_values
      * @param array[bool] $is_zai_recommendations
      */
-    function __construct(
+    public function __construct(
         $user_id,
         $item_ids,
         $timestamp,
@@ -44,8 +36,8 @@ class EventRequest extends Request
         $this->validate($item_ids, $event_values, $from_values, $is_zai_recommendations);
 
         $events = [];
-        $tmp_timestamp = $timestamp;
-        $this->_timestamp = $timestamp;
+        $tmp_timestamp = is_null($timestamp) ? microtime(true) : $timestamp;
+        $this->timestamp = $tmp_timestamp;
         parent::__construct("POST", config::COLLECTOR_API_ENDPOINT);
         $i = 0;
         foreach (array_combine($item_ids, $event_values) as $item_id => $event_value) {
@@ -67,9 +59,9 @@ class EventRequest extends Request
                     $tmp_timestamp,
                     $event_type,
                     substr($event_value, 0, 500),
-                    substr($from_value, 0, 500),
+                    is_null($from_value) ? null : substr($from_value, 0, 500),
                     $is_zai_recommendation,
-                    null
+                    null // TODO: Events don't have to set time_to_live
                 )
             );
             $tmp_timestamp += config::EPSILON;
@@ -88,17 +80,17 @@ class EventRequest extends Request
         }
     }
 
-    function getTimestamp()
+    public function getTimestamp()
     {
-        return $this->_timestamp;
+        return $this->timestamp;
     }
 
-    function getPath($client_id)
+    public function getPath($client_id)
     {
         return config::EVENTS_API_PATH;
     }
 
-    function getPayload($is_test = false)
+    public function getPayload($is_test = false)
     {
         if ($is_test) {
             if (is_array($this->payload)) {
@@ -112,7 +104,7 @@ class EventRequest extends Request
         return $this->payload;
     }
 
-    function getQueryParam()
+    public function getQueryParam()
     {
         return [];
     }
