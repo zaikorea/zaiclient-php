@@ -157,7 +157,7 @@ class Validator
             return null;
         }
 
-        if (!is_array($value) || !Util::isAssoc($value)) {
+        if (!is_array($value) || !Util::isAssociativeArray($value)) {
             throw new InvalidArgumentException("Recommendation options must be an associative array.");
         }
 

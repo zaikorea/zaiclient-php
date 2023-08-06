@@ -54,20 +54,20 @@ class UtilsTest extends TestCase
     /**
      * @dataProvider shouldSucceed
      */
-    public function testIsAssocSucceed(
+    public function testisAssociativeArraySucceed(
         $options
     ) {
 
-        $this->assertTrue(Util::isAssoc($options));
+        $this->assertTrue(Util::isAssociativeArray($options));
     }
 
     /**
      * @dataProvider shouldFail
      */
-    public function testIsAssocFail(
+    public function testisAssociativeArrayFail(
         $options
     ) {
 
-        $this->assertFalse(Util::isAssoc($options));
+        $this->assertFalse(Util::isAssociativeArray($options));
     }
 }

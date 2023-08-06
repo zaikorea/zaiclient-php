@@ -92,7 +92,7 @@ abstract class RecommendationRequest implements \JsonSerializable
      * @param array $arr
      * @return boolean
      */
-    public function isAssoc(array $arr)
+    public function isAssociativeArray(array $arr)
     {
         if (array() === $arr)
             return false;
