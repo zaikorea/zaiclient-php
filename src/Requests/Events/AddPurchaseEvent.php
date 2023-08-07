@@ -75,20 +75,18 @@ class AddPurchaseEvent extends EventRequest
         $flattenedOrders = [];
 
         foreach ($orders as $order) {
-            for ($i = 0; $i < $order["quantity"]; $i++)
-                if (array_key_exists("is_zai_rec", $order)) {
-                    $flattenedOrders[] = [
-                        "item_id" => $order["item_id"],
-                        "price" => $order["price"],
-                        "is_zai_rec" => $order["is_zai_rec"],
-                    ];
-                } else {
-                    $flattenedOrders[] = [
-                        "item_id" => $order["item_id"],
-                        "price" => $order["price"],
-                        "is_zai_rec" => false,
-                    ];
-                }
+            for ($i = 0; $i < $order["quantity"]; $i++) {
+                $flattenedOrders[] = [
+                    "item_id" => $order["item_id"],
+                    "price" => $order["price"],
+                    "from" => (array_key_exists("from", $order)
+                        ? $order["from"]
+                        : null),
+                    "is_zai_rec" => (array_key_exists("is_zai_rec", $order)
+                        ? $order["is_zai_rec"]
+                        : false),
+                ];
+            }
         }
 
         return $flattenedOrders;
