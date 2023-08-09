@@ -1,10 +1,8 @@
 <?php
 namespace ZaiClient\Requests\Events;
 
-use InvalidArgumentException;
 use JsonSerializable;
 
-use ZaiClient\Configs\Config;
 use ZaiClient\Utils\Validator;
 
 class Event implements JsonSerializable
@@ -69,14 +67,46 @@ class Event implements JsonSerializable
         $is_zai_recommendation,
         $time_to_live
     ) {
-        $this->user_id = Validator::validateString($user_id, 1, 500);
-        $this->item_id = Validator::validateString($item_id, 1, 500, true);
-        $this->timestamp = Validator::validateTimestamp($timestamp);
-        $this->event_type = Validator::validateString($event_type, 1, 500);
-        $this->event_value = Validator::validateString($event_value, 1, 500);
-        $this->from = Validator::validateString($from, 1, 500, true);
-        $this->is_zai_recommendation = Validator::validateBoolean($is_zai_recommendation, true);
-        $this->time_to_live = Validator::validateInt($time_to_live, 0, 1000000000, true);
+        $this->user_id = Validator::validateString($user_id, 1, 500, [
+            "var_name" => "\$user_id"
+        ]);
+        $this->item_id = Validator::validateString($item_id, 1, 100, [
+            "nullable" => true,
+            "var_name" => "\$item_id"
+        ]);
+        $this->timestamp = Validator::validateTimestamp($timestamp, [
+            "var_name" => "\$timestamp"
+        ]);
+        $this->event_type = Validator::validateString($event_type, 1, 500, [
+            "var_name" => "\$event_type"
+        ]);
+        $this->event_value = Validator::validateString($event_value, 1, 500, [
+            "var_name" => "\$event_value"
+        ]);
+        $this->from = Validator::validateString($from, 1, 500, [
+            "nullable" => true,
+            "var_name" => "\$from"
+        ]);
+        $this->is_zai_recommendation = Validator::validateBoolean(
+            $is_zai_recommendation,
+            [
+                "nullable" => true,
+                "var_name" => "\$is_zai_recommendation"
+            ]
+        );
+
+        $this->time_to_live = Validator::validateInt($time_to_live, 0, null, [
+            "nullable" => true,
+            "var_name" => "\$time_to_live"
+        ]);
+    }
+
+    public function setTimeToLive($time_to_live)
+    {
+        $this->time_to_live = Validator::validateInt($time_to_live, 0, null, [
+            "nullable" => false,
+            "var_name" => "\$time_to_live"
+        ]);
     }
 
     #[\ReturnTypeWillChange]

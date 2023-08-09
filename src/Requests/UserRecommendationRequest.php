@@ -34,7 +34,7 @@ class UserRecommendationRequest extends RecommendationRequest
                 throw new \InvalidArgumentException('Length of recommendation type must be between 1 and 500.');
         }
         if (isset($options['recommendation_options'])) {
-            if (!is_array($options['recommendation_options']) || !$this->isAssoc($options['recommendation_options'])) {
+            if (!is_array($options['recommendation_options']) || !$this->isAssociativeArray($options['recommendation_options'])) {
                 throw new \InvalidArgumentException("\$options['recommendation_options'] must be an associative array.");
             }
             if (strlen(json_encode($options['recommendation_options'])) > 1000) {

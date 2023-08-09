@@ -19,6 +19,12 @@ class Config
     const ML_API_ENDPOINT = "https://ml-api%s.zaikorea.org";
     const ML_API_PATH_PREFIX = '/clients/%s/recommenders';
 
+    const USER_RECOMMENDATION_PATH = '/user-recommendations';
+    const RELATED_ITEMS_PATH = "/related-items";
+
+    const RERANKING_RECOMMENDATION_PATH = "/reranking-recommendations";
+    const RERANKING_RECOMMENDATION_PATH_PREFIX = "/reranking-recommendations";
+
     const HMAC_ALGORITHM = 'sha256';
     const HMAC_SCHEME = 'ZAi';
     const ZAI_CLIENT_ID_HEADER = 'X-ZAI-CLIENT-ID';
@@ -33,4 +39,6 @@ class Config
     const NON_SEQ_ARR_ERRMSG = '%s:%s expects parameter %d to be a sequential array.';
     const ARR_FORM_ERRMSG = '%s:%s expects parameter %d to be an array of form %s.';
     const BATCH_ERRMSG = '%s does not support batch processing.';
+
+    const TEST_EVENT_TIME_TO_LIVE = 60 * 60 * 24; // 1 day
 }

@@ -29,6 +29,15 @@ class TestUtils
         return $random_string;
     }
 
+    static function generateRandomArrayOfUuid($length = 10)
+    {
+        $array = [];
+        for ($i = 0; $i < $length; $i++) {
+            array_push($array, TestUtils::generateUuid());
+        }
+        return $array;
+    }
+
     static function generateUuid()
     {
         $uuid = Uuid::uuid4();
