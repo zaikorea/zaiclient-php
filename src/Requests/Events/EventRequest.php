@@ -10,6 +10,9 @@ use ZaiClient\Requests\Events\Event;
 
 class EventRequest extends Request
 {
+    /**
+     * @var Event | array[Event]
+     */
     private $payload;
     private $timestamp;
 
@@ -91,10 +94,10 @@ class EventRequest extends Request
         if ($is_test) {
             if (is_array($this->payload)) {
                 foreach ($this->payload as &$event) {
-                    $event["time_to_live"] = config::TEST_EVENT_TIME_TO_LIVE;
+                    $event->setTimeToLive(config::TEST_EVENT_TIME_TO_LIVE);
                 }
             } else {
-                $this->payload["time_to_live"] = config::TEST_EVENT_TIME_TO_LIVE;
+                $this->payload->setTimeToLive(config::TEST_EVENT_TIME_TO_LIVE);
             }
         }
         return $this->payload;

@@ -220,4 +220,40 @@ class EventRequestTest extends TestCase
         new EventRequest($user_id, $item_id, $timestamp, $event_type, $event_values, $from_values, $is_zai_recommendation);
     }
 
+    /* ----------------------- Methods --------------------- */
+    public function testGetPayloadWithIsTestOption()
+    {
+        $user_id = "User_Id_1";
+        $item_ids = ["Item_Id_1"];
+        $timestamp = microtime(true);
+        $event_type = "test_event_type";
+        $event_values = ["test_event_value"];
+        $from_values = ["test_from_value"];
+        $is_zai_recommendation = [true];
+
+        $expected = json_encode(
+            [
+                "user_id" => $user_id,
+                "item_id" => $item_ids[0],
+                "timestamp" => $timestamp,
+                "event_type" => $event_type,
+                "event_value" => $event_values[0],
+                "from" => $from_values[0],
+                "is_zai_recommendation" => $is_zai_recommendation[0],
+                "time_to_live" => 60 * 60 * 24,
+                // 1 day
+            ]
+        );
+
+        $request = new EventRequest($user_id, $item_ids, $timestamp, $event_type, $event_values, $from_values, $is_zai_recommendation);
+
+        $actual = json_encode(
+            $request->getPayload(true)
+        );
+
+        $this->assertJsonStringEqualsJsonString(
+            $expected,
+            $actual
+        );
+    }
 }

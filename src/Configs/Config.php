@@ -39,4 +39,6 @@ class Config
     const NON_SEQ_ARR_ERRMSG = '%s:%s expects parameter %d to be a sequential array.';
     const ARR_FORM_ERRMSG = '%s:%s expects parameter %d to be an array of form %s.';
     const BATCH_ERRMSG = '%s does not support batch processing.';
+
+    const TEST_EVENT_TIME_TO_LIVE = 60 * 60 * 24; // 1 day
 }

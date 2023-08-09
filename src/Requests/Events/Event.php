@@ -91,12 +91,21 @@ class Event implements JsonSerializable
             $is_zai_recommendation,
             [
                 "nullable" => true,
-                "var_name" => "is_zai_recommendation"
+                "var_name" => "\$is_zai_recommendation"
             ]
         );
 
         $this->time_to_live = Validator::validateInt($time_to_live, 0, null, [
-            "nullable" => true
+            "nullable" => true,
+            "var_name" => "\$time_to_live"
+        ]);
+    }
+
+    public function setTimeToLive($time_to_live)
+    {
+        $this->time_to_live = Validator::validateInt($time_to_live, 0, null, [
+            "nullable" => false,
+            "var_name" => "\$time_to_live"
         ]);
     }
 
