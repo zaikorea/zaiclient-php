@@ -1,6 +1,7 @@
 <?php
 namespace ZaiClient\Requests\Items;
 
+use RuntimeException;
 use ZaiClient\Configs\Config;
 use ZaiClient\Requests\Items\Item;
 use ZaiClient\Requests\Request;
@@ -10,19 +11,17 @@ class ItemRequest extends Request
 
     private $payload;
 
+    /**
+     * @param string $method
+     * @param array[\ZaiClient\Requests\Items\Item]|array[string] $input
+     */
     public function __construct(
         $method,
-        $id,
-        $name = null,
-        $properties = []
+        $payload
     ) {
 
         parent::__construct($method, Config::COLLECTOR_API_ENDPOINT);
-
-        $properties["item_id"] = $id;
-        $properties["item_name"] = $name;
-
-        $this->payload = new Item($properties); // All validation is done in Item class
+        $this->payload = $payload;
     }
 
 
@@ -33,16 +32,16 @@ class ItemRequest extends Request
     }
 
 
-    public function getPath($client_id)
+    public function getPath($client_id = null)
     {
 
         return config::ITEMS_API_PATH;
     }
 
 
-    public function getQueryParam()
+    public function getQueryParams()
     {
 
-        return [];
+        throw new RuntimeException("NotImplementedError");
     }
 }

@@ -10,8 +10,10 @@ namespace ZaiClient;
 
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\Psr7\Query;
 use GuzzleHttp\Psr7\Utils;
 use JsonMapper;
+use RuntimeException;
 use ZaiClient\Configs\Config;
 use ZaiClient\Exceptions\ZaiClientException;
 use ZaiClient\Exceptions\ZaiNetworkIOException;
@@ -212,7 +214,7 @@ class ZaiClient
     /**
      * Send Request to Zai API server
      *
-     * @param Request|EventRequest|ItemRequest| $request
+     * @param Request|EventRequest|ItemRequest|RecommendationRequest $request
      */
     public function sendRequest($request, $options = ['is_test' => false])
     {
@@ -230,6 +232,14 @@ class ZaiClient
             )
         );
 
+        try{
+            $query = Query::build(
+                $request->getQueryParams()
+            );
+        } catch (RuntimeException $e) {
+            $query = null;
+        }
+
         $url = sprintf(
             $request->getBaseUrl(), $this->options['custom_endpoint']
         ) . $path;
@@ -240,9 +250,10 @@ class ZaiClient
                 $url,
                 [
                     'headers' => $headers,
+                    'query' => $query,
                     'body' => Utils::streamFor($body),
                     'connect_timeout' => $this->options['connect_timeout'],
-                    'read_timeout' => $this->options['read_timeout']
+                    'read_timeout' => $this->options['read_timeout'],
                 ]
             );
         } catch (RequestException $e) {
@@ -323,4 +334,6 @@ class ZaiClient
     {
         return $this->ml_api_endpoint;
     }
+
+
 }

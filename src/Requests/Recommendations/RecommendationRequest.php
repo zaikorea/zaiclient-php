@@ -57,7 +57,7 @@ class RecommendationRequest extends Request
         return $this->payload;
     }
 
-    public function getQueryParam()
+    public function getQueryParams()
     {
         throw new RuntimeException("NotImplementedError");
     }

@@ -51,7 +51,7 @@ class Request
      * @param string $client_id
      * @return array payload in json to use for request
      */
-    public function getQueryParam()
+    public function getQueryParams()
     {
         throw new RuntimeException("NotImplementedError");
     }

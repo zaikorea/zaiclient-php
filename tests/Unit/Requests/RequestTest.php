@@ -45,6 +45,6 @@ class RequestTest extends TestCase
         $base_url = 'https://test.zai-dev.com';
         $request = new Request($method, $base_url);
 
-        $request->getQueryParam();
+        $request->getQueryParams();
     }
 }

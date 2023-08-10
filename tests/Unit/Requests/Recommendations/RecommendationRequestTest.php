@@ -67,6 +67,6 @@ class RecommendationRequestTest extends TestCase
             null
         );
 
-        $request->getQueryParam();
+        $request->getQueryParams();
     }
 }

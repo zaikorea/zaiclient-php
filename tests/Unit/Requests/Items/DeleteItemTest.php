@@ -19,18 +19,7 @@ class DeleteItemTest extends TestCase
 
         $this->assertEquals("DELETE", $delete_item_request->getMethod());
         $this->assertEquals(Config::ITEMS_API_PATH, $delete_item_request->getPath(null));
-        $this->assertEquals([], $delete_item_request->getQueryParam());
-        $this->assertJsonStringEqualsJsonString(
-            json_encode(
-                array_merge(
-                    TestUtils::getEmptyItemRequestPayload(),
-                    [
-                        "item_id" => $id,
-                    ]
-                )
-            ),
-            json_encode($delete_item_request->getPayload())
-        );
+        $this->assertEquals(["id" => array($id)], $delete_item_request->getQueryParams());
     }
 
     public function testClassConstructorWithEmptyItemId()
@@ -39,46 +28,14 @@ class DeleteItemTest extends TestCase
 
         $id = "";
 
-        $delete_item_request = new DeleteItem($id);
-
-        $this->assertEquals("DELETE", $delete_item_request->getMethod());
-        $this->assertEquals(Config::ITEMS_API_PATH, $delete_item_request->getPath(null));
-        $this->assertEquals([], $delete_item_request->getQueryParam());
-        $this->assertJsonStringEqualsJsonString(
-            json_encode(
-                array_merge(
-                    TestUtils::getEmptyItemRequestPayload(),
-                    [
-                        "item_id" => $id,
-                    ]
-                )
-            ),
-            json_encode($delete_item_request->getPayload())
-        );
+        new DeleteItem($id); // NOSONAR
     }
 
     public function testClassConstructorWithItemIdOverMaxLen()
     {
         $this->expectException(InvalidArgumentException::class);
-        $id = TestUtils::generateRandomString(501);
+        $id = TestUtils::generateRandomString(504);
 
-        $delete_item_request = new DeleteItem($id);
-
-        $this->assertEquals("DELETE", $delete_item_request->getMethod());
-        $this->assertEquals(Config::ITEMS_API_PATH, $delete_item_request->getPath(null));
-        $this->assertEquals([], $delete_item_request->getQueryParam());
-        $this->assertJsonStringEqualsJsonString(
-            json_encode(
-                array_merge(
-                    TestUtils::getEmptyItemRequestPayload(),
-                    [
-                        "item_id" => $id,
-                    ]
-                )
-            ),
-            json_encode($delete_item_request->getPayload())
-        );
+        new DeleteItem($id); // NOSONAR
     }
-
-
 }

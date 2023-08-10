@@ -103,7 +103,7 @@ class EventRequest extends Request
         return $this->payload;
     }
 
-    public function getQueryParam()
+    public function getQueryParams()
     {
         return [];
     }
