@@ -24,13 +24,17 @@ class Validator
         }
 
         if (!is_string($value)) {
-            throw new InvalidArgumentException(var_export($value, true) . " must be a string.");
+            throw new InvalidArgumentException(
+                $_options["var_name"] . " must be a string not " . var_export($value, true)
+            );
         }
 
         $length = strlen($value);
 
         if ($length < $min || $length > $max) {
-            throw new InvalidArgumentException($_options["var_name"] . " must be between $min and $max characters long but $value");
+            throw new InvalidArgumentException(
+                $_options["var_name"] . " must be between $min and $max characters long but $value"
+            );
         }
 
         return $value;
@@ -47,13 +51,17 @@ class Validator
         }
 
         if (!is_float($value) && !is_int($value)) {
-            throw new InvalidArgumentException($_options["var_name"] . " must be a float not " . var_export($value, true));
+            throw new InvalidArgumentException(
+                $_options["var_name"] . " must be a float not " . var_export($value, true)
+            );
         }
 
         if ($value > 1648871097. && $value < 2147483647.) { // e.g. 1690737483.076
             return $value;
         } else {
-            throw new InvalidArgumentException($_options["var_name"] . " must be a valid microseconds unix timestamp string not " . var_export($value, true));
+            throw new InvalidArgumentException(
+                $_options["var_name"] . " must be a valid microseconds unix timestamp string not " . var_export($value, true)
+            );
         }
     }
 

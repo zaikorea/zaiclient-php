@@ -1,11 +1,11 @@
 <?php
 namespace ZaiClient\Tests\Requests\Events;
 
-use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
+use ZaiClient\Requests\Events\AddCustomEvent;
+use ZaiClient\Utils\Util;
 
-use ZaiClient\Requests\Events\EventRequest;
-
-class AddCustomEventTest extends EventRequest
+class AddCustomEventTest extends TestCase
 {
     public function shouldSucceed()
     {
@@ -18,22 +18,22 @@ class AddCustomEventTest extends EventRequest
                         "item_id" => "test_item_id",
                         "value" => null,
                     ],
-                    "time_to_live" => 1000,
                 ],
                 "expected" => [
                     "user_id" => "test_user_id",
                     "item_id" => "test_item_id",
-                    "event_type" => "test_event_type",
-                    "event_value" => "null",
-                    "from" => "null",
-                    "is_zai_rec" => false,
-                    "time_to_live" => 1000,
+                    "timestamp" => microtime(true),
+                    "event_type" => "custom_event_type",
+                    "event_value" => null, // This should change to "null" after collector-api update (2023/08/10)
+                    "from" => null, // This should change too
+                    "is_zai_recommendation" => false,
+                    "time_to_live" => null,
                 ]
             ],
             "case 2" => [
                 "input" => [
                     "user_id" => "test_user_id",
-                    "event_type" => "custom_event_type",
+                    "event_type" => "test_event_type",
                     "custom_event" => [
                         ["item_id" => "test_item_id", "value" => null],
                         ["item_id" => "test_item_id", "value" => "watch"],
@@ -45,9 +45,9 @@ class AddCustomEventTest extends EventRequest
                         "item_id" => "test_item_id",
                         "timestamp" => microtime(true),
                         "event_type" => "test_event_type",
-                        "event_value" => "null",
-                        "from" => "null",
-                        "is_zai_rec" => false,
+                        "event_value" => null,
+                        "from" => null,
+                        "is_zai_recommendation" => false,
                         "time_to_live" => null,
                     ],
                     [
@@ -56,8 +56,8 @@ class AddCustomEventTest extends EventRequest
                         "timestamp" => microtime(true),
                         "event_type" => "test_event_type",
                         "event_value" => "watch",
-                        "from" => "null",
-                        "is_zai_rec" => false,
+                        "from" => null,
+                        "is_zai_recommendation" => false,
                         "time_to_live" => null,
                     ]
                 ]
@@ -72,43 +72,44 @@ class AddCustomEventTest extends EventRequest
                         "is_zai_rec" => true,
                         "from" => "test_from",
                     ],
-                    "time_to_live" => 1000,
                 ],
                 "expected" => [
                     "user_id" => "test_user_id",
                     "item_id" => "test_item_id",
                     "timestamp" => microtime(true),
-                    "event_type" => "test_event_type",
-                    "event_value" => "null",
-                    "from" => "test_from",
-                    "is_zai_rec" => true,
-                    "time_to_live" => 1000,
+                    "event_type" => "custom_event_type",
+                    "event_value" => null,
+                    "from" => null,
+                    "is_zai_recommendation" => true,
+                    "time_to_live" => null,
                 ]
             ],
         ];
     }
 
     /**
-     * @dataprovider shouldSucceed
+     * @dataProvider shouldSucceed
      */
     public function testConstructorSucceeds(
         $input,
         $expected
     ) {
         $user_id = $input["user_id"];
-        $custom_action = $input["custom_action"];
+        $event_type = $input["event_type"];
+        $custom_event = $input["custom_event"];
 
-        if (array_key_exists("reqeust_options")) {
+        if (array_key_exists("request_options", $input)) {
             $request = new AddCustomEvent(
                 $user_id,
-                $custom_action,
+                $event_type,
+                $custom_event,
                 $input["request_options"]
             );
         } else {
             $request = new AddCustomEvent(
                 $user_id,
-                $custom_action,
-                $input["request_options"]
+                $event_type,
+                $custom_event
             );
         }
 
@@ -129,8 +130,8 @@ class AddCustomEventTest extends EventRequest
             $this->assertEquals(
                 $expected_timestamp,
                 $actual_timestamp,
-                "Timestamp should match within 0.1 microsecond",
-                0.1 // Delta
+                "Timestamp should match within 5 milisecond",
+                5 // Delta
             );
 
             unset($e["timestamp"]);

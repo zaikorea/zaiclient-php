@@ -2,7 +2,7 @@
 namespace ZaiClient\Tests;
 
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
+use BadMethodCallException;
 use ZaiClient\Tests\TestUtils;
 use ZaiClient\Requests\Request;
 
@@ -13,7 +13,7 @@ class RequestTest extends TestCase
 {
     function testRequestGetPath()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage('NotImplementedError');
 
         $method = 'POST';
@@ -26,7 +26,7 @@ class RequestTest extends TestCase
 
     function testRequestGetPayload()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage('NotImplementedError');
 
         $method = 'POST';
@@ -38,13 +38,13 @@ class RequestTest extends TestCase
 
     function testRequestGetQueryParam()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage('NotImplementedError');
 
         $method = 'POST';
         $base_url = 'https://test.zai-dev.com';
         $request = new Request($method, $base_url);
 
-        $request->getQueryParam();
+        $request->getQueryParams();
     }
 }

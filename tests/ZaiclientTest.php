@@ -10,15 +10,17 @@ namespace ZaiClient;
 
 use PHPUnit\Framework\TestCase;
 
+use ZaiClient\Requests\Events\EventRequest;
+use ZaiClient\Requests\Items\Item;
 use ZaiClient\Requests\Items\ItemRequest;
-use ZaiClient\Requests\ProductDetailViewEvent;
+use ZaiClient\Requests\Recommendations\GetUserRecommendation;
+use ZaiClient\Requests\Recommendations\RecommendationRequest;
 use ZaiClient\Tests\TestUtils;
 
 class ZaiclientTest extends TestCase
 {
     const CLIENT_ID = 'test';
     const SECRET = 'KVPzvdHTPWnt0xaEGc2ix-eqPXFCdEV5zcqolBr_h1k';
-    private $add_event_msg = 'The given event was added successfully.';
     private $mockHttpClient = null;
 
     /**
@@ -37,17 +39,7 @@ class ZaiclientTest extends TestCase
         $this->mockHttpClient = null;
     }
 
-    public function testClient()
-    {
-
-        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
-        $user_id = 'php-testClient';
-        $item_id = 'P1000005';
-        $product_detail_view_event = new ProductDetailViewEvent($user_id, $item_id);
-        $response = $client->addEventLog($product_detail_view_event);
-
-        self::assertSame($this->add_event_msg, $response->getMessage());
-    }
+    // BackLog: Add tests using MockHttpClient
 
     public function testClientWithWrongTimeoutOptions()
     {
@@ -57,7 +49,7 @@ class ZaiclientTest extends TestCase
             'read_timeout' => "2"
         ];
 
-        $client = new ZaiClient(self::CLIENT_ID, self::SECRET, $options);
+        new ZaiClient(self::CLIENT_ID, self::SECRET, $options); // NOSONAR
     }
 
     public function testClientWithTimeoutOptions()
@@ -66,17 +58,11 @@ class ZaiclientTest extends TestCase
             'connect_timeout' => 60,
             'read_timeout' => 60
         ];
+
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET, $options);
-        self::assertSame($client->getOptions()['connect_timeout'], 60);
-        self::assertSame($client->getOptions()['read_timeout'], 60);
 
-        $user_id = 'php-add-single-productdetailview';
-        $item_id = 'P1000005';
-
-        $product_detail_view_event = new ProductDetailViewEvent($user_id, $item_id);
-        $response = $client->addEventLog($product_detail_view_event);
-
-        self::assertSame($this->add_event_msg, $response->getMessage());
+        self::assertSame(60, $client->getOptions()['connect_timeout']);
+        self::assertSame(60, $client->getOptions()['read_timeout']);
     }
 
     public function testClientWithCustomEndpoint()
@@ -85,8 +71,8 @@ class ZaiclientTest extends TestCase
             'custom_endpoint' => 'dev',
         ];
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET, $options);
-        self::assertSame($client->getCollectorApiEndpoint(), 'https://collector-api-dev.zaikorea.org');
-        self::assertSame($client->getMlApiEndpoint(), 'https://ml-api-dev.zaikorea.org');
+        self::assertSame('https://collector-api-dev.zaikorea.org', $client->getCollectorApiEndpoint());
+        self::assertSame('https://ml-api-dev.zaikorea.org', $client->getMlApiEndpoint());
     }
 
     public function testClientWithBadCustomEndpoint()
@@ -96,35 +82,91 @@ class ZaiclientTest extends TestCase
         $options = [
             'custom_endpoint' => '-@dev',
         ];
-        $client = new ZaiClient(self::CLIENT_ID, self::SECRET, $options);
+
+        new ZaiClient(self::CLIENT_ID, self::SECRET, $options); // NOSONAR
     }
 
     public function testSendRequest()
     {
-        $client = new ZaiClient(self::CLIENT_ID, self::SECRET, $options = array(), $this->mockHttpClient);
+        $mockBody = json_encode([
+            "items" =>
+                [array_merge(
+                    TestUtils::getEmptyItemRequestPayload(),
+                    [
+                        "item_id" => "test_id",
+                        "item_name" => "test-item",
+                        "is_active" => true,
+                        "is_soldout" => false,
+                    ]
+                )],
+        ]);
+
+        $mockHttpClient = TestUtils::createMockHttpClient($this, $mockBody);
+
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET, array(), $mockHttpClient);
 
         // Test With ItemRequest
-        $request = new ItemRequest("POST", "P1000005", "test-item");
+        $item = new Item("test_id", "test-item");
+        $request = new ItemRequest("POST", [$item]);
 
         $response = $client->sendRequest($request);
 
-        $response_body = $response->getBody();
-
         // To consume the stream, read the first 1024 bytes.
         // If you want to retrieve the entire contents of the stream, use getContents() instead of read().
-        self::assertJsonStringEqualsJsonString(TestUtils::getDefaultResponseBody(), $response_body->getContents());
+        self::assertJsonStringEqualsJsonString(
+            json_encode(json_decode($mockBody)->items),
+            json_encode($response->getItems())
+        );
     }
 
     public function testSendRequestWithCustomEndPoint()
     {
-        $client = new ZaiClient(self::CLIENT_ID, self::SECRET, $options = ["custom_endpoint" => "test-dev"], $this->mockHttpClient);
+        $client = new ZaiClient(
+            self::CLIENT_ID,
+            self::SECRET,
+            ["custom_endpoint" => "test-dev"],
+            $this->mockHttpClient
+        );
 
         // Test With ItemRequest
-        $request = new ItemRequest("POST", "P1000005", "test-item");
+        $item_request = new ItemRequest(
+            "POST", new Item("test_id", "test-item")
+        );
 
+        $item_endpoint = sprintf(
+            $item_request->getBaseUrl(),
+            $client->getOptions()['custom_endpoint']
+        ) . $item_request->getPath(null);
 
-        $endpoint = sprintf($request->getBaseUrl(), $client->getOptions()['custom_endpoint']) . $request->getPath(null);
+        $rec_request = new GetUserRecommendation(
+            "test_user_id",
+            3
+        );
+        $rec_endpoint = sprintf(
+            $rec_request->getBaseUrl(),
+            $client->getOptions()['custom_endpoint']
+        ) . $rec_request->getPath(self::CLIENT_ID);
 
-        self::assertSame("https://collector-api-test-dev.zaikorea.org/items", $endpoint);
+        $event_request = new EventRequest(
+            "test_user_id",
+            ["test_item_id"],
+            microtime(true),
+            "test_event_type",
+            ["test_event_value"],
+            [null],
+            [false]
+        );
+
+        $event_endpoint = sprintf(
+            $event_request->getBaseUrl(),
+            $client->getOptions()['custom_endpoint']
+        ) . $event_request->getPath(null);
+
+        self::assertSame("https://collector-api-test-dev.zaikorea.org/items", $item_endpoint);
+        self::assertSame(
+            "https://ml-api-test-dev.zaikorea.org/clients/test/recommenders/user-recommendations",
+            $rec_endpoint
+        );
+        self::assertSame("https://collector-api-test-dev.zaikorea.org/events", $event_endpoint);
     }
 }

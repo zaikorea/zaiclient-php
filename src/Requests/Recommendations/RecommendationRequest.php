@@ -6,11 +6,12 @@
 
 namespace ZaiClient\Requests\Recommendations;
 
-use JsonSerializable;
-use RuntimeException;
+use BadMethodCallException;
+use ZaiClient\Configs\Config;
 use ZaiClient\Requests\Recommendations\Recommendation;
+use ZaiClient\Requests\Request;
 
-class RecommendationRequest
+class RecommendationRequest extends Request
 {
 
     /**
@@ -27,6 +28,8 @@ class RecommendationRequest
         $offset,
         $options
     ) {
+        parent::__construct("POST", Config::ML_API_ENDPOINT);
+
         $this->payload = new Recommendation(
             $user_id,
             $item_id,
@@ -43,19 +46,19 @@ class RecommendationRequest
      * Get api path
      * @return string PATH to use for request
      */
-    public function getPath($client_id)
+    public function getPath($client_id = null)
     {
 
-        throw new RuntimeException("NotImplementedError");
+        throw new BadMethodCallException("NotImplementedError");
     }
 
-    public function getPayload()
+    public function getPayload($is_test = null)
     {
         return $this->payload;
     }
 
-    public function getQueryParam()
+    public function getQueryParams() // NOSONAR
     {
-        throw new RuntimeException("NotImplementedError");
+        throw new BadMethodCallException("NotImplementedError");
     }
 }

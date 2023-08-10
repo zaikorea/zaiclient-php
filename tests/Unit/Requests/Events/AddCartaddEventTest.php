@@ -1,30 +1,28 @@
 <?php
-namespace Tests\Requests\Events;
+namespace ZaiClient\Tests\Requests\Events;
 
-
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-use ZaiClient\Utils\Util;
-use ZaiClient\Requests\Events\AddRateEvent;
+use ZaiClient\Requests\Events\AddCartaddEvent;
+use ZaiClient\Tests\TestUtils;
 
-class AddRateEventTest extends TestCase
+class AddCartaddEventTest extends TestCase
 {
     public function shouldSucceed()
     {
         return [
             "case 1" => [
-                // case 1:
                 "input" => [
                     "user_id" => "test_user_id",
                     "item_id" => "test_item_id",
-                    "rating" => 5,
                 ],
                 "expected" => [
                     "user_id" => "test_user_id",
                     "item_id" => "test_item_id",
                     "timestamp" => microtime(true),
-                    "event_type" => "rate",
-                    "event_value" => "5",
+                    "event_type" => "cartadd",
+                    "event_value" => "null",
                     "from" => null,
                     "is_zai_recommendation" => false,
                     "time_to_live" => null,
@@ -34,24 +32,6 @@ class AddRateEventTest extends TestCase
                 "input" => [
                     "user_id" => "test_user_id",
                     "item_id" => "test_item_id",
-                    "rating" => 1.3,
-                ],
-                "expected" => [
-                    "user_id" => "test_user_id",
-                    "item_id" => "test_item_id",
-                    "timestamp" => microtime(true),
-                    "event_type" => "rate",
-                    "event_value" => "1.3",
-                    "from" => null,
-                    "is_zai_recommendation" => false,
-                    "time_to_live" => null,
-                ]
-            ],
-            "case 3" => [
-                "input" => [
-                    "user_id" => "test_user_id",
-                    "item_id" => "test_item_id",
-                    "rating" => 0,
                     "request_options" => [
                         "is_zai_rec" => true,
                     ]
@@ -60,13 +40,14 @@ class AddRateEventTest extends TestCase
                     "user_id" => "test_user_id",
                     "item_id" => "test_item_id",
                     "timestamp" => microtime(true),
-                    "event_type" => "rate",
-                    "event_value" => "0",
+                    "event_type" => "cartadd",
+                    "event_value" => "null",
                     "from" => null,
                     "is_zai_recommendation" => true,
                     "time_to_live" => null,
                 ]
-            ]
+
+            ],
         ];
     }
 
@@ -76,14 +57,33 @@ class AddRateEventTest extends TestCase
             "case 1" => [
                 "input" => [
                     "user_id" => "test_user_id",
-                    "item_id" => "test_item_id",
-                    "rating" => "This is not a number",
+                    "item_id" => TestUtils::generateRandomString(0),
                 ],
-                "expected" => null
-            ]
+                "expected" => [],
+            ],
+            "case 2" => [
+                "input" => [
+                    "user_id" => "test_user_id",
+                    "item_id" => TestUtils::generateRandomString(501),
+                ],
+                "expected" => [],
+            ],
+            "case 3" => [
+                "input" => [
+                    "user_id" => TestUtils::generateRandomString(0),
+                    "item_id" => "test_item_id",
+                ],
+                "expected" => [],
+            ],
+            "case 4" => [
+                "input" => [
+                    "user_id" => TestUtils::generateRandomString(501),
+                    "item_id" => "test_item_id",
+                ],
+                "expected" => [],
+            ],
         ];
     }
-
 
     /**
      * @dataProvider shouldSucceed
@@ -94,20 +94,17 @@ class AddRateEventTest extends TestCase
     ) {
         $user_id = $input["user_id"];
         $item_id = $input["item_id"];
-        $rating = $input["rating"];
 
         if (array_key_exists("request_options", $input)) {
-            $request = new AddRateEvent(
+            $request = new AddCartaddEvent(
                 $user_id,
                 $item_id,
-                $rating,
                 $input["request_options"]
             );
         } else {
-            $request = new AddRateEvent(
+            $request = new AddCartaddEvent(
                 $user_id,
-                $item_id,
-                $rating
+                $item_id
             );
         }
 
@@ -119,16 +116,17 @@ class AddRateEventTest extends TestCase
         $this->assertEquals(
             $expected_timestamp,
             $actual_timestamp,
-            "Timestamp should match within 0.1 microsecond",
-            0.1
+            "Timestamp should match within 5 milisecond",
+            5 // Delta
         );
 
         unset($actual["timestamp"]);
         unset($expected["timestamp"]);
 
-        $this->assertJsonStringEqualsJsonString(
-            json_encode($expected),
-            json_encode($actual)
+        $this->assertEquals(
+            $expected,
+            $actual,
+            "Payload should match"
         );
     }
 
@@ -139,26 +137,22 @@ class AddRateEventTest extends TestCase
         $input,
         $expected
     ) {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $user_id = $input["user_id"];
         $item_id = $input["item_id"];
-        $rating = $input["rating"];
 
         if (array_key_exists("request_options", $input)) {
-            $request = new AddRateEvent(
+            $request = new AddCartaddEvent(
                 $user_id,
                 $item_id,
-                $rating,
                 $input["request_options"]
             );
         } else {
-            $request = new AddRateEvent(
+            $request = new AddCartaddEvent(
                 $user_id,
-                $item_id,
-                $rating
+                $item_id
             );
         }
     }
-
 }

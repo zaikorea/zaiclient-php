@@ -52,7 +52,7 @@ class EventRequest extends Request
                     $item_ids[$i],
                     $tmp_timestamp,
                     $event_type,
-                    substr($event_values[$i], 0, 500),
+                    is_null($event_values[$i]) ? null : substr($event_values[$i], 0, 500),
                     is_null($from_values[$i]) ? null : substr($from_values[$i], 0, 500),
                     $is_zai_recommendations[$i],
                     null // TODO: Events don't have to set time_to_live
@@ -84,7 +84,7 @@ class EventRequest extends Request
         $this->timestamp = $timestamp;
     }
 
-    public function getPath($client_id)
+    public function getPath($client_id = null)
     {
         return config::EVENTS_API_PATH;
     }
@@ -103,7 +103,7 @@ class EventRequest extends Request
         return $this->payload;
     }
 
-    public function getQueryParam()
+    public function getQueryParams()
     {
         return [];
     }

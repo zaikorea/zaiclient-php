@@ -81,6 +81,7 @@ class Event implements JsonSerializable
             "var_name" => "\$event_type"
         ]);
         $this->event_value = Validator::validateString($event_value, 1, 500, [
+            "nullable" => true,
             "var_name" => "\$event_value"
         ]);
         $this->from = Validator::validateString($from, 1, 500, [

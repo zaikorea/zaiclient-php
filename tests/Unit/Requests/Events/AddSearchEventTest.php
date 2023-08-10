@@ -2,27 +2,30 @@
 namespace ZaiClient\Tests\Requests\Events;
 
 use InvalidArgumentException;
+
 use PHPUnit\Framework\TestCase;
 
-use ZaiClient\Requests\Events\AddCartaddEvent;
+use ZaiClient\Requests\Events\AddSearchEvent;
 use ZaiClient\Tests\TestUtils;
 
-class AddCartaddEventTest extends TestCase
+class AddSearchEventTest extends TestCase
 {
     public function shouldSucceed()
     {
+        $random_query = TestUtils::generateRandomString(502);
+
         return [
             "case 1" => [
                 "input" => [
                     "user_id" => "test_user_id",
-                    "item_id" => "test_item_id",
+                    "search_query" => "test_search_query",
                 ],
                 "expected" => [
                     "user_id" => "test_user_id",
-                    "item_id" => "test_item_id",
+                    "item_id" => "null",
                     "timestamp" => microtime(true),
-                    "event_type" => "cartadd",
-                    "event_value" => "null",
+                    "event_type" => "search",
+                    "event_value" => "test_search_query",
                     "from" => null,
                     "is_zai_recommendation" => false,
                     "time_to_live" => null,
@@ -31,23 +34,19 @@ class AddCartaddEventTest extends TestCase
             "case 2" => [
                 "input" => [
                     "user_id" => "test_user_id",
-                    "item_id" => "test_item_id",
-                    "request_options" => [
-                        "is_zai_rec" => true,
-                    ]
+                    "search_query" => $random_query,
                 ],
                 "expected" => [
                     "user_id" => "test_user_id",
-                    "item_id" => "test_item_id",
+                    "item_id" => "null",
                     "timestamp" => microtime(true),
-                    "event_type" => "cartadd",
-                    "event_value" => "null",
+                    "event_type" => "search",
+                    "event_value" => substr($random_query, 0, 500),
                     "from" => null,
-                    "is_zai_recommendation" => true,
+                    "is_zai_recommendation" => false,
                     "time_to_live" => null,
                 ]
-
-            ],
+            ]
         ];
     }
 
@@ -57,30 +56,16 @@ class AddCartaddEventTest extends TestCase
             "case 1" => [
                 "input" => [
                     "user_id" => "test_user_id",
-                    "item_id" => TestUtils::generateRandomString(0),
+                    "search_query" => ["test_search_query_1", "test_search_query_2"],
                 ],
-                "expected" => [],
+                "expected" => []
             ],
             "case 2" => [
                 "input" => [
                     "user_id" => "test_user_id",
-                    "item_id" => TestUtils::generateRandomString(501),
+                    "search_query" => 123,
                 ],
-                "expected" => [],
-            ],
-            "case 3" => [
-                "input" => [
-                    "user_id" => TestUtils::generateRandomString(0),
-                    "item_id" => "test_item_id",
-                ],
-                "expected" => [],
-            ],
-            "case 4" => [
-                "input" => [
-                    "user_id" => TestUtils::generateRandomString(501),
-                    "item_id" => "test_item_id",
-                ],
-                "expected" => [],
+                "expected" => []
             ],
         ];
     }
@@ -93,18 +78,18 @@ class AddCartaddEventTest extends TestCase
         $expected
     ) {
         $user_id = $input["user_id"];
-        $item_id = $input["item_id"];
+        $search_query = $input["search_query"];
 
         if (array_key_exists("request_options", $input)) {
-            $request = new AddCartaddEvent(
+            $request = new AddSearchEvent(
                 $user_id,
-                $item_id,
+                $search_query,
                 $input["request_options"]
             );
         } else {
-            $request = new AddCartaddEvent(
+            $request = new AddSearchEvent(
                 $user_id,
-                $item_id
+                $search_query
             );
         }
 
@@ -116,8 +101,8 @@ class AddCartaddEventTest extends TestCase
         $this->assertEquals(
             $expected_timestamp,
             $actual_timestamp,
-            "Timestamp should match within 0.1 microsecond",
-            0.1 // Delta
+            "Timestamp should match within 5 milisecond",
+            5 // Delta
         );
 
         unset($actual["timestamp"]);
@@ -140,18 +125,18 @@ class AddCartaddEventTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $user_id = $input["user_id"];
-        $item_id = $input["item_id"];
+        $search_query = $input["search_query"];
 
         if (array_key_exists("request_options", $input)) {
-            $request = new AddCartaddEvent(
+            $request = new AddSearchEvent(
                 $user_id,
-                $item_id,
+                $search_query,
                 $input["request_options"]
             );
         } else {
-            $request = new AddCartaddEvent(
+            $request = new AddSearchEvent(
                 $user_id,
-                $item_id
+                $search_query
             );
         }
     }

@@ -51,23 +51,13 @@ class AddPurchaseEvent extends EventRequest
                 : null),
             self::DEFAULT_EVENT_TYPE,
             array_map(function ($order) {
-                return (string) $order["price"];
+                return $order["price"];
             }, $flattenedOrders),
             array_fill(0, count($flattenedOrders), null),
             array_map(function ($order) {
                 return $order["is_zai_rec"];
             }, $flattenedOrders)
         );
-    }
-
-    public function getEndpoint(): string
-    {
-        return "/events/purchase";
-    }
-
-    public function getMethod(): string
-    {
-        return "POST";
     }
 
     private function flattenOrders($orders)
