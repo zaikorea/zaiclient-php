@@ -60,16 +60,6 @@ class AddPurchaseEvent extends EventRequest
         );
     }
 
-    public function getEndpoint(): string
-    {
-        return "/events/purchase";
-    }
-
-    public function getMethod(): string
-    {
-        return "POST";
-    }
-
     private function flattenOrders($orders)
     {
         $flattenedOrders = [];

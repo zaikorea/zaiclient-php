@@ -17,8 +17,10 @@ use ZaiClient\Configs\Config;
 use ZaiClient\Exceptions\ZaiClientException;
 use ZaiClient\Exceptions\ZaiNetworkIOException;
 use ZaiClient\Requests\BaseEvent;
+use ZaiClient\Requests\Events\EventRequest;
+use ZaiClient\Requests\Items\ItemRequest;
+use ZaiClient\Requests\Recommendations\RecommendationRequest;
 use ZaiClient\Requests\Request;
-use ZaiClient\Requests\RecommendationRequest;
 use ZaiClient\Responses\EventLoggerResponse;
 use ZaiClient\Responses\RecommendationResponse;
 use ZaiClient\Security\ZaiHeaders;
@@ -98,7 +100,7 @@ class ZaiClient
 
     /**
      * @param BaseEvent $event
-     * @return int StatusCode
+     * @return mixed $response
      */
     public function updateEventLog($event)
     {
@@ -136,7 +138,7 @@ class ZaiClient
 
     /**
      * @param BaseEvent $event
-     * @return int StatusCode
+     * @return mixed $response
      */
     public function deleteEventLog($event)
     {
@@ -210,7 +212,7 @@ class ZaiClient
     /**
      * Send Request to Zai API server
      *
-     * @param Request $request
+     * @param Request|EventRequest|ItemRequest| $request
      */
     public function sendRequest($request, $options = ['is_test' => false])
     {
@@ -249,7 +251,24 @@ class ZaiClient
             throw new ZaiNetworkIOException($e->getMessage(), $e);
         }
 
-        return $response;
+        if (is_a($request, EventRequest::class)) {
+            $response_body = json_decode($response->getBody());
+            $eventlogger_response = $this->json_mapper->map($response_body, new EventLoggerResponse());
+            return $eventlogger_response;
+        }
+
+        if ( is_a($request, ItemRequest::class)) {
+            return $response;
+            //$response_body = json_decode($response->getBody());
+            // $item_response = $this->json_mapper->map($response_body, new ItemResponse());
+            //return $response_body;
+        }
+
+        if (is_a($request, RecommendationRequest::class)) {
+            $response_body = json_decode($response->getBody());
+            $recommendation_response = $this->json_mapper->map($response_body, new RecommendationResponse());
+            return $recommendation_response;
+        }
     }
 
     public function resolveTimeoutOptions($key, $options)

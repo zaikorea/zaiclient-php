@@ -26,7 +26,7 @@ class ItemRequest extends Request
     }
 
 
-    public function getPayload($is_test = false)
+    public function getPayload($is_test = null)
     {
 
         return $this->payload;

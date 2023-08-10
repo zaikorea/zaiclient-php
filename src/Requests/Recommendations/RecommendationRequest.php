@@ -6,11 +6,12 @@
 
 namespace ZaiClient\Requests\Recommendations;
 
-use JsonSerializable;
 use RuntimeException;
+use ZaiClient\Configs\Config;
 use ZaiClient\Requests\Recommendations\Recommendation;
+use ZaiClient\Requests\Request;
 
-class RecommendationRequest
+class RecommendationRequest extends Request
 {
 
     /**
@@ -27,6 +28,8 @@ class RecommendationRequest
         $offset,
         $options
     ) {
+        parent::__construct("POST", Config::ML_API_ENDPOINT);
+
         $this->payload = new Recommendation(
             $user_id,
             $item_id,
@@ -49,7 +52,7 @@ class RecommendationRequest
         throw new RuntimeException("NotImplementedError");
     }
 
-    public function getPayload()
+    public function getPayload($is_test = null)
     {
         return $this->payload;
     }

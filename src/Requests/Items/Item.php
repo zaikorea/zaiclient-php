@@ -96,19 +96,19 @@ class Item implements JsonSerializable
             ]) : null);
         $this->updated_timestamp = (array_key_exists('updated_timestamp', $data)
             ? Validator::validateTimestamp($data['updated_timestamp'], [
-                "nullable" => null,
+                "nullable" => true,
                 "var_name" => "\$updated_timestamp"
             ]) : null);
         $this->is_active = (array_key_exists('is_active', $data)
             ? Validator::validateBoolean($data['is_active'], [
-                "nullable" => null,
+                "nullable" => false,
                 "var_name" => "\$is_active"
-            ]) : null);
+            ]) : false);
         $this->is_soldout = (array_key_exists('is_soldout', $data)
             ? Validator::validateBoolean($data['is_soldout'], [
-                "nullable" => null,
+                "nullable" => false,
                 "var_name" => "\$is_soldout"
-            ]) : null);
+            ]) : false);
         $this->promote_on = (array_key_exists('promote_on', $data)
             ? Validator::validateString($data['promote_on'], 0, 2000, [
                 "nullable" => true,
