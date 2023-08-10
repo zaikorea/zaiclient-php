@@ -8,7 +8,6 @@
 
 namespace ZaiClient;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Psr7\Utils;
@@ -21,7 +20,8 @@ use ZaiClient\Requests\Events\EventRequest;
 use ZaiClient\Requests\Items\ItemRequest;
 use ZaiClient\Requests\Recommendations\RecommendationRequest;
 use ZaiClient\Requests\Request;
-use ZaiClient\Responses\EventLoggerResponse;
+use ZaiClient\Responses\EventResponse;
+use ZaiClient\Responses\ItemResponse;
 use ZaiClient\Responses\RecommendationResponse;
 use ZaiClient\Security\ZaiHeaders;
 
@@ -253,15 +253,14 @@ class ZaiClient
 
         if (is_a($request, EventRequest::class)) {
             $response_body = json_decode($response->getBody());
-            $eventlogger_response = $this->json_mapper->map($response_body, new EventLoggerResponse());
-            return $eventlogger_response;
+            $event_response = $this->json_mapper->map($response_body, new EventResponse());
+            return $event_response;
         }
 
-        if ( is_a($request, ItemRequest::class)) {
-            return $response;
-            //$response_body = json_decode($response->getBody());
-            // $item_response = $this->json_mapper->map($response_body, new ItemResponse());
-            //return $response_body;
+        if (is_a($request, ItemRequest::class)) {
+            $response_body = json_decode($response->getBody());
+            $item_response = $this->json_mapper->map($response_body, new ItemResponse());
+            return $item_response;
         }
 
         if (is_a($request, RecommendationRequest::class)) {

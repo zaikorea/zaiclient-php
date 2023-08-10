@@ -111,11 +111,11 @@ class RecommendationResponse
 
     public function __toString()
     {
-        return "RecommendationResponse{\n" .
-            "\titems=" . implode(" | ", $this->items) . "\n" .
-            "\tcount={$this->count}\n" .
-            "\ttimestamp={$this->timestamp}\n" .
-            "\tmetadata=" . print_r($this->metadata, true) . "\n" .
-            "}\n";
+        return json_encode([
+            'items' => $this->items,
+            'count' => $this->count,
+            'timestamp' => $this->timestamp,
+            'metadata' => $this->metadata,
+        ]);
     }
 }

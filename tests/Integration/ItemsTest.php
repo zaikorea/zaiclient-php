@@ -19,17 +19,21 @@ class ItemsSendRequestTest extends TestCase
 
         $response = $client->sendRequest($request, ['is_test' => true]);
 
-        $actual_items = json_decode($response->getBody()->getContents(), true);
         $expected_items = [
             array_merge(
                 TestUtils::getEmptyItemRequestPayload(),
                 [
                     'item_id' => 'item_1',
                     'item_name' => 'test_item_name_1',
+                    "is_active" => false,
+                    "is_soldout" => false,
                 ]
             )
         ];
 
-        $this->assertEquals($expected_items, $actual_items['items']);
+        $this->assertJsonStringEqualsJsonString(
+            json_encode($expected_items),
+            json_encode($response->getItems())
+        );
     }
 }

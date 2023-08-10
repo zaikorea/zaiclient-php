@@ -1,12 +1,7 @@
 <?php
-
-/**
- * EventLogger response
- */
-
 namespace ZaiClient\Responses;
 
-class EventLoggerResponse
+class EventResponse
 {
 
     /**
@@ -80,10 +75,10 @@ class EventLoggerResponse
 
     public function __toString()
     {
-        return "EventLoggerResonse{\n" .
-            "\tmessage=\"{$this->message}\"\n" .
-            "\tfailure count={$this->failure_count}\n" .
-            "\ttimestamp={$this->timestamp}\n" .
-            "}\n";
+        return json_encode(([
+            "message" => $this->message,
+            "failure_count" => $this->failure_count,
+            "timestamp" => $this->timestamp
+        ]));
     }
 }

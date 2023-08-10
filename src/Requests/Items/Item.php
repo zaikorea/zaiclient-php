@@ -11,28 +11,120 @@ class Item implements JsonSerializable
      * @var string $item_id ID of the item
      */
     public $item_id;
+
+    /**
+     * @var string $item_name Name of the item
+     */
     public $item_name;
+
+    /**
+     * @var string|null $category_id_1 ID of the first category
+     */
     public $category_id_1;
+
+    /**
+     * @var string|null $category_name_1 Name of the first category
+     */
     public $category_name_1;
+
+    /**
+     * @var string|null $category_id_2 ID of the second category
+     */
     public $category_id_2;
+
+    /**
+     * @var string|null $category_name_2 Name of the second category
+     */
     public $category_name_2;
+
+    /**
+     * @var string|null $category_id_3 ID of the third category
+     */
     public $category_id_3;
+
+    /**
+     * @var string|null $category_name_3 Name of the third category
+     */
     public $category_name_3;
+
+    /**
+     * @var string|null $category_id_4 ID of the fourth category
+     */
     public $brand_id;
+
+    /**
+     * @var string|null $brand_name Name of the brand
+     */
     public $brand_name;
+
+    /**
+     * @var string|null $description Description of the item
+     */
     public $description;
+
+    /**
+     * @var string|null $created_timestamp Timestamp of when the item was created
+     */
     public $created_timestamp;
+
+    /**
+     * @var string|null $updated_timestamp Timestamp of when the item was last updated
+     */
     public $updated_timestamp;
+
+    /**
+     * @var bool $is_active Whether the item is active
+     */
     public $is_active;
+
+    /**
+     * @var bool $is_soldout Whether the item is sold out
+     */
     public $is_soldout;
+
+    /**
+     * @var string|null $promote_on
+     */
     public $promote_on;
+
+    /**
+     * @var string|null $item_group
+     */
     public $item_group;
+
+    /**
+     * @var float|null $rating Rating of the item
+     */
     public $rating;
+
+    /**
+     * @var float|null $price Price of the item
+     */
     public $price;
+
+    /**
+     * @var int|null $click_counts Number of clicks
+     */
     public $click_counts;
+
+    /**
+     * @var int|null $purchase_counts Number of purchases
+     */
     public $purchase_counts;
+
+    /**
+     * @var string|null $image_url URL of the image
+     */
     public $image_url;
+
+    /**
+     * @var string|null $item_url URL of the item
+     */
     public $item_url;
+
+    /**
+     * @var string|null $miscellaneous Miscellaneous information
+     */
     public $miscellaneous;
 
     public function __construct($data)
