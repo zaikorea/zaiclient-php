@@ -1,9 +1,8 @@
 <?php
 namespace ZaiClient\Requests\Items;
 
-use RuntimeException;
+use BadMethodCallException;
 use ZaiClient\Configs\Config;
-use ZaiClient\Requests\Items\Item;
 use ZaiClient\Requests\Request;
 
 class ItemRequest extends Request
@@ -42,6 +41,6 @@ class ItemRequest extends Request
     public function getQueryParams()
     {
 
-        throw new RuntimeException("NotImplementedError");
+        throw new BadMethodCallException("NotImplementedError"); // BackLog: Define a dedicated Exception
     }
 }

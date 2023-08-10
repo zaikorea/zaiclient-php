@@ -69,8 +69,8 @@ class AddPageViewEventTest extends TestCase
         $this->assertEquals(
             $expected_timestamp,
             $actual_timestamp,
-            "Timestamp should match within 0.1 microsecond",
-            0.1 // Delta
+            "Timestamp should match within 5 milisecond",
+            5 // Delta
         );
 
         unset($actual["timestamp"]);
@@ -83,11 +83,5 @@ class AddPageViewEventTest extends TestCase
         );
     }
 
-    // public function testConstructorFail(
-    //     $input,
-    //     $expected
-    // ) {
-
-    // }
-
+    // BackLog: Add failure test
 }

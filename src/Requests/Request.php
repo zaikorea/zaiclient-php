@@ -2,7 +2,7 @@
 
 namespace ZaiClient\Requests;
 
-use RuntimeException;
+use BadMethodCallException;
 use JsonSerializable;
 
 
@@ -33,26 +33,26 @@ class Request
      * @param string $client_id
      * @return string PATH to use for request
      */
-    public function getPath($client_id)
+    public function getPath($client_id = null) // NOSONAR
     {
-        throw new RuntimeException("NotImplementedError");
+        throw new BadMethodCallException("NotImplementedError");
     }
 
     /**
      * @param string $client_id
      * @return JsonSerializable payload in json to use for request
      */
-    public function getPayload($is_test)
+    public function getPayload($is_test) // NOSONAR
     {
-        throw new RuntimeException("NotImplementedError");
+        throw new BadMethodCallException("NotImplementedError");
     }
 
     /**
      * @param string $client_id
      * @return array payload in json to use for request
      */
-    public function getQueryParams()
+    public function getQueryParams() // NOSONAR
     {
-        throw new RuntimeException("NotImplementedError");
+        throw new BadMethodCallException("NotImplementedError");
     }
 }

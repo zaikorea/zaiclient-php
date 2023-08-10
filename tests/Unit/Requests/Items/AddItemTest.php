@@ -12,14 +12,14 @@ use ZaiClient\Tests\TestUtils;
 
 class AddItemTest extends TestCase
 {
+    const TEST_NAME = "Test_Item_Name";
     public function testClassConstructor()
     {
         $id = "Item_Id_1";
-        $name = "Test Item Name";
         $properties = [
             "category_id_1" => "Category_Id_1",
         ];
-        $item = new Item($id, $name, $properties);
+        $item = new Item($id, self::TEST_NAME, $properties);
         $add_item_request = new AddItem($item);
 
         $this->assertEquals("POST", $add_item_request->getMethod());
@@ -30,7 +30,7 @@ class AddItemTest extends TestCase
                     TestUtils::getEmptyItemRequestPayload(),
                     [
                         "item_id" => $id,
-                        "item_name" => $name,
+                        "item_name" => self::TEST_NAME,
                         "category_id_1" => "Category_Id_1",
                         "is_active" => true,
                         "is_soldout" => false,
@@ -46,12 +46,12 @@ class AddItemTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $id = "";
-        $name = "Test Item Name";
         $properties = [
             "category_id_1" => "Category_Id_1",
         ];
 
-        new AddItem($id, $name, $properties);
+        $item = new Item($id, self::TEST_NAME, $properties);
+        new AddItem($item); // NOSONAR
     }
 
     public function testClassConstructorWithItemIdOverMaxLength()
@@ -59,12 +59,13 @@ class AddItemTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $id = TestUtils::generateRandomString(2001);
-        $name = "Test Item Name";
         $properties = [
             "category_id_1" => "Category_Id_1",
         ];
 
-        new AddItem($id, $name, $properties);
+        $item = new Item($id, self::TEST_NAME, $properties);
+
+        new AddItem($item); // NOSONAR
     }
 
     public function testClassConstructorWithEmptyItemName()
@@ -72,11 +73,12 @@ class AddItemTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $id = "Item_Id_1";
-        $name = "";
         $properties = [
             "category_id_1" => "Category_Id_1",
         ];
 
-        new AddItem($id, $name, $properties);
+        $item = new Item($id, null, $properties);
+
+        new AddItem($item); // NOSONAR
     }
 }

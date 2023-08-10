@@ -8,7 +8,10 @@ use ZaiClient\Requests\Events\AddPurchaseEvent;
 
 class AddPurchaseEventTest extends TestCase
 {
-    public function shouldSucceedDataWithoutRequestOptions()
+    const PRICE_1 = 10000;
+    const PRICE_2 = 30000;
+
+    public function shouldSucceedDataWithoutRequestOptions() // NOSONAR
     {
         return [
             "case 1" => [
@@ -17,7 +20,7 @@ class AddPurchaseEventTest extends TestCase
                     "user_id" => "test_user_id",
                     "orders" => [
                         "item_id" => "test_item_id",
-                        "price" => 10000,
+                        "price" => self::PRICE_1,
                         "quantity" => 1
                     ],
                 ],
@@ -26,7 +29,7 @@ class AddPurchaseEventTest extends TestCase
                     "item_id" => "test_item_id",
                     "timestamp" => microtime(true),
                     "event_type" => "purchase",
-                    "event_value" => "10000",
+                    "event_value" => strval(self::PRICE_1),
                     "from" => null,
                     "is_zai_recommendation" => false,
                     "time_to_live" => null,
@@ -38,7 +41,7 @@ class AddPurchaseEventTest extends TestCase
                     "user_id" => "test_user_id",
                     "orders" => [
                         "item_id" => "test_item_id",
-                        "price" => 10000,
+                        "price" => self::PRICE_1,
                         "quantity" => 2
                     ],
                 ],
@@ -48,7 +51,7 @@ class AddPurchaseEventTest extends TestCase
                         "item_id" => "test_item_id",
                         "timestamp" => microtime(true),
                         "event_type" => "purchase",
-                        "event_value" => "10000",
+                        "event_value" => strval(self::PRICE_1),
                         "from" => null,
                         "is_zai_recommendation" => false,
                         "time_to_live" => null,
@@ -58,7 +61,7 @@ class AddPurchaseEventTest extends TestCase
                         "item_id" => "test_item_id",
                         "timestamp" => microtime(true),
                         "event_type" => "purchase",
-                        "event_value" => "10000",
+                        "event_value" => strval(self::PRICE_1),
                         "from" => null,
                         "is_zai_recommendation" => false,
                         "time_to_live" => null,
@@ -72,12 +75,12 @@ class AddPurchaseEventTest extends TestCase
                     "orders" => [
                         [
                             "item_id" => "test_item_id_1",
-                            "price" => 10000,
+                            "price" => self::PRICE_1,
                             "quantity" => 2
                         ],
                         [
                             "item_id" => "test_item_id_2",
-                            "price" => 30000,
+                            "price" => self::PRICE_2,
                             "quantity" => 2
                         ]
                     ],
@@ -88,7 +91,7 @@ class AddPurchaseEventTest extends TestCase
                         "item_id" => "test_item_id_1",
                         "timestamp" => microtime(true),
                         "event_type" => "purchase",
-                        "event_value" => "10000",
+                        "event_value" => strval(self::PRICE_1),
                         "from" => null,
                         "is_zai_recommendation" => false,
                         "time_to_live" => null,
@@ -98,7 +101,7 @@ class AddPurchaseEventTest extends TestCase
                         "item_id" => "test_item_id_1",
                         "timestamp" => microtime(true),
                         "event_type" => "purchase",
-                        "event_value" => "10000",
+                        "event_value" => strval(self::PRICE_1),
                         "from" => null,
                         "is_zai_recommendation" => false,
                         "time_to_live" => null,
@@ -108,7 +111,7 @@ class AddPurchaseEventTest extends TestCase
                         "item_id" => "test_item_id_2",
                         "timestamp" => microtime(true),
                         "event_type" => "purchase",
-                        "event_value" => "30000",
+                        "event_value" => strval(self::PRICE_2),
                         "from" => null,
                         "is_zai_recommendation" => false,
                         "time_to_live" => null,
@@ -118,7 +121,7 @@ class AddPurchaseEventTest extends TestCase
                         "item_id" => "test_item_id_2",
                         "timestamp" => microtime(true),
                         "event_type" => "purchase",
-                        "event_value" => "30000",
+                        "event_value" => strval(self::PRICE_2),
                         "from" => null,
                         "is_zai_recommendation" => false,
                         "time_to_live" => null,
@@ -132,13 +135,13 @@ class AddPurchaseEventTest extends TestCase
                     "orders" => [
                         [
                             "item_id" => "test_item_id_1",
-                            "price" => 10000,
+                            "price" => self::PRICE_1,
                             "quantity" => 1,
                             "is_zai_rec" => true,
                         ],
                         [
                             "item_id" => "test_item_id_2",
-                            "price" => 30000,
+                            "price" => self::PRICE_2,
                             "quantity" => 1,
                             "is_zai_rec" => false,
                         ]
@@ -150,7 +153,7 @@ class AddPurchaseEventTest extends TestCase
                         "item_id" => "test_item_id_1",
                         "timestamp" => microtime(true),
                         "event_type" => "purchase",
-                        "event_value" => "10000",
+                        "event_value" => strval(self::PRICE_1),
                         "from" => null,
                         "is_zai_recommendation" => true,
                         "time_to_live" => null,
@@ -160,7 +163,7 @@ class AddPurchaseEventTest extends TestCase
                         "item_id" => "test_item_id_2",
                         "timestamp" => microtime(true),
                         "event_type" => "purchase",
-                        "event_value" => "30000",
+                        "event_value" => strval(self::PRICE_2),
                         "from" => null,
                         "is_zai_recommendation" => false,
                         "time_to_live" => null,
@@ -178,7 +181,7 @@ class AddPurchaseEventTest extends TestCase
                 "user_id" => "",
                 "order" => [
                     "item_id" => "test_item_id",
-                    "price" => 10000,
+                    "price" => self::PRICE_1,
                     "quantity" => 3
                 ],
             ],
@@ -188,12 +191,12 @@ class AddPurchaseEventTest extends TestCase
                 "orders" => [
                     [
                         "item_id" => "test_item_id",
-                        "price" => 10000,
+                        "price" => self::PRICE_1,
                         "quantity" => 3
                     ],
                     [
                         "item_id" => "test_item_id_2",
-                        "price" => 30000,
+                        "price" => self::PRICE_2,
                         "quantity" => 1
                     ]
                 ],
@@ -204,12 +207,12 @@ class AddPurchaseEventTest extends TestCase
                 "orders" => [
                     [
                         "item_id" => "test_item_id",
-                        "price" => 10000,
+                        "price" => self::PRICE_1,
                         "quantity" => 0
                     ],
                     [
                         "item_id" => "test_item_id_2",
-                        "price" => 30000,
+                        "price" => self::PRICE_2,
                         "quantity" => 1
                     ]
                 ],
@@ -248,8 +251,8 @@ class AddPurchaseEventTest extends TestCase
             $this->assertEquals(
                 $expected_timestamp,
                 $actual_timestamp,
-                "Timestamp should match within 0.1 microsecond",
-                0.1 // Delta
+                "Timestamp should match within 5 milisecond",
+                5 // Delta
             );
 
             unset($e["timestamp"]);

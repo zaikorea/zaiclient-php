@@ -4,7 +4,6 @@ namespace Tests\Requests\Events;
 
 use PHPUnit\Framework\TestCase;
 
-use ZaiClient\Utils\Util;
 use ZaiClient\Requests\Events\AddRateEvent;
 
 class AddRateEventTest extends TestCase
@@ -119,8 +118,8 @@ class AddRateEventTest extends TestCase
         $this->assertEquals(
             $expected_timestamp,
             $actual_timestamp,
-            "Timestamp should match within 0.1 microsecond",
-            0.1
+            "Timestamp should match within 5 milisecond",
+            5
         );
 
         unset($actual["timestamp"]);

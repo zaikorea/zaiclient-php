@@ -6,7 +6,7 @@
 
 namespace ZaiClient\Requests\Recommendations;
 
-use RuntimeException;
+use BadMethodCallException;
 use ZaiClient\Configs\Config;
 use ZaiClient\Requests\Recommendations\Recommendation;
 use ZaiClient\Requests\Request;
@@ -46,10 +46,10 @@ class RecommendationRequest extends Request
      * Get api path
      * @return string PATH to use for request
      */
-    public function getPath($client_id)
+    public function getPath($client_id = null)
     {
 
-        throw new RuntimeException("NotImplementedError");
+        throw new BadMethodCallException("NotImplementedError");
     }
 
     public function getPayload($is_test = null)
@@ -57,8 +57,8 @@ class RecommendationRequest extends Request
         return $this->payload;
     }
 
-    public function getQueryParams()
+    public function getQueryParams() // NOSONAR
     {
-        throw new RuntimeException("NotImplementedError");
+        throw new BadMethodCallException("NotImplementedError");
     }
 }

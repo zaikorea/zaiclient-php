@@ -51,7 +51,7 @@ class AddCustomEvent extends EventRequest
                 : null),
             $custom_event_type,
             array_map(function ($custom_action) {
-                return (string) $custom_action["value"];
+                return $custom_action["value"];
             }, $flattenedCustomActions),
             array_fill(0, count($flattenedCustomActions), null),
             array_map(function ($custom_action) {

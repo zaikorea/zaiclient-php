@@ -23,7 +23,6 @@ class Config
     const RELATED_ITEMS_PATH = "/related-items";
 
     const RERANKING_RECOMMENDATION_PATH = "/reranking";
-    const RERANKING_RECOMMENDATION_PATH_PREFIX = "/reranking";
 
     const HMAC_ALGORITHM = 'sha256';
     const HMAC_SCHEME = 'ZAi';
@@ -32,13 +31,6 @@ class Config
     const ZAI_AUTHORIZATION_HEADER = 'X-ZAI-AUTHORIZATION';
     const BATCH_REQUEST_CAP = '50';
     const EPSILON = 1e-4;
-
-    /* ----------------- Error Messages ----------------- */
-    const NON_STR_ARG_ERRMSG = '%s:%s expects parameter %d to be a non-empty string.';
-    const EMPTY_ARR_ERRMSG = '%s:%s expects parameter %d to be a non-empty array.';
-    const NON_SEQ_ARR_ERRMSG = '%s:%s expects parameter %d to be a sequential array.';
-    const ARR_FORM_ERRMSG = '%s:%s expects parameter %d to be an array of form %s.';
-    const BATCH_ERRMSG = '%s does not support batch processing.';
 
     const TEST_EVENT_TIME_TO_LIVE = 60 * 60 * 24; // 1 day
 }

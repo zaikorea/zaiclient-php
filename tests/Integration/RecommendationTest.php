@@ -13,6 +13,9 @@ class RecommendationsTest extends TestCase
     const CLIENT_ID = 'test';
     const SECRET = 'KVPzvdHTPWnt0xaEGc2ix-eqPXFCdEV5zcqolBr_h1k';
 
+    const ASSERT_MSG_METADATA = "metadata don't match";
+    const ASSERT_MSG_COUNT = "items count don't match";
+
     public function testGetUserRecommendation()
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
@@ -37,8 +40,8 @@ class RecommendationsTest extends TestCase
         ];
 
         self::assertEquals(['ITEM_ID_0', 'ITEM_ID_1', 'ITEM_ID_2'], $response->getItems());
-        self::assertEquals(3, $response->getCount(), "items count don't match");
-        self::assertEquals($expected_metatdata, $response->getMetadata(), "metadata don't match");
+        self::assertEquals(3, $response->getCount(), self::ASSERT_MSG_COUNT);
+        self::assertEquals($expected_metatdata, $response->getMetadata(), self::ASSERT_MSG_METADATA);
 
     }
 
@@ -66,8 +69,8 @@ class RecommendationsTest extends TestCase
         ];
 
         self::assertEquals(['ITEM_ID_0', 'ITEM_ID_1', 'ITEM_ID_2'], $response->getItems());
-        self::assertEquals(3, $response->getCount(), "items count don't match");
-        self::assertEquals($expected_metatdata, $response->getMetadata(), "metadata don't match");
+        self::assertEquals(3, $response->getCount(), self::ASSERT_MSG_COUNT);
+        self::assertEquals($expected_metatdata, $response->getMetadata(), self::ASSERT_MSG_METADATA);
     }
 
     public function testGetRerankingRecommendation()
@@ -98,8 +101,8 @@ class RecommendationsTest extends TestCase
         ];
 
         self::assertEquals(['ITEM_ID_0', 'ITEM_ID_1', 'ITEM_ID_2'], $response->getItems());
-        self::assertEquals(3, $response->getCount(), "items count don't match");
-        self::assertEquals($expected_metatdata, $response->getMetadata(), "metadata don't match");
+        self::assertEquals(3, $response->getCount(), self::ASSERT_MSG_COUNT);
+        self::assertEquals($expected_metatdata, $response->getMetadata(), self::ASSERT_MSG_METADATA);
     }
 
 

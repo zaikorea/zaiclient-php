@@ -135,8 +135,11 @@ class Item implements JsonSerializable
     public function __construct($item_id, $item_name = null, $properties = [])
     {
         // Validate and assign values
-        $this->item_id = Validator::validateString($item_id, 1, 500);
-        $this->item_name = $item_name;
+        $this->item_id = Validator::validateString($item_id, 1, 500, ["var_name" => "\$item_id"]);
+        $this->item_name = Validator::validateString($item_name, 1, 2000, [
+            'var_name' => '\$item_name',
+            'nullable' => true
+        ]);
         $this->category_id_1 = (array_key_exists('category_id_1', $properties)
             ? Validator::validateString($properties['category_id_1'], 0, 2000, [
                 'nullable' => true,

@@ -46,8 +46,12 @@ class GetRelatedRecommendation extends RecommendationRequest
         );
     }
 
-    public function getPath($client_id)
+    public function getPath($client_id = null)
     {
+        if (!is_string($client_id)) {
+            throw new InvalidArgumentException("client_id must be a string");
+        }
+
         return sprintf(Config::ML_API_PATH_PREFIX, $client_id) . Config::RELATED_ITEMS_PATH;
     }
 }

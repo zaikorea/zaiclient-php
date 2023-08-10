@@ -3,7 +3,7 @@ namespace ZaiClient\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-use RuntimeException;
+use BadMethodCallException;
 use ZaiClient\Utils\Util;
 
 class UtilsTest extends TestCase

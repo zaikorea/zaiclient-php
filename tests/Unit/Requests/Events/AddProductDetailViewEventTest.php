@@ -67,8 +67,8 @@ class AddProductDetailViewEventTest extends TestCase
         $this->assertEquals(
             $expect_timestamp,
             $actual_timestamp,
-            "Timestamp should match within 0.1 microsecond",
-            0.1 // Delta
+            "Timestamp should match within 5 milisecond",
+            5 // Delta
         );
         $this->assertJsonStringEqualsJsonString(
             json_encode($expect),

@@ -3,7 +3,7 @@ namespace ZaiClient\Tests\Requests;
 
 use PHPUnit\Framework\TestCase;
 
-use RuntimeException;
+use BadMethodCallException;
 use ZaiClient\Requests\Recommendations\RecommendationRequest;
 
 class RecommendationRequestTest extends TestCase
@@ -38,7 +38,7 @@ class RecommendationRequestTest extends TestCase
 
     public function testGetPathFails()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(BadMethodCallException::class);
 
         $request = new RecommendationRequest(
             "user_id",
@@ -55,7 +55,7 @@ class RecommendationRequestTest extends TestCase
 
     public function testGetQueryParamFails()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(BadMethodCallException::class);
 
         $request = new RecommendationRequest(
             "user_id",
