@@ -7,7 +7,7 @@ do
     phpbrew switch ${version}
     php -v
     php ../composers/v7.x/composer.phar install -q
-    ./vendor/bin/phpunit tests
+    ./vendor/bin/phpunit
     rm -rf vendor
     rm composer.lock
 done
@@ -20,7 +20,7 @@ do
     phpbrew switch ${version}
     php -v
     php ../composers/v8.x/composer.phar install -q
-    ./vendor/bin/phpunit tests
+    ./vendor/bin/phpunit
     rm -rf vendor
     rm composer.lock
 done
