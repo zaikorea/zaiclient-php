@@ -78,7 +78,7 @@ class UpdateItemTest extends TestCase
             "category_id_1" => "Category_Id_1",
         ];
 
-        new UpdateItem($id, $properties);
+        new UpdateItem($id, $properties); // NOSONAR
     }
 
     public function testClassConstructorWithItemId()
@@ -89,6 +89,6 @@ class UpdateItemTest extends TestCase
             "category_id_1" => "Category_Id_1",
         ];
 
-        new UpdateItem($id, $properties);
+        new UpdateItem($id, $properties); // NOSONAR
     }
 }

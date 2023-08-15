@@ -156,10 +156,7 @@ class GetUserRecommendationTest extends TestCase
             "options" => null,
         ];
 
-        new GetUserRecommendation(
-            $user_id,
-            $limit
-        );
+        new GetUserRecommendation($user_id, $limit); // NOSONAR
 
     }
 
@@ -235,11 +232,6 @@ class GetUserRecommendationTest extends TestCase
 
         }
 
-        new GetUserRecommendation(
-            $user_id,
-            $limit,
-            $request_options
-        );
-
+        new GetUserRecommendation($user_id, $limit, $request_options); // NOSONAR
     }
 }

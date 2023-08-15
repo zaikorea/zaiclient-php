@@ -11,7 +11,7 @@ class Validator
         "var_name" => Validator::VARIABLE_REQUIREMENT_MESG,
     ];
 
-    static function validateString(
+    public static function validateString(
         $value,
         $min,
         $max,
@@ -40,7 +40,7 @@ class Validator
         return $value;
     }
 
-    static function validateTimestamp(
+    public static function validateTimestamp(
         $value,
         $options = array())
     {
@@ -65,7 +65,7 @@ class Validator
         }
     }
 
-    static function validateBoolean(
+    public static function validateBoolean(
         $value,
         $options = array())
     {
@@ -76,13 +76,15 @@ class Validator
         }
 
         if (!is_bool($value)) {
-            throw new InvalidArgumentException($_options["var_name"] . " must be a boolean, not " . var_export($value, true));
+            throw new InvalidArgumentException(
+                $_options["var_name"] . " must be a boolean, not " . var_export($value, true)
+            );
         }
 
         return $value;
     }
 
-    static function validateFloat(
+    public static function validateFloat(
         $value,
         $min,
         $max,
@@ -95,13 +97,15 @@ class Validator
         }
 
         if (!is_float($value) || ($min !== null && $value < $min) || ($max !== null && $value > $max)) {
-            throw new InvalidArgumentException($_options["var_name"] . " must be a float between $min and $max not " . var_export($value, true));
+            throw new InvalidArgumentException(
+                $_options["var_name"] . " must be a float between $min and $max not " . var_export($value, true)
+            );
         }
 
         return $value;
     }
 
-    static function validateInt(
+    public static function validateInt(
         $value,
         $min,
         $max,
@@ -114,13 +118,15 @@ class Validator
         }
 
         if (!is_int($value) || ($min !== null && $value < $min) || ($max !== null && $value > $max)) {
-            throw new InvalidArgumentException($_options["var_name"] . " must be an integer between $min and $max not " . var_export($value, true));
+            throw new InvalidArgumentException(
+                $_options["var_name"] . " must be an integer between $min and $max not " . var_export($value, true)
+            );
         }
 
         return $value;
     }
 
-    static function validateStringArrays(
+    public static function validateStringArrays(
         $value,
         $arrMin,
         $arrMax,
@@ -137,7 +143,9 @@ class Validator
         }
 
         if (count($value) < $arrMin && $arrMax < count($value)) {
-            throw new InvalidArgumentException($_options["var_name"] . " array must contain between $arrMin and $arrMax elements not " . count($value) . "elements");
+            throw new InvalidArgumentException(
+                $_options["var_name"] . " array must contain between $arrMin and $arrMax elements not " . count($value) . "elements"
+            );
         }
 
         try {
@@ -153,7 +161,7 @@ class Validator
         return $value;
     }
 
-    static function validateJsonSerializable(
+    public static function validateJsonSerializable(
         $value,
         $max,
         $options = [

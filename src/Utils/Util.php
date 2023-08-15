@@ -10,7 +10,7 @@ class Util
      * @param array $arr
      * @return boolean
      */
-    static function isAssociativeArray(array $arr)
+    public static function isAssociativeArray(array $arr)
     {
         if (array() === $arr) {
             return false;
@@ -19,7 +19,7 @@ class Util
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
 
-    static function isSequentialArray($array)
+    public static function isSequentialArray($array)
     {
         if (!is_array($array)) {
             return false;

@@ -120,15 +120,7 @@ class RecommendationTest extends TestCase
     ) {
         $this->expectException(InvalidArgumentException::class);
 
-        new Recommendation(
-            $user_id,
-            $item_id,
-            $item_ids,
-            $recommendation_type,
-            $limit,
-            $offset,
-            $recommendation_options
-        );
+        new Recommendation($user_id, $item_id, $item_ids, $recommendation_type, $limit, $offset, $recommendation_options); // NOSONAR
     }
 
 }

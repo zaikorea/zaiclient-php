@@ -11,7 +11,7 @@ use ZaiClient\Requests\Request;
 
 class RequestTest extends TestCase
 {
-    function testRequestGetPath()
+    public function testRequestGetPath()
     {
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage('NotImplementedError');
@@ -24,7 +24,7 @@ class RequestTest extends TestCase
     }
 
 
-    function testRequestGetPayload()
+    public function testRequestGetPayload()
     {
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage('NotImplementedError');
@@ -36,7 +36,7 @@ class RequestTest extends TestCase
         $request->getPayload('Test_Client_Id');
     }
 
-    function testRequestGetQueryParam()
+    public function testRequestGetQueryParam()
     {
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage('NotImplementedError');
