@@ -40,6 +40,37 @@ class ItemsSendRequestTest extends TestCase
         );
     }
 
+    public function testAddItems()
+    {
+        $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
+
+        $items = [
+            new Item("item_1", "test_item_name_1"),
+            new Item("item_2", "test_item_name_2"),
+        ];
+
+        $request = new AddItem($items);
+
+        $response = $client->sendRequest($request, ['is_test' => true]);
+
+        $expected_items = [
+            array_merge(
+                TestUtils::getEmptyItemRequestPayload(),
+                [
+                    'item_id' => 'item_1',
+                    'item_name' => 'test_item_name_1',
+                    "is_active" => true,
+                    "is_soldout" => false,
+                ]
+            )
+        ];
+
+        $this->assertJsonStringEqualsJsonString(
+            json_encode($expected_items),
+            json_encode($response->getItems())
+        );
+    }
+
     public function testUpdateItem()
     {
         $client = new ZaiClient(self::CLIENT_ID, self::SECRET);
@@ -124,7 +155,7 @@ class ItemsSendRequestTest extends TestCase
                     "is_active" => null,
                     "is_soldout" => null,
                 ]
-                ),
+            ),
         ];
 
         $this->assertJsonStringEqualsJsonString(

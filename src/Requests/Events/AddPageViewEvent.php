@@ -33,8 +33,8 @@ class AddPageViewEvent extends EventRequest
             (array_key_exists("from", $request_options)
                 ? [$request_options["from"]]
                 : [null]),
-            (array_key_exists("is_zai_rec", $request_options)
-                ? [$request_options["is_zai_rec"]]
+            (array_key_exists("contains_zai_rec", $request_options)
+                ? [$request_options["contains_zai_rec"]]
                 : [false])
         );
     }

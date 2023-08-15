@@ -63,12 +63,12 @@ class Item implements JsonSerializable
     public $description;
 
     /**
-     * @var string|null $created_timestamp Timestamp of when the item was created
+     * @var float|null $created_timestamp Timestamp of when the item was created
      */
     public $created_timestamp;
 
     /**
-     * @var string|null $updated_timestamp Timestamp of when the item was last updated
+     * @var float|null $updated_timestamp Timestamp of when the item was last updated
      */
     public $updated_timestamp;
 
