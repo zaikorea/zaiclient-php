@@ -22,7 +22,7 @@ use ZaiClient\Requests\Events\EventRequest;
 use ZaiClient\Requests\Items\ItemRequest;
 use ZaiClient\Requests\Recommendations\RecommendationRequest;
 use ZaiClient\Requests\Request;
-use ZaiClient\Responses\EventResponse;
+use ZaiClient\Responses\EventLoggerResponse;
 use ZaiClient\Responses\ItemResponse;
 use ZaiClient\Responses\RecommendationResponse;
 use ZaiClient\Security\ZaiHeaders;
@@ -83,7 +83,7 @@ class ZaiClient
             )
         );
 
-        try{
+        try {
             $query = Query::build(
                 $request->getQueryParams()
             );
@@ -115,7 +115,7 @@ class ZaiClient
 
         if (is_a($request, EventRequest::class)) {
             $response_body = json_decode($response->getBody());
-            $event_response = $this->json_mapper->map($response_body, new EventResponse());
+            $event_response = $this->json_mapper->map($response_body, new EventLoggerResponse());
             return $event_response;
         }
 

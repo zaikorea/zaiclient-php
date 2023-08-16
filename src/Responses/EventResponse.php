@@ -1,7 +1,7 @@
 <?php
 namespace ZaiClient\Responses;
 
-class EventResponse
+class EventLoggerResponse
 {
 
     /**
