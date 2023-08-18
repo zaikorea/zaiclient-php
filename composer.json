@@ -1,11 +1,16 @@
 {
     "name": "zaikorea/zaiclient",
-    "version": "2.2.1",
+    "version": "3.0.0",
     "description": "Z.Ai official client SDK",
     "hompage": "https://www.zaikorea.org",
     "autoload": {
         "psr-4": {
-            "ZaiKorea\\": "src/"
+            "ZaiClient\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ZaiClient\\Tests\\": "tests/"
         }
     },
     "authors": [
@@ -15,10 +20,11 @@
     ],
     "require": {
         "guzzlehttp/guzzle": "~6.0|~7.0",
-        "netresearch/jsonmapper": "~3.0|~4.0"
+        "netresearch/jsonmapper": "~3.0|~4.0",
+        "ramsey/uuid": "~3.0|~4.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~6.0|~7.0|~8.0|~9.0"
+        "phpunit/phpunit": "~6.0|~7.0|~8.0"
     },
     "config": {
         "allow-plugins": {
