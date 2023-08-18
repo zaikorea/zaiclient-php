@@ -42,7 +42,7 @@ class EventRequest extends Request
         $tmp_timestamp = is_null($timestamp) ? microtime(true) : $timestamp;
         $this->timestamp = $tmp_timestamp;
 
-        parent::__construct("POST", config::COLLECTOR_API_ENDPOINT);
+        parent::__construct("POST", Config::COLLECTOR_API_ENDPOINT);
 
         for ($i = 0; $i < count($item_ids); $i++) {
             array_push(
@@ -61,8 +61,8 @@ class EventRequest extends Request
             $tmp_timestamp += config::EPSILON;
         }
 
-        if (count($events) > config::BATCH_REQUEST_CAP) {
-            throw new BatchSizeLimitExceededException();
+        if (count($events) > Config::BATCH_REQUEST_CAP) {
+            throw new BatchSizeLimitExceededException(count($events));
         }
         if (count($events) == 0) {
             throw new EmptyBatchException();
@@ -86,7 +86,7 @@ class EventRequest extends Request
 
     public function getPath($client_id = null)
     {
-        return config::EVENTS_API_PATH;
+        return Config::EVENTS_API_PATH;
     }
 
     public function getPayload($is_test = false)
@@ -94,7 +94,7 @@ class EventRequest extends Request
         if ($is_test) {
             if (is_array($this->payload)) {
                 foreach ($this->payload as &$event) {
-                    $event->setTimeToLive(config::TEST_EVENT_TIME_TO_LIVE);
+                    $event->setTimeToLive(Config::TEST_EVENT_TIME_TO_LIVE);
                 }
             } else {
                 $this->payload->setTimeToLive(config::TEST_EVENT_TIME_TO_LIVE);

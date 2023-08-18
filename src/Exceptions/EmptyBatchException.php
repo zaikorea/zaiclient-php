@@ -13,9 +13,9 @@ namespace ZaiClient\Exceptions;
  */
 class EmptyBatchException extends \Exception
 {
-    public function __construct($records_num)
+    public function __construct()
     {
-        $message = sprintf("Number of total records cannot exceed 50, but your Event holds %d.", $records_num);
+        $message = sprintf("Number of total records cannot be 0");
         parent::__construct($message, 2);
     }
 

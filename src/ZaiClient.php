@@ -53,7 +53,7 @@ class ZaiClient
         ];
 
         $this->ml_api_endpoint = sprintf(Config::ML_API_ENDPOINT, $this->options['custom_endpoint']);
-        $this->collector_api_endpoint = sprintf(Config::EVENTS_API_ENDPOINT, $this->options['custom_endpoint']);
+        $this->collector_api_endpoint = sprintf(Config::COLLECTOR_API_ENDPOINT, $this->options['custom_endpoint']);
 
         if ($client && getenv('ZAI_CLIENT_TEST') == 'true') {
             $this->guzzle_client = $client;
