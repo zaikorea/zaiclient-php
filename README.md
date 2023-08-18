@@ -21,7 +21,7 @@ composer require zaikorea/zaiclient
 - 또는 프로젝트의 `composer.json` 의 `require` 항목에 아래와 같이 추가
 ```
 "require": {
-    "zaikorea/zaiclient": "~2.0"
+    "zaikorea/zaiclient": "~3.0"
     ...
 }
 ```
