@@ -22,7 +22,7 @@ use ZaiClient\Requests\Events\EventRequest;
 use ZaiClient\Requests\Items\ItemRequest;
 use ZaiClient\Requests\Recommendations\RecommendationRequest;
 use ZaiClient\Requests\Request;
-use ZaiClient\Responses\EventLoggerResponse;
+use ZaiClient\Responses\EventResponse;
 use ZaiClient\Responses\ItemResponse;
 use ZaiClient\Responses\RecommendationResponse;
 use ZaiClient\Security\ZaiHeaders;
@@ -92,7 +92,8 @@ class ZaiClient
         }
 
         $url = sprintf(
-            $request->getBaseUrl(), $this->options['custom_endpoint']
+            $request->getBaseUrl(),
+            $this->options['custom_endpoint']
         ) . $path;
 
         try {
@@ -115,7 +116,7 @@ class ZaiClient
 
         if (is_a($request, EventRequest::class)) {
             $response_body = json_decode($response->getBody());
-            $event_response = $this->json_mapper->map($response_body, new EventLoggerResponse());
+            $event_response = $this->json_mapper->map($response_body, new EventResponse());
             return $event_response;
         }
 
