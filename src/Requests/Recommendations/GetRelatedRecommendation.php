@@ -12,11 +12,13 @@ class GetRelatedRecommendation extends RecommendationRequest
     const DEFAULT_RECOMMENDATION_TYPE = "product_detail_page";
 
     /**
+     * @param string|null $user_id
      * @param string $item_id
      * @param int $limit
      * @param array $request_options
      */
     public function __construct(
+        $user_id,
         $item_id,
         $limit,
         $request_options = array())
@@ -26,9 +28,9 @@ class GetRelatedRecommendation extends RecommendationRequest
         }
 
         parent::__construct(
-            null,
+            $user_id,
             Validator::validateString($item_id, 1, 500, [
-                "var_name" => "\$user_id",
+                "var_name" => "\$item_id",
             ]),
             null,
             (array_key_exists("recommendation_type", $request_options)
